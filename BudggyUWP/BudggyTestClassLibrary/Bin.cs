@@ -8,8 +8,8 @@ namespace Budggy
 {
    public class Bin
     {
-         List<Expense> Expenses { get; set; }
-         List<Income> Incomes { get; set; }
+        List<Expense> Expenses = new List<Expense>();
+        List<Income> Incomes = new List<Income>();
         string Description { get; set; }
         string Name { get; set; }
         double Balance { get; set; }
