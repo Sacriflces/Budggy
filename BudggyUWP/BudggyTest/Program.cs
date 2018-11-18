@@ -31,6 +31,7 @@ namespace BudggyTest
             bin.AddIncome(171.32, "Paycheck", new DateTime(2018,11,6));
             bin.AddIncome(220.00, "Paycheck", DateTime.Today);
 
+            Console.WriteLine("what is happening");
             
 
             Console.WriteLine("Incomes     Expenses");
