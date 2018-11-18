@@ -7,9 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudggyUWP", "BudggyUWP\Budg
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Budggy", "Budggy\Budggy.csproj", "{960EF8FD-C522-4CD0-BEEB-01744298ADAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudggyTest", "BudggyTest\BudggyTest.csproj", "{A18F9099-EB44-49D1-AE8C-E64D839B33BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudggyTest", "BudggyTest\BudggyTest.csproj", "{A18F9099-EB44-49D1-AE8C-E64D839B33BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudggyTestClassLibrary", "BudggyTestClassLibrary\BudggyTestClassLibrary.csproj", "{67CDF295-357B-4D95-8483-AAC529EF7B7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudggyTestClassLibrary", "BudggyTestClassLibrary\BudggyTestClassLibrary.csproj", "{67CDF295-357B-4D95-8483-AAC529EF7B7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
