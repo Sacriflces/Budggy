@@ -12,12 +12,17 @@ namespace BudggyTestClassLibrary
         internal List<Income> Incomes = new List<Income>();
         string Description { get; set; }
         internal string Name { get; set; }
-        double Balance { get; set; }
-        double Percentage { get; set; }
+        internal double Balance { get; set; }
+        internal double Percentage { get; set; }
 
-        double MinimumBalance { get; set; }
-        double GoalBalance { get; set; }
-        double Multiplier { get; set; }
+        internal double MinimumBalance { get; set; }
+        internal double GoalBalance { get; set; }
+        internal double Multiplier { get; set; }
+
+        public Bin()
+        {
+
+        }
 
         public Bin(string name, string description, double percentage, double minimumBalance, double goalBalance, double multiplier)
         {
