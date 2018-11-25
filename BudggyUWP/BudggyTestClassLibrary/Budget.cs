@@ -89,11 +89,36 @@ namespace BudggyTestClassLibrary
 
         //split income into each bin based on their percentage preset
         //On another note. should we have the budget contain the percentage preset? It might be easier to manage and check
-        public void AddIncome()
+        public int AddIncome(double value, string destr, DateTime date, int mode)
         {
-            
+            if(mode == -1)
+            {
+                double percentage = 0;
+                foreach (Bin bin in Bins)
+                {
+                    percentage += bin.Percentage;
+                }
+
+                if (percentage > 1)
+                {
+                    return 0;
+                }
+                else
+                {
+                    foreach (Bin bin in Bins)
+                    {
+                        bin.AddIncome(value * bin.Percentage, destr, date);
+                    }
+                    return 1;
+                }
+
+            }
+            Bins[mode].AddIncome(value, destr, date);
+            return 1;
+
         }
 
-        //Need to actually have month budget
+        //Need to actually have monthly budget maybe monthly budget class with a DateTime Month. could add to the bins as well
+        //maybe need a monthly budget variable... that'll set the value
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System;
-using Budggy;
+using BudggyTestClassLibrary;
 
 
 namespace BudggyTest
