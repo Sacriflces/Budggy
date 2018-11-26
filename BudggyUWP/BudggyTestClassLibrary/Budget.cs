@@ -11,12 +11,17 @@ namespace BudggyTestClassLibrary
         List<Bin> Bins { get; set; }
         List<Income> Incs { get; set; }
         List<Expense> Exps { get; set; }
-
+        List<MonthBudget> MonthlyBudgets { get; set; }
+        public double DefaultMonthlyBudget { get; set; }
         string Name { get; set; }
-        double Balance { get; set; }
-        double MonthlyBudget { get; set; }
+        double Balance { get; set; }        
         Savings Savings { get; }
 
+
+        Budget()
+        {
+            DefaultMonthlyBudget = 2500;
+        }
         // Methods to add bins
         public void AddBin(string name, string description, double percentage, double minimumBalance, double goalBalance, double multiplier)
         {
@@ -70,16 +75,16 @@ namespace BudggyTestClassLibrary
 
             if(index1 != -1 && index2 != -1)
             {
-                Bins[index1].AddIncome(amount, "Transfer from " + Bins[index2].Name, date);
-                Bins[index2].AddExpense(amount, "Transfer to " + Bins[index1].Name, date);
+                Bins[index1].AddIncome(amount, "[Transfer from] " + Bins[index2].Name, date);
+                Bins[index2].AddExpense(amount, "[Transfer to] " + Bins[index1].Name, date);
             } else if(index1 == -1)
             {
                 Savings.AddIncome(amount, "Transfer from " + Bins[index2].Name, date);
-                Bins[index2].AddExpense(amount, "Transfer to Savings", date);
+                Bins[index2].AddExpense(amount, "[Transfer to] Savings", date);
             } else if(index2 == -1)
             {
-                Bins[index1].AddIncome(amount, "Transfer from Savings", date);
-                Savings.AddExpense(amount, "Transfer to " + Bins[index1].Name, date);
+                Bins[index1].AddIncome(amount, "[Transfer from] Savings", date);
+                Savings.AddExpense(amount, "[Transfer to] " + Bins[index1].Name, date);
             }
 
             
@@ -118,7 +123,74 @@ namespace BudggyTestClassLibrary
 
         }
 
+        public void AddExpense(double value, string destr, DateTime date, int bin)
+        {
+            Bins[bin].AddExpense(value, destr, date);
+            AddMonthBudgetExpense(value, destr, date);
+        }
+
         //Need to actually have monthly budget maybe monthly budget class with a DateTime Month. could add to the bins as well
         //maybe need a monthly budget variable... that'll set the value
+        public void CreateMonthlyBudget()
+        {
+            int found = 1;
+
+            for(int i = 0; i<MonthlyBudgets.Count; i++)
+            {
+                if (MonthlyBudgets[i].Month.Month == DateTime.Now.Month && MonthlyBudgets[i].Month.Year == DateTime.Now.Year)
+                {
+                    found = 0;
+                    break;
+                }
+            }
+
+            if(found == 1)
+            {
+                MonthBudget budget = new MonthBudget(DefaultMonthlyBudget, DateTime.Now.Month, DateTime.Now.Year);
+            }
+        }
+        // calculates all of the monthly budgets wheww.... 
+        // checks all the expenses in bins and the budget controller. It also checks if a transfer occurred, so there won't be extra substractions
+        public void CalcMonthBudgetAll()
+        {
+            foreach (MonthBudget bud in MonthlyBudgets)
+            {
+                bud.Value = bud.BudgetVal;
+                foreach(Expense exp in Exps)
+                {
+                    if(exp.Date.Month == bud.Month.Month && exp.Date.Year == bud.Month.Year)
+                    {
+                        if (!(exp.Description.Contains("[Transfer to]")))
+                        {
+                            bud.SubtractExpense(exp);
+                        }
+                    }
+                }
+
+                foreach(Bin bin in Bins)
+                {
+                    foreach(Expense exp in bin.Expenses)
+                    {
+                        if (exp.Date.Month == bud.Month.Month && exp.Date.Year == bud.Month.Year)
+                        {
+                            if(!(exp.Description.Contains("[Transfer to]")))
+                            {
+                                bud.SubtractExpense(exp);
+                            }
+                            
+                        }
+                    }
+                }
+            }
+        }
+
+        public void AddMonthBudgetExpense(double value, string destr, DateTime date)
+        {
+            foreach (MonthBudget budget in MonthlyBudgets)
+            {
+                budget.SubtractExpense(new Expense(value, destr, date));
+            }
+        }
+        
     }
 }
