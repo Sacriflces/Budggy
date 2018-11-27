@@ -8,21 +8,22 @@ namespace BudggyTestClassLibrary
 {
     public class Budget
     {
-        List<Bin> Bins { get; set; }
-        List<Income> Incs { get; set; }
-        List<Expense> Exps { get; set; }
-        List<MonthBudget> MonthlyBudgets { get; set; }
+        public List<Bin> Bins = new List<Bin>();
+        List<Income> Incs = new List<Income>();
+        List<Expense> Exps = new List<Expense>();
+        public List<MonthBudget> MonthlyBudgets = new List<MonthBudget>();
         public double DefaultMonthlyBudget { get; set; }
         string Name { get; set; }
-        double Balance { get; set; }        
-        Savings Savings { get; }
+        double Balance { get; set; }
+        public Savings Savings = new Savings("Savings", "", .15);
 
 
-        Budget()
+        public Budget()
         {
             DefaultMonthlyBudget = 2500;
         }
         // Methods to add bins
+        //check if multiplier is between 1 and 0
         public void AddBin(string name, string description, double percentage, double minimumBalance, double goalBalance, double multiplier)
         {
             Bins.Add(new Bin(name, description, percentage, minimumBalance, goalBalance, multiplier));
@@ -30,11 +31,12 @@ namespace BudggyTestClassLibrary
 
         public void AddBin(string name, string description, double percentage)
         {
+
             Bins.Add(new Bin(name, description, percentage));
         }
 
         // Method to calculate the balance based on the Balance within the bins 
-        public void TotalBalance()
+        public double TotalBalance()
         {
             double balance = 0;
 
@@ -44,6 +46,13 @@ namespace BudggyTestClassLibrary
             }
             
             this.Balance = balance + Savings.GetBalance();
+            return Balance;
+        }
+
+        //Method to change percentage on the Savings balance
+        public void SavingsPercentage(double value)
+        {
+            Savings.Percentage = value;
         }
 
         // Delete a bin and transfer funds into another bin... (maybe savings by default? which mean I'd have to make that bin type)
@@ -67,22 +76,26 @@ namespace BudggyTestClassLibrary
             Bins.RemoveAt(index);
         }
 
-        //transfer funds from one bin to another (from index2 to index1)
+        //transfer funds from one bin to another (from index2 to index1) ** change it to be based on strings 
         public int TransferFunds(int index1, int index2, double amount, DateTime date)
         {
-            if (amount > Bins[index2].GetBalance())
-                return 0;
-
+            
             if(index1 != -1 && index2 != -1)
             {
+                if (amount > Bins[index2].GetBalance())
+                    return 0;
                 Bins[index1].AddIncome(amount, "[Transfer from] " + Bins[index2].Name, date);
                 Bins[index2].AddExpense(amount, "[Transfer to] " + Bins[index1].Name, date);
             } else if(index1 == -1)
             {
+                if (amount > Bins[index2].GetBalance())
+                    return 0;
                 Savings.AddIncome(amount, "Transfer from " + Bins[index2].Name, date);
                 Bins[index2].AddExpense(amount, "[Transfer to] Savings", date);
             } else if(index2 == -1)
             {
+                if (amount > Savings.GetBalance())
+                    return 0;
                 Bins[index1].AddIncome(amount, "[Transfer from] Savings", date);
                 Savings.AddExpense(amount, "[Transfer to] " + Bins[index1].Name, date);
             }
@@ -94,15 +107,17 @@ namespace BudggyTestClassLibrary
 
         //split income into each bin based on their percentage preset
         //On another note. should we have the budget contain the percentage preset? It might be easier to manage and check
-        public int AddIncome(double value, string destr, DateTime date, int mode)
+        public int AddIncome(double value, string destr, DateTime date, string mode)
         {
-            if(mode == -1)
+            int index;
+            if(mode == "Split")
             {
                 double percentage = 0;
                 foreach (Bin bin in Bins)
                 {
                     percentage += bin.Percentage;
                 }
+                percentage += Savings.Percentage;
 
                 if (percentage > 1)
                 {
@@ -110,6 +125,7 @@ namespace BudggyTestClassLibrary
                 }
                 else
                 {
+                    Savings.AddIncome(value * Savings.Percentage, destr, date);
                     foreach (Bin bin in Bins)
                     {
                         bin.AddIncome(value * bin.Percentage, destr, date);
@@ -118,14 +134,24 @@ namespace BudggyTestClassLibrary
                 }
 
             }
-            Bins[mode].AddIncome(value, destr, date);
-            return 1;
+           index = Bins.FindIndex(x => string.Compare(x.Name, mode) == 0);
+            
+            if(index != -1)
+            {
+                Bins[index].AddIncome(value, destr, date);
+                return 1;
+            } 
+            
+            return index;
 
         }
 
-        public void AddExpense(double value, string destr, DateTime date, int bin)
+        public void AddExpense(double value, string destr, DateTime date, string bin)
         {
-            Bins[bin].AddExpense(value, destr, date);
+            int index = Bins.FindIndex(x => string.Compare(x.Name, bin) == 0);
+
+
+            Bins[index].AddExpense(value, destr, date);
             AddMonthBudgetExpense(value, destr, date);
         }
 
@@ -147,6 +173,7 @@ namespace BudggyTestClassLibrary
             if(found == 1)
             {
                 MonthBudget budget = new MonthBudget(DefaultMonthlyBudget, DateTime.Now.Month, DateTime.Now.Year);
+                MonthlyBudgets.Add(budget);
             }
         }
         // calculates all of the monthly budgets wheww.... 

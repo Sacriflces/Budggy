@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BudggyTestClassLibrary
 {
-    class Savings : Bin
+    public class Savings : Bin
     {
         public Savings(string name, string description, double percentage) : base(name, description, percentage)
         {

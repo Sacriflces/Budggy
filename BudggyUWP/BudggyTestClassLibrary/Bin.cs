@@ -11,7 +11,7 @@ namespace BudggyTestClassLibrary
         internal List<Expense> Expenses = new List<Expense>();
         internal List<Income> Incomes = new List<Income>();
         string Description { get; set; }
-        internal string Name { get; set; }
+        public string Name { get; set; }
         internal double Balance { get; set; }
         internal double Percentage { get; set; }
 
