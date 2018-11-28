@@ -16,7 +16,8 @@ namespace BudggyTestClassLibrary
         string Name { get; set; }
         double Balance { get; set; }
         public Savings Savings = new Savings("Savings", "", .15);
-
+/* think about putting all the incs and exps in the budget class, instead of the Bins and just have a string that states what bin its apart of 
+  I'm liking this idea. it'll be easier to use MVVM did it*/
 
         public Budget()
         {
@@ -34,18 +35,61 @@ namespace BudggyTestClassLibrary
 
             Bins.Add(new Bin(name, description, percentage));
         }
+        internal void BinBalanceToZero()
+        {
+            Savings.Balance = 0;
+            foreach (Bin bin in Bins)
+            {
+                bin.Balance = 0;
+            }
+        }
+        public void CalcBinBalance()
+        {
+            int index;
+            BinBalanceToZero();
+            
+            foreach(Income inc in Incs)
+            {
+                if(String.Compare(inc.Bin, Savings.Name) != 0)
+                {
+                    index = Bins.FindIndex(x => String.Compare(x.Name, inc.Bin) == 0);
+                    if (index != -1) Bins[index].Balance += inc.Value;
+                } else
+                {
+                    Savings.Balance += inc.Value;
+                }
+               
+            }
+
+            foreach (Expense exp in Exps)
+            {
+                if (String.Compare(exp.Bin, Savings.Name) != 0)
+                {
+                    index = Bins.FindIndex(x => String.Compare(x.Name, exp.Bin) == 0);
+                    if (index != -1) Bins[index].Balance -= exp.Value;
+                } else
+                {
+                    Savings.Balance -= exp.Value;
+                    
+                }
+            }
+        }
 
         // Method to calculate the balance based on the Balance within the bins 
         public double TotalBalance()
         {
             double balance = 0;
 
-            foreach(Bin bin in Bins)
+            foreach(Income inc in Incs)
             {
-                balance += bin.GetBalance();
+                balance += inc.Value;
             }
-            
-            this.Balance = balance + Savings.GetBalance();
+
+            foreach (Expense exp in Exps)
+            {
+                balance -= exp.Value;
+            }
+            Balance = balance;
             return Balance;
         }
 
@@ -56,51 +100,58 @@ namespace BudggyTestClassLibrary
         }
 
         // Delete a bin and transfer funds into another bin... (maybe savings by default? which mean I'd have to make that bin type)
-        public void DeleteBin(int index)
+        public void DeleteBin(string bin)
         {
+            int index = Bins.FindIndex(x => string.Compare(x.Name, bin) == 0);
+
             double balance = Bins[index].GetBalance();
 
-            //adds incomes and expenses from the deleted bin to the Budget's list
-            foreach(Income inc in Bins[index].Incomes) 
+            //Changes the bin property of each income and expense associated with the bin to null
+            foreach(Income inc in Incs) 
             {
-                this.Incs.Add(inc);
+                if (string.Compare(inc.Bin, bin) == 0)
+                    inc.Bin = null;
             }
 
-            foreach (Expense exp in Bins[index].Expenses)
+            foreach (Expense exp in Exps)
             {
-                this.Exps.Add(exp);
+                if (string.Compare(exp.Bin, bin) == 0)
+                    exp.Bin = null;
             }
 
             //transfers all funds or debts from the deleted bin to savings and deletes from the budget's list
-            TransferFunds(-1, index, balance, DateTime.Today);
+            TransferFunds(Savings.Name, Bins[index].Name, balance, DateTime.Today);
             Bins.RemoveAt(index);
         }
 
         //transfer funds from one bin to another (from index2 to index1) ** change it to be based on strings 
-        public int TransferFunds(int index1, int index2, double amount, DateTime date)
+        public int TransferFunds(string bin1, string bin2, double amount, DateTime date)
         {
-            
-            if(index1 != -1 && index2 != -1)
+            int index1 = Bins.FindIndex(x => string.Compare(x.Name, bin1) == 0);
+            int index2 = Bins.FindIndex(x => string.Compare(x.Name, bin2) == 0);
+            if(bin1 != Savings.Name && bin2 != Savings.Name)
             {
                 if (amount > Bins[index2].GetBalance())
                     return 0;
-                Bins[index1].AddIncome(amount, "[Transfer from] " + Bins[index2].Name, date);
-                Bins[index2].AddExpense(amount, "[Transfer to] " + Bins[index1].Name, date);
+                Incs.Add(new Income(amount, "[Transfer from] " + Bins[index2].Name, Bins[index1].Name, date));
+                Exps.Add(new Expense(amount, "[Transfer to] " + Bins[index1].Name, Bins[index2].Name, date));
+                
             } else if(index1 == -1)
             {
                 if (amount > Bins[index2].GetBalance())
                     return 0;
-                Savings.AddIncome(amount, "Transfer from " + Bins[index2].Name, date);
-                Bins[index2].AddExpense(amount, "[Transfer to] Savings", date);
+                Incs.Add(new Income(amount, "[Transfer from] " + Bins[index2].Name, Savings.Name, date));
+                Exps.Add(new Expense(amount, "[Transfer to] " + Savings.Name, Bins[index2].Name, date));               
+               
             } else if(index2 == -1)
             {
                 if (amount > Savings.GetBalance())
                     return 0;
-                Bins[index1].AddIncome(amount, "[Transfer from] Savings", date);
-                Savings.AddExpense(amount, "[Transfer to] " + Bins[index1].Name, date);
+                Incs.Add(new Income(amount, "[Transfer from] " + Savings.Name, Bins[index1].Name, date));
+                Exps.Add(new Expense(amount, "[Transfer to] " + Bins[index1].Name, Savings.Name, date));               
             }
 
-            
+            CalcBinBalance();
             return 1;
 
         }
@@ -125,52 +176,67 @@ namespace BudggyTestClassLibrary
                 }
                 else
                 {
-                    Savings.AddIncome(value * Savings.Percentage, destr, date);
+                    Incs.Add(new Income(value * Savings.Percentage, destr, Savings.Name, date));
+                    
                     foreach (Bin bin in Bins)
                     {
-                        bin.AddIncome(value * bin.Percentage, destr, date);
+                        Incs.Add(new Income(value * bin.Percentage, destr, bin.Name, date));
                     }
+                    CalcBinBalance();
                     return 1;
                 }
 
             }
-           index = Bins.FindIndex(x => string.Compare(x.Name, mode) == 0);
-            
-            if(index != -1)
+            else
             {
-                Bins[index].AddIncome(value, destr, date);
-                return 1;
-            } 
-            
-            return index;
+                index = Bins.FindIndex(x => string.Compare(x.Name, mode) == 0);
+
+                if (index != -1)
+                {
+                    Incs.Add(new Income(value, destr, mode, date));
+                    CalcBinBalance();
+                    return 1;
+                }
+                else
+                    Incs.Add(new Income(value, destr, null, date));
+
+                CalcBinBalance();
+                return index;
+            }
+          
 
         }
 
         public void AddExpense(double value, string destr, DateTime date, string bin)
         {
             int index = Bins.FindIndex(x => string.Compare(x.Name, bin) == 0);
+            if (index != -1)
+            {
+                Exps.Add(new Expense(value, destr, Bins[index].Name, date));
+            }
+            else
+                Exps.Add(new Expense(value, destr, null, date));
 
-
-            Bins[index].AddExpense(value, destr, date);
-            AddMonthBudgetExpense(value, destr, date);
+            CalcBinBalance();
+            AddMonthBudgetExpense(value, destr, bin, date);
         }
 
         //Need to actually have monthly budget maybe monthly budget class with a DateTime Month. could add to the bins as well
         //maybe need a monthly budget variable... that'll set the value
         public void CreateMonthlyBudget()
         {
-            int found = 1;
+            int found = 0;
 
             for(int i = 0; i<MonthlyBudgets.Count; i++)
             {
                 if (MonthlyBudgets[i].Month.Month == DateTime.Now.Month && MonthlyBudgets[i].Month.Year == DateTime.Now.Year)
                 {
-                    found = 0;
+                    found = 1;
                     break;
                 }
             }
 
-            if(found == 1)
+            if(found == 0)
             {
                 MonthBudget budget = new MonthBudget(DefaultMonthlyBudget, DateTime.Now.Month, DateTime.Now.Year);
                 MonthlyBudgets.Add(budget);
@@ -192,31 +258,27 @@ namespace BudggyTestClassLibrary
                             bud.SubtractExpense(exp);
                         }
                     }
-                }
-
-                foreach(Bin bin in Bins)
-                {
-                    foreach(Expense exp in bin.Expenses)
-                    {
-                        if (exp.Date.Month == bud.Month.Month && exp.Date.Year == bud.Month.Year)
-                        {
-                            if(!(exp.Description.Contains("[Transfer to]")))
-                            {
-                                bud.SubtractExpense(exp);
-                            }
-                            
-                        }
-                    }
-                }
+                }                
             }
         }
 
-        public void AddMonthBudgetExpense(double value, string destr, DateTime date)
+        public void AddMonthBudgetExpense(double value, string destr, string bin, DateTime date)
         {
-            foreach (MonthBudget budget in MonthlyBudgets)
+           int index = Bins.FindIndex(x => string.Compare(x.Name, bin) == 0);
+           if(index != -1)
             {
-                budget.SubtractExpense(new Expense(value, destr, date));
+                foreach (MonthBudget budget in MonthlyBudgets)
+                {
+                    budget.SubtractExpense(new Expense(value, destr, bin, date));
+                }
+            } else
+            {
+                foreach (MonthBudget budget in MonthlyBudgets)
+                {
+                    budget.SubtractExpense(new Expense(value, destr, null, date));
+                }
             }
+            
         }
         
     }

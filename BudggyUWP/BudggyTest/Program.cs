@@ -37,13 +37,14 @@ namespace BudggyTest
             budget.AddIncome(171.32, "Paycheck", new DateTime(2018, 11, 6), "Split");
             budget.AddIncome(220.00, "Paycheck", DateTime.Today, "Split");
 
-            budget.TransferFunds(3, -1, 500, DateTime.Now); 
+            budget.TransferFunds("Gas", "Savings", 500, DateTime.Now);
+            budget.CalcBinBalance();
 
             foreach  (Bin bin in budget.Bins)
             {
-                Console.WriteLine("{1}: {0:C2}", bin.CalcBalance(), bin.Name);
+                Console.WriteLine("{1}: {0:C2}", bin.GetBalance(), bin.Name);
             }
-            Console.WriteLine("{1}: {0:C2}", budget.Savings.CalcBalance(), "Savings");
+            Console.WriteLine("{1}: {0:C2}", budget.Savings.GetBalance(), "Savings"); 
             Console.WriteLine("Total Balance : {0:C2}", budget.TotalBalance());
             Console.WriteLine("Monthly budget : {0:C2}", budget.MonthlyBudgets[0].Value);
             Console.ReadLine();

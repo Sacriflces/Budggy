@@ -32,23 +32,25 @@ namespace BudggyTestClassLibrary
             MinimumBalance = minimumBalance;
             GoalBalance = goalBalance;
             Multiplier = multiplier;
+            Balance = 0;
         }
 
         public Bin(string name, string description, double percentage)
         {
             Name = name;
             Description = description;
-            Percentage = percentage;          
+            Percentage = percentage;
+            Balance = 0;
         }
 
 
-        public void AddExpense(double value, string destr, DateTime date)
+       /* public void AddExpense(double value, string destr, DateTime date)
         {
             Expense expense = new Expense(value, destr, date);
             Expenses.Add(expense);
             CalcBalance();
             OrganizeExpensesByDate();
-        }
+        } */
 
         public void DeleteExpense(int index)
         {
@@ -62,13 +64,13 @@ namespace BudggyTestClassLibrary
             return Expenses.Count();
         }
 
-        public void AddIncome(double value, string destr, DateTime date)
+      /*  public void AddIncome(double value, string destr, DateTime date)
         {
             Income income = new Income(value, destr, date);
             Incomes.Add(income);            
             CalcBalance();
             OrganizeIncomesByDate();
-        }
+        } */
 
         public void DeleteIncome(int index)
         {
