@@ -16,7 +16,7 @@ namespace BudggyTest
             budget.AddBin("Gas", "fund my ability to be mobile", .20);
             budget.SavingsPercentage(.15);
             budget.CreateMonthlyBudget();
-
+            
             budget.AddIncome(5000, "Paycheck", DateTime.Now, "Split");
             budget.AddIncome(250, "Grocery Money", DateTime.Now, "Food");
 

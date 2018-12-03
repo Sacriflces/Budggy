@@ -10,7 +10,7 @@ namespace BudggyTestClassLibrary
     {
         public List<Bin> Bins = new List<Bin>();
         List<Income> Incs = new List<Income>();
-        List<Expense> Exps = new List<Expense>();
+        List<Expense> Exps = new List<Expense>();       
         public List<MonthBudget> MonthlyBudgets = new List<MonthBudget>();
         public double DefaultMonthlyBudget { get; set; }
         string Name { get; set; }
@@ -206,6 +206,15 @@ namespace BudggyTestClassLibrary
           
 
         }
+        
+        public void DeleteIncome(double value, string destr, DateTime date, string bin)
+        {   
+            int index = Incs.FindIndex(x => string.Compare(destr, x.Description) == 0 && value == x.Value 
+            && DateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0);
+
+            Incs.RemoveAt(index);
+        }
+        //maybe add a split functionality later on as well
 
         public void AddExpense(double value, string destr, DateTime date, string bin)
         {
@@ -219,6 +228,14 @@ namespace BudggyTestClassLibrary
 
             CalcBinBalance();
             AddMonthBudgetExpense(value, destr, bin, date);
+        }
+
+        public void DeleteExpense(double value, string destr, DateTime date, string bin)
+        {
+            int index = Exps.FindIndex(x => string.Compare(destr, x.Description) == 0 && value == x.Value
+            && DateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0);
+
+            Exps.RemoveAt(index);
         }
 
         //Need to actually have monthly budget maybe monthly budget class with a DateTime Month. could add to the bins as well

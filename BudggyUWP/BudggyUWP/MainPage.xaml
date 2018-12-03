@@ -9,6 +9,69 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
+        <RelativePanel Name="topBarRP" Width="Auto">
+            
+            <Button Name="menuButton" FontFamily="Segoe MDL2 Assets" 
+                    Content="&#xE700;" FontSize="36"
+                    Height="50" RelativePanel.AlignLeftWithPanel="True" 
+                    Click="MenuButton_Click"/>
+            
+            <Button Name = "backButton" FontFamily="Segoe MDL2 Assets" 
+                    Content="&#xE0A6;" FontSize="36"
+                    Height="50" RelativePanel.RightOf="menuButton" 
+                    Visibility="Collapsed"/>
+
+            <TextBlock Name="TitleTB" Text="Budggy" FontSize="36"
+                       FontWeight="Bold" Margin="20,0,0,0"
+                       RelativePanel.RightOf="backButton"/>
+
+            <TextBox Name="searchTextBox" FontSize="24" PlaceholderText="Search"
+                    Background="LightGray"  Height="50" Width="200" 
+                     RelativePanel.LeftOf="searchBT" />
+
+            <Button Name="searchBT" Height="50" FontSize="36" FontFamily="Segoe MDL2 Assets"
+                    Content="&#xE1A3;" RelativePanel.AlignRightWithPanel="True"/>
+        </RelativePanel>
+        
+        <SplitView 
+            Name="budggySV"
+            Grid.Row="1"
+            OpenPaneLength="200"
+            DisplayMode="CompactInline"
+            CompactPaneLength="56">
+
+            <SplitView.Pane>
+                <ListBox Name="budggyLB"
+                         SelectionMode="Single"
+                         SelectionChanged="BudggyLB_SelectionChanged">
+                    <ListBoxItem Name="BuggyHome">
+                        
+                    </ListBoxItem>
+
+                    <ListBoxItem Name="BinsHome">
+                        
+                    </ListBoxItem>
+
+                    <ListBoxItem Name="TransferHome">
+                        
+                    </ListBoxItem>
+
+                    <ListBoxItem Name="StatisticsHome">
+                        
+                    </ListBoxItem>
+                    
+                    
+                </ListBox>
+            </SplitView.Pane>
+
+            <SplitView.Content>
+                <Frame Name="contentFrame"/>
+            </SplitView.Content>
+        </SplitView>
     </Grid>
 </Page>

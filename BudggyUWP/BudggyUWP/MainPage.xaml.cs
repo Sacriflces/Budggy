@@ -26,5 +26,15 @@ namespace BudggyUWP
         {
             this.InitializeComponent();
         }
+
+        private void MenuButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BudggyLB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }
