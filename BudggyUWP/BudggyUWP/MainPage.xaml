@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+    <!-- need to add a resource library for textboxs, stackpanels, etc.-->
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -41,7 +41,7 @@
         <SplitView 
             Name="budggySV"
             Grid.Row="1"
-            OpenPaneLength="200"
+            OpenPaneLength="230"
             DisplayMode="CompactInline"
             CompactPaneLength="56">
 
@@ -50,22 +50,85 @@
                          SelectionMode="Single"
                          SelectionChanged="BudggyLB_SelectionChanged">
                     <ListBoxItem Name="BuggyHome">
-                        
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Name="BuggyHomeTB"
+                                       FontFamily="Segoe MDL2 Assets" 
+                                       Text="&#xE80F;"
+                                       FontSize="36"
+                                       />
+                            <TextBlock Name="BuggyHomeNTB"
+                                       FontFamily=" New Times Roman"
+                                       Text="Home"
+                                       FontSize="36"
+                                       FontWeight="Bold"
+                                       Margin="20,0,0,0"/>
+                        </StackPanel>
                     </ListBoxItem>
 
                     <ListBoxItem Name="BinsHome">
-                        
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Name="BinsTB"
+                                       FontFamily="Segoe MDL2 Assets" 
+                                       Text="&#xE825;"
+                                       FontSize="36"
+                                       />
+                            <TextBlock Name="BinsNTB"
+                                       FontFamily=" New Times Roman"
+                                       Text="Bins"
+                                       FontSize="36"
+                                       FontWeight="Bold"
+                                       Margin="20,0,0,0"/>
+                        </StackPanel>
                     </ListBoxItem>
-
+                    
                     <ListBoxItem Name="TransferHome">
-                        
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Name="TransferTB"
+                                       FontFamily="Segoe MDL2 Assets" 
+                                       Text="&#xE8AB;"
+                                       FontSize="36"
+                                       />
+                            <TextBlock Name="TransferNTB"
+                                       FontFamily=" New Times Roman"
+                                       Text="Transfer"
+                                       FontSize="36"
+                                       FontWeight="Bold"
+                                       Margin="20,0,0,0"/>
+                        </StackPanel>
                     </ListBoxItem>
 
                     <ListBoxItem Name="StatisticsHome">
-                        
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Name="StatisticsTB"
+                                       FontFamily="Segoe MDL2 Assets" 
+                                       Text="&#xE8F1;"
+                                       FontSize="36"
+                                       />
+                            <TextBlock Name="StatisticsNTB"
+                                       FontFamily=" New Times Roman"
+                                       Text="Statistics"
+                                       FontSize="36"
+                                       FontWeight="Bold"
+                                       Margin="20,0,0,0"/>
+                        </StackPanel>
                     </ListBoxItem>
-                    
-                    
+
+                    <ListBoxItem Name="Settings">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Name="SettingsTB"
+                                       FontFamily="Segoe MDL2 Assets" 
+                                       Text="&#xE713;"
+                                       FontSize="36"
+                                       />
+                            <TextBlock Name="SettingsNTB"
+                                       FontFamily=" New Times Roman"
+                                       Text="Settings"
+                                       FontSize="36"
+                                       FontWeight="Bold"
+                                       Margin="20,0,0,0"/>
+                        </StackPanel>
+                        </ListBoxItem>
+
                 </ListBox>
             </SplitView.Pane>
 

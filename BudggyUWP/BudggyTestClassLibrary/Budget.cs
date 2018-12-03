@@ -183,6 +183,7 @@ namespace BudggyTestClassLibrary
                         Incs.Add(new Income(value * bin.Percentage, destr, bin.Name, date));
                     }
                     CalcBinBalance();
+                    OrganizeIncomesByDate();
                     return 1;
                 }
 
@@ -201,6 +202,7 @@ namespace BudggyTestClassLibrary
                     Incs.Add(new Income(value, destr, null, date));
 
                 CalcBinBalance();
+                OrganizeIncomesByDate();
                 return index;
             }
           
@@ -213,6 +215,7 @@ namespace BudggyTestClassLibrary
             && DateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0);
 
             Incs.RemoveAt(index);
+            OrganizeIncomesByDate();
         }
         //maybe add a split functionality later on as well
 
@@ -228,6 +231,7 @@ namespace BudggyTestClassLibrary
 
             CalcBinBalance();
             AddMonthBudgetExpense(value, destr, bin, date);
+            OrganizeExpensesByDate();
         }
 
         public void DeleteExpense(double value, string destr, DateTime date, string bin)
@@ -236,6 +240,35 @@ namespace BudggyTestClassLibrary
             && DateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0);
 
             Exps.RemoveAt(index);
+            OrganizeExpensesByDate();
+        }
+
+        //Sorting Methods date and value
+        public void OrganizeIncomesByDate()
+        {
+            Incs.Sort((x, y) => DateTime.Compare(x.Date, y.Date));
+        }
+
+        public void OrganizeIncomesByValue()
+        {
+            Incs.Sort((x, y) => DCompare(x.Value, y.Value));
+        }
+
+        public void OrganizeExpensesByDate()
+        {
+            Exps.Sort((x, y) => DateTime.Compare(x.Date, y.Date));
+        }
+
+        public void OrganizeExpensesByValue()
+        {
+            Exps.Sort((x, y) => DCompare(x.Value, y.Value));
+        }
+
+        int DCompare(double x, double y)
+        {
+            if (x - y > 0) return 1;
+            else if (x - y < 0) return -1;
+            else return 0;
         }
 
         //Need to actually have monthly budget maybe monthly budget class with a DateTime Month. could add to the bins as well
