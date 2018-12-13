@@ -8,6 +8,13 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <!-- need to add a resource library for textboxs, stackpanels, etc.-->
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Dictionary1.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -16,25 +23,27 @@
 
         <RelativePanel Name="topBarRP" Width="Auto">
             
-            <Button Name="menuButton" FontFamily="Segoe MDL2 Assets" 
-                    Content="&#xE700;" FontSize="36"
-                    Height="50" RelativePanel.AlignLeftWithPanel="True" 
+            <Button Name="menuButton" Content="&#xE700;" 
+                    Style="{StaticResource MyMenuButtonStyle}"
+                    RelativePanel.AlignLeftWithPanel="True" 
                     Click="MenuButton_Click"/>
-            
-            <Button Name = "backButton" FontFamily="Segoe MDL2 Assets" 
-                    Content="&#xE0A6;" FontSize="36"
-                    Height="50" RelativePanel.RightOf="menuButton" 
+
+            <Button Name = "backButton" 
+                    Style="{StaticResource MyMenuButtonStyle}" 
+                    Content="&#xE0A6;"
+                    RelativePanel.RightOf="menuButton" 
                     Visibility="Collapsed"/>
 
-            <TextBlock Name="TitleTB" Text="Budggy" FontSize="36"
-                       FontWeight="Bold" Margin="20,0,0,0"
+            <TextBlock Name="TitleTB" Text="Budggy" 
+                       Style="{StaticResource MyTextBlockStyle}"
+                       FontWeight="Bold" 
                        RelativePanel.RightOf="backButton"/>
 
             <TextBox Name="searchTextBox" FontSize="24" PlaceholderText="Search"
                     Background="LightGray"  Height="50" Width="200" 
                      RelativePanel.LeftOf="searchBT" />
 
-            <Button Name="searchBT" Height="50" FontSize="36" FontFamily="Segoe MDL2 Assets"
+            <Button Name="searchBT" Style="{StaticResource MyMenuButtonStyle}"
                     Content="&#xE1A3;" RelativePanel.AlignRightWithPanel="True"/>
         </RelativePanel>
         
@@ -52,80 +61,66 @@
                     <ListBoxItem Name="BuggyHome">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Name="BuggyHomeTB"
-                                       FontFamily="Segoe MDL2 Assets" 
-                                       Text="&#xE80F;"
-                                       FontSize="36"
+                                       Style="{StaticResource MyMenuTextBlockStyle}"                                       
+                                       Text="&#xE80F;"                                    
                                        />
-                            <TextBlock Name="BuggyHomeNTB"
-                                       FontFamily=" New Times Roman"
+                            <TextBlock Name="BuggyHomeNTB"                                       
                                        Text="Home"
-                                       FontSize="36"
-                                       FontWeight="Bold"
-                                       Margin="20,0,0,0"/>
+                                       Style="{StaticResource MyTextBlockStyle}"
+                                       />
                         </StackPanel>
                     </ListBoxItem>
 
                     <ListBoxItem Name="BinsHome">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Name="BinsTB"
-                                       FontFamily="Segoe MDL2 Assets" 
-                                       Text="&#xE825;"
-                                       FontSize="36"
+                                       Style="{StaticResource MyMenuTextBlockStyle}"
+                                       Text="&#xE825;"                                       
                                        />
                             <TextBlock Name="BinsNTB"
-                                       FontFamily=" New Times Roman"
-                                       Text="Bins"
-                                       FontSize="36"
-                                       FontWeight="Bold"
-                                       Margin="20,0,0,0"/>
+                                       Style="{StaticResource MyTextBlockStyle}"                                       
+                                       Text="Bins"                                       
+                                       />
+
                         </StackPanel>
                     </ListBoxItem>
                     
                     <ListBoxItem Name="TransferHome">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Name="TransferTB"
-                                       FontFamily="Segoe MDL2 Assets" 
-                                       Text="&#xE8AB;"
-                                       FontSize="36"
+                                       Style="{StaticResource MyMenuTextBlockStyle}"
+                                       Text="&#xE8AB;"                                       
                                        />
-                            <TextBlock Name="TransferNTB"
-                                       FontFamily=" New Times Roman"
+                            <TextBlock Name="TransferNTB"                                       
+                                       Style="{StaticResource MyTextBlockStyle}"  
                                        Text="Transfer"
-                                       FontSize="36"
-                                       FontWeight="Bold"
-                                       Margin="20,0,0,0"/>
+                                       />
                         </StackPanel>
                     </ListBoxItem>
 
                     <ListBoxItem Name="StatisticsHome">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Name="StatisticsTB"
-                                       FontFamily="Segoe MDL2 Assets" 
-                                       Text="&#xE8F1;"
-                                       FontSize="36"
+                                       Style="{StaticResource MyMenuTextBlockStyle}"                                         
+                                       Text="&#xE8F1;"                                       
                                        />
                             <TextBlock Name="StatisticsNTB"
-                                       FontFamily=" New Times Roman"
+                                       Style="{StaticResource MyTextBlockStyle}"                                       
                                        Text="Statistics"
-                                       FontSize="36"
-                                       FontWeight="Bold"
-                                       Margin="20,0,0,0"/>
+                                       />
                         </StackPanel>
                     </ListBoxItem>
 
                     <ListBoxItem Name="Settings">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Name="SettingsTB"
-                                       FontFamily="Segoe MDL2 Assets" 
-                                       Text="&#xE713;"
-                                       FontSize="36"
+                                       Style="{StaticResource MyMenuTextBlockStyle}"                                       
+                                       Text="&#xE713;"                                       
                                        />
                             <TextBlock Name="SettingsNTB"
-                                       FontFamily=" New Times Roman"
+                                       Style="{StaticResource MyTextBlockStyle}"                                       
                                        Text="Settings"
-                                       FontSize="36"
-                                       FontWeight="Bold"
-                                       Margin="20,0,0,0"/>
+                                       />
                         </StackPanel>
                         </ListBoxItem>
 
