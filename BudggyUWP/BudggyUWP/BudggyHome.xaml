@@ -7,8 +7,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
-    <Grid >
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Dictionary1.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="3*"/>
             <RowDefinition Height="1*"/>
@@ -19,8 +25,29 @@
             <!--<ColumnDefinition Width="2*"/> -->
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
-
-        <Rectangle Grid.Row="1" Grid.ColumnSpan="3" Fill="Green"/>
+        <RelativePanel Grid.Row="1" Grid.ColumnSpan="3">
+            <StackPanel Grid.Row="1" Grid.ColumnSpan="3"
+                        RelativePanel.AlignHorizontalCenterWithPanel="True"
+                        RelativePanel.AlignVerticalCenterWithPanel="True"
+                    Orientation="Horizontal">
+                <ComboBox x:Name="IncExpTSwitch" Width="100
+                          "  >
+                    <ComboBoxItem Content="Income"/>
+                    <ComboBoxItem Content="Expense"/>
+                </ComboBox>
+                <TextBox PlaceholderText="Description"
+                         Name="DescriptionTB" Width="300"/>
+                <TextBox Name="ValueTB" PlaceholderText="Value"                          
+                         KeyDown="ValueTB_KeyDown"
+                         KeyUp="ValueTB_KeyUp"                         
+                         Width="100" Margin="20,0,0,0"/>
+                
+            </StackPanel>            
+        </RelativePanel>
+        
+        
+        <!--
+        <!<Rectangle Grid.Row="1" Grid.ColumnSpan="3" Fill="Green"/> -->
         <Rectangle Grid.Row="0" Grid.ColumnSpan="3" Fill="Blue"/>
         <Rectangle Grid.Row="2" Grid.ColumnSpan="3" Fill="Red"/>
     </Grid>

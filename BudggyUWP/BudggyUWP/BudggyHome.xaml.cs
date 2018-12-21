@@ -25,6 +25,70 @@ namespace BudggyUWP
         public BudggyHome()
         {
             this.InitializeComponent();
+        }              
+
+        private void ValueTB_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            int index = ValueTB.SelectionStart;
+            if (Convert.ToInt16(e.Key) != '.' && !(Convert.ToInt16(e.Key) <= 40 && Convert.ToInt16(e.Key) >= 37)  &&
+                !Char.IsControl(Convert.ToChar(e.Key))  && !Char.IsNumber(Convert.ToChar(e.Key)))
+            {
+               // ValueTB.Text = Convert.ToChar(e.Key).ToString().ToLower(); //String.Concat(e.Key.ToString(),Convert.ToInt16(e.Key));
+
+                ValueTB.Text = ValueTB.Text.Remove(ValueTB.Text.IndexOf(e.Key.ToString().ToLower()),1);
+                //ValueTB.SelectionStart = ValueTB.Text.Length;
+                ValueTB.SelectionStart = index - 1;
+                
+
+
+            }
+            /*
+            while(ValueTB.Text.Length < 2)
+            {
+                ValueTB.Text = ValueTB.Text.Insert(0, "0");
+            }
+
+            ValueTB.Text = AddPeriod(ValueTB.Text); */
+            
+            
+            
+            else if(Convert.ToInt16(e.Key) == 190)           
+                
+            {               
+                if (ValueTB.Text.IndexOf('.') != ValueTB.Text.LastIndexOf('.'))
+                {
+                    
+                    ValueTB.Text = ValueTB.Text.Remove(ValueTB.Text.LastIndexOf('.'), 1);
+                    ValueTB.SelectionStart = ValueTB.Text.Length;
+                } 
+            }
+
+            // ValueTB.Text = Convert.ToInt16(e.Key).ToString();
+            //ValueTB.Text = Convert.ToChar(e.Key).ToString();
+        }
+
+        private void ValueTB_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+
+        }
+
+        string AddPeriod(string str)
+        {
+            string newStr = str;
+            int index = newStr.IndexOf('.');
+            
+            if (index >= 0)
+            {
+                newStr = newStr.Remove(index);
+                
+            }
+
+            newStr = newStr.Insert(newStr.Length - 2, ".");
+
+
+            return newStr;
         }
     }
+
+    
 }
