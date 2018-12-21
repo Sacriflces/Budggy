@@ -40,11 +40,12 @@ namespace BudggyUWP
 
         private void BudggyLB_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            Page page;
             switch (budggyLB.SelectedIndex)
             {
-                case 0: TitleTB.Text = "Budggy";
+                case 0: TitleTB.Text = "Budggy";                    
                     contentFrame.Navigate(typeof(BudggyHome));
-                        contentFrame.DataContext = budget;
+                        contentFrame.DataContext = budget;                        
                     break;
                 case 1: TitleTB.Text = "Bins";
                     contentFrame.Navigate(typeof(BinsHome));

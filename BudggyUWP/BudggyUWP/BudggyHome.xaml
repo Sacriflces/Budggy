@@ -30,7 +30,12 @@
                         RelativePanel.AlignHorizontalCenterWithPanel="True"
                         RelativePanel.AlignVerticalCenterWithPanel="True"
                     Orientation="Horizontal">
-                <ComboBox x:Name="IncExpTSwitch" Width="100
+                <ComboBox x:Name="BinsCB" Width="100"
+                          Margin="0,0,20,0">
+                    
+
+                </ComboBox>
+                <ComboBox x:Name="IncExpCB" Width="100
                           "  >
                     <ComboBoxItem Content="Income"/>
                     <ComboBoxItem Content="Expense"/>
@@ -41,7 +46,12 @@
                          KeyDown="ValueTB_KeyDown"
                          KeyUp="ValueTB_KeyUp"                         
                          Width="100" Margin="20,0,0,0"/>
-                
+                <CalendarDatePicker Name="HomeCDP"
+                                    Margin="20,0,0,0"/>
+                <Button Name="AddButton" Content="Add" 
+                        Margin="20,0,0,0"
+                        Click="AddButton_Click"/>
+
             </StackPanel>            
         </RelativePanel>
         
