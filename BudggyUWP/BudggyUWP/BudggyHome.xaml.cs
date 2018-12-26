@@ -27,6 +27,8 @@ namespace BudggyUWP
         public BudggyHome()
         {
             this.InitializeComponent();
+            HomeCDP.Date = DateTime.Now;
+            
             
           
         }
@@ -39,6 +41,9 @@ namespace BudggyUWP
             budget = parameters;
             this.DataContext = budget;            
             BinsCB.ItemsSource = budget.Budggy.Bins;
+            IncLB.ItemsSource = budget.Budggy.Incs;
+            ExpLB.ItemsSource = budget.Budggy.Exps;
+            
 
 
 
@@ -117,6 +122,16 @@ namespace BudggyUWP
             return newStr;
         }
 
+        private void IncExpCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IncExpCB.SelectedIndex == 0)
+            {
+                SplitTSW.IsEnabled = true;
+            } else
+            { 
+                SplitTSW.IsEnabled = false;
+            }
+        }
     }
 
 

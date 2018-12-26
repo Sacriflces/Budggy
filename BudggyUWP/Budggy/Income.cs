@@ -6,19 +6,25 @@ using System.Threading.Tasks;
 
 namespace Budggy
 {
-     internal class Income
+     public class Income
     {
-        internal double Value { get; set; }
-        internal string Description { get; set; }
-        internal string Bin { get; set; }
-        internal DateTime Date { get; set; }
+        public string ValueStr { get; set; }
+        public double Value { get; set; }
+       
+        public string Description { get; set; }
+        public string Bin { get; set; }
+        public DateTime Date { get; set; }
+        public string DateStr { get; set; }
 
-      internal Income(double value, string destr, string bin, DateTime date)
+        internal Income(double value, string destr, string bin, DateTime date)
         {
             Value = value;
+            ValueStr = String.Format("{0:C}", value);
             Description = destr;
             Bin = bin;
             Date = date;
+            DateStr = date.ToString("d");
+               
         }
     }
 }

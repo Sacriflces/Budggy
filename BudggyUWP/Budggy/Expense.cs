@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Budggy
 {
-    internal class Expense : Income
+    public class Expense : Income
     {
         internal Expense(double value, string destr, string bin, DateTime date) : base(value, destr, bin, date)
         {

@@ -12,7 +12,13 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Dictionary1.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+            <Style x:Name="BudggyHomeTBlock" TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+            <Style x:Name="BudggyHomeTBox" TargetType="TextBox">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+        </ResourceDictionary>        
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -26,47 +32,103 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         <RelativePanel Grid.Row="1" Grid.ColumnSpan="3">
-            <StackPanel Grid.Row="1" Grid.ColumnSpan="3"
-                        
+            <StackPanel Grid.Row="1" Grid.ColumnSpan="3"                        
                         RelativePanel.AlignHorizontalCenterWithPanel="True"
                         RelativePanel.AlignVerticalCenterWithPanel="True"
-                    Orientation="Horizontal">
+                        Orientation="Horizontal">
+                <ToggleSwitch Name="SplitTSW" Header="Split Income" IsOn="True"/>
                 <ComboBox x:Name="BinsCB" Width="200"
-                          Margin="0,0,20,0">                    
+                          VerticalAlignment="Center"
+                          Margin="0,0,20,0" 
+                          >                    
                     <ComboBox.ItemTemplate>
                         <DataTemplate  >
                             <TextBlock Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
                           
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
-                </ComboBox>
-                <!-- add a checkbox to split for income.. maybe for expense but income first
-                It'll grey out the Bin selection. Also have income as default and the checkbox
-                enabled by default-->
-                <ComboBox x:Name="IncExpCB" Width="100
-                          "  >
+                </ComboBox>               
+                <ComboBox x:Name="IncExpCB" Width="100"
+                          SelectedIndex="0" 
+                          VerticalAlignment="Center"
+                          SelectionChanged="IncExpCB_SelectionChanged">
                     <ComboBoxItem Content="Income"/>
                     <ComboBoxItem Content="Expense"/>
                 </ComboBox>
                 <TextBox PlaceholderText="Description"
-                         Name="DescriptionTB" Width="300"/>
-                <TextBox Name="ValueTB" PlaceholderText="Value"                          
+                         Style="{StaticResource BudggyHomeTBox}"
+                         Name="DescriptionTB" Width="300"
+                         />
+                <TextBox Name="ValueTB" PlaceholderText="Value"   
+                         Style="{StaticResource BudggyHomeTBox}"
                          KeyDown="ValueTB_KeyDown"
-                         KeyUp="ValueTB_KeyUp"                         
+                         KeyUp="ValueTB_KeyUp"       
+                         
                          Width="100" Margin="20,0,0,0"/>
                 <CalendarDatePicker Name="HomeCDP"
+                                    IsTodayHighlighted="True"
+                                    
                                     Margin="20,0,0,0"/>
                 <Button Name="AddButton" Content="Add" 
-                        Margin="20,0,0,0"
+                        Margin="20,0,0,0"                       
                         Click="AddButton_Click"/>
 
             </StackPanel>            
         </RelativePanel>
-        
+        <ListBox Name="IncLB" Grid.Row="2" 
+                 ScrollViewer.HorizontalScrollMode="Enabled"
+                 ScrollViewer.HorizontalScrollBarVisibility="Visible"
+                 ScrollViewer.IsHorizontalRailEnabled="True">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Fill="Green" Width="25" Height="25"/>                       
+                        <TextBlock Margin="20,0,0,0" Text="{Binding ValueStr, UpdateSourceTrigger=PropertyChanged}"
+                                   Style="{StaticResource BudggyHomeTBlock}"/>
+                        <StackPanel Margin="20,0,20,0">
+                            <TextBlock Text="Bin:"/>
+                            <TextBlock Text="{Binding Bin, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+                        <TextBlock Name="IncDateTB" Style="{StaticResource BudggyHomeTBlock}"
+                                   Text="{Binding DateStr, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBlock Margin="20,0,0,0" Style="{StaticResource BudggyHomeTBlock}" 
+                            Text="{Binding Description,UpdateSourceTrigger=PropertyChanged}"
+                                   TextWrapping="WrapWholeWords"
+                                   MaxWidth="400"/>
+                    </StackPanel>
+                    </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    
+        <ListBox Name="ExpLB" Grid.Row="2" Grid.Column="1"
+                 ScrollViewer.HorizontalScrollMode="Enabled"
+                 ScrollViewer.HorizontalScrollBarVisibility="Visible"
+                 ScrollViewer.IsHorizontalRailEnabled="True">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Fill="Red" Width="25" Height="25"/>                        
+                        <TextBlock Margin="20,0,0,0" Text="{Binding ValueStr, UpdateSourceTrigger=PropertyChanged}"
+                                   Style="{StaticResource BudggyHomeTBlock}"/>
+                        <StackPanel Margin="20,0,20,0">
+                            <TextBlock Text="Bin:"/>
+                            <TextBlock Text="{Binding Bin, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+                        <TextBlock Name="ExpDateTB" Style="{StaticResource BudggyHomeTBlock}"
+                                   Text="{Binding DateStr, UpdateSourceTrigger=PropertyChanged}"/>                        
+                        <TextBlock Margin="20,0,0,0" Style="{StaticResource BudggyHomeTBlock}" 
+                            Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" 
+                                   TextWrapping="WrapWholeWords"                                   
+                                   MaxWidth="400"/>
+                        
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
         
         <!--
         <!<Rectangle Grid.Row="1" Grid.ColumnSpan="3" Fill="Green"/> -->
         <Rectangle Grid.Row="0" Grid.ColumnSpan="3" Fill="Blue"/>
-        <Rectangle Grid.Row="2" Grid.ColumnSpan="3" Fill="Red"/>
+       <!-- <Rectangle Grid.Row="2" Grid.ColumnSpan="3" Fill="Red"/> -->
     </Grid>
 </Page>
