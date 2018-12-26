@@ -8,8 +8,8 @@ namespace Budggy
 {
    public class Bin
     {
-        internal List<Expense> Expenses = new List<Expense>();
-        internal List<Income> Incomes = new List<Income>();
+       // internal List<Expense> Expenses = new List<Expense>();
+        //internal List<Income> Incomes = new List<Income>();
         string Description { get; set; }
         public string Name { get; set; }
         internal double Balance { get; set; }
@@ -50,7 +50,7 @@ namespace Budggy
             Expenses.Add(expense);
             CalcBalance();
             OrganizeExpensesByDate();
-        } */
+        } 
 
         public void DeleteExpense(int index)
         {
@@ -70,7 +70,7 @@ namespace Budggy
             Incomes.Add(income);            
             CalcBalance();
             OrganizeIncomesByDate();
-        } */
+        } 
 
         public void DeleteIncome(int index)
         {
@@ -92,13 +92,13 @@ namespace Budggy
         public double GetIValue(int index)
         {
             return Incomes[index].Value;
-        }
+        } */
         
         public double GetBalance()
         {
             return Balance;
         }
-
+        /*
         public double CalcBalance()
         {
             double sum = 0;
@@ -135,7 +135,7 @@ namespace Budggy
         public void OrganizeExpensesByValue()
         {
             Expenses.Sort((x, y) => DCompare(x.Value, y.Value));
-        }
+        } */
 
         int DCompare(double x, double y)
         {

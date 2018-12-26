@@ -1,19 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Budggy
 {
+    /* TAGS:
+     * FIX IT***
+     */
     public class Budget
     {
-        public List<Bin> Bins = new List<Bin>();
-        List<Income> Incs = new List<Income>();
-        List<Expense> Exps = new List<Expense>();       
-        public List<MonthBudget> MonthlyBudgets = new List<MonthBudget>();
+
+        public ObservableCollection<Bin> Bins = new ObservableCollection<Bin>()  {
+            new Bin("Savings", "", .15),
+            new Bin("Entertainment", "Going out money and gaming money", .5),
+        };
+        ObservableCollection<Income> Incs = new ObservableCollection<Income>() {
+            new Income(2500, "Money", "Savings", DateTime.Now),
+        };
+        ObservableCollection<Expense> Exps = new ObservableCollection<Expense>()  {
+            new Expense(15, "Money", "Savings", DateTime.Now),
+        };
+        public ObservableCollection<MonthBudget> MonthlyBudgets = new ObservableCollection<MonthBudget>() {
+            new MonthBudget(2500, 12, 2018),
+        };
+       /* public List<Bin> Bins = new List<Bin>() {
+         new Bin("Entertainment", "Going out money and gaming money", .5),
+        };
+        List<Income> Incs = new List<Income>()
+        {
+            new Income(2500, "Money", "Savings", DateTime.Now),
+        };
+        List<Expense> Exps = new List<Expense>()
+        {
+            new Expense(15, "Money", "Savings", DateTime.Now),
+        };
+        public List<MonthBudget> MonthlyBudgets = new List<MonthBudget>() {
+            new MonthBudget(2500, 12, 2018),
+        };*/
         public double DefaultMonthlyBudget { get; set; }
-        string Name { get; set; }
+        //string Name { get; set; }
         double Balance { get; set; }
         public Savings Savings = new Savings("Savings", "", .15);
 /* think about putting all the incs and exps in the budget class, instead of the Bins and just have a string that states what bin its apart of 
@@ -52,7 +80,8 @@ namespace Budggy
             {
                 if(String.Compare(inc.Bin, Savings.Name) != 0)
                 {
-                    index = Bins.FindIndex(x => String.Compare(x.Name, inc.Bin) == 0);
+
+                    index = -1; //Bins.FindIndex(x => String.Compare(x.Name, inc.Bin) == 0);
                     if (index != -1) Bins[index].Balance += inc.Value;
                 } else
                 {
@@ -65,7 +94,7 @@ namespace Budggy
             {
                 if (String.Compare(exp.Bin, Savings.Name) != 0)
                 {
-                    index = Bins.FindIndex(x => String.Compare(x.Name, exp.Bin) == 0);
+                    index = -1;// Bins.FindIndex(x => String.Compare(x.Name, exp.Bin) == 0); FIX IT***
                     if (index != -1) Bins[index].Balance -= exp.Value;
                 } else
                 {
@@ -102,7 +131,7 @@ namespace Budggy
         // Delete a bin and transfer funds into another bin... (maybe savings by default? which mean I'd have to make that bin type)
         public void DeleteBin(string bin)
         {
-            int index = Bins.FindIndex(x => string.Compare(x.Name, bin) == 0);
+            int index = -1; // Bins.FindIndex(x => string.Compare(x.Name, bin) == 0); FIX IT***
 
             double balance = Bins[index].GetBalance();
 
@@ -127,9 +156,9 @@ namespace Budggy
         //transfer funds from one bin to another (from index2 to index1) ** change it to be based on strings 
         public int TransferFunds(string bin1, string bin2, double amount, DateTime date)
         {
-            int index1 = Bins.FindIndex(x => string.Compare(x.Name, bin1) == 0);
-            int index2 = Bins.FindIndex(x => string.Compare(x.Name, bin2) == 0);
-            if(bin1 != Savings.Name && bin2 != Savings.Name)
+            int index1 = -1; //Bins.FindIndex(x => string.Compare(x.Name, bin1) == 0); FIX IT***
+            int index2 = 0; //Bins.FindIndex(x => string.Compare(x.Name, bin2) == 0); FIX IT***
+            if (bin1 != Savings.Name && bin2 != Savings.Name)
             {
                 if (amount > Bins[index2].GetBalance())
                     return 0;
@@ -190,7 +219,7 @@ namespace Budggy
             }
             else
             {
-                index = Bins.FindIndex(x => string.Compare(x.Name, mode) == 0);
+                index = -1; // Bins.FindIndex(x => string.Compare(x.Name, mode) == 0); FIX IT***
 
                 if (index != -1)
                 {
@@ -210,9 +239,9 @@ namespace Budggy
         }
         
         public void DeleteIncome(double value, string destr, DateTime date, string bin)
-        {   
-            int index = Incs.FindIndex(x => string.Compare(destr, x.Description) == 0 && value == x.Value 
-            && DateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0);
+        {
+            int index = -1;  //Incs.FindIndex(x => string.Compare(destr, x.Description) == 0 && value == x.Value 
+            //&& DateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0); FIX IT***
 
             Incs.RemoveAt(index);
             OrganizeIncomesByDate();
@@ -221,7 +250,7 @@ namespace Budggy
 
         public void AddExpense(double value, string destr, DateTime date, string bin)
         {
-            int index = Bins.FindIndex(x => string.Compare(x.Name, bin) == 0);
+            int index = -1;// Bins.FindIndex(x => string.Compare(x.Name, bin) == 0);
             if (index != -1)
             {
                 Exps.Add(new Expense(value, destr, Bins[index].Name, date));
@@ -236,8 +265,8 @@ namespace Budggy
 
         public void DeleteExpense(double value, string destr, DateTime date, string bin)
         {
-            int index = Exps.FindIndex(x => string.Compare(destr, x.Description) == 0 && value == x.Value
-            && DateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0);
+            int index = -1; // Exps.FindIndex(x => string.Compare(destr, x.Description) == 0 && value == x.Value
+            //&& DateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0); FIX IT***
 
             Exps.RemoveAt(index);
             OrganizeExpensesByDate();
@@ -246,22 +275,23 @@ namespace Budggy
         //Sorting Methods date and value
         public void OrganizeIncomesByDate()
         {
-            Incs.Sort((x, y) => DateTime.Compare(x.Date, y.Date));
+           // Incs.Sort((x, y) => DateTime.Compare(x.Date, y.Date)); FIX IT***
         }
 
         public void OrganizeIncomesByValue()
         {
-            Incs.Sort((x, y) => DCompare(x.Value, y.Value));
+            //  Incs.Sort((x, y) => DCompare(x.Value, y.Value)); FIX IT***
         }
 
         public void OrganizeExpensesByDate()
         {
-            Exps.Sort((x, y) => DateTime.Compare(x.Date, y.Date));
+            // Exps.Sort((x, y) => DateTime.Compare(x.Date, y.Date)); FIX IT***
         }
 
         public void OrganizeExpensesByValue()
         {
-            Exps.Sort((x, y) => DCompare(x.Value, y.Value));
+            //  Exps.Sort((x, y) => DCompare(x.Value, y.Value)); FIX IT***
+
         }
 
         int DCompare(double x, double y)
@@ -314,8 +344,8 @@ namespace Budggy
 
         public void AddMonthBudgetExpense(double value, string destr, string bin, DateTime date)
         {
-           int index = Bins.FindIndex(x => string.Compare(x.Name, bin) == 0);
-           if(index != -1)
+            int index = -1; // Bins.FindIndex(x => string.Compare(x.Name, bin) == 0); FIX IT***
+           if (index != -1)
             {
                 foreach (MonthBudget budget in MonthlyBudgets)
                 {
@@ -331,5 +361,14 @@ namespace Budggy
             
         }
         
+    }
+
+    public class BudgetViewModel
+    {
+        private Budget budget = new Budget();
+        public Budget Budggy { get
+            {
+                return budget;
+            } }
     }
 }

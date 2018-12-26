@@ -104,7 +104,7 @@ namespace BudggyTestClassLibrary
         {
             int index = Bins.FindIndex(x => string.Compare(x.Name, bin) == 0);
 
-            double balance = Bins[index].GetBalance();
+            double balance = Bins[index].Balance;
 
             //Changes the bin property of each income and expense associated with the bin to null
             foreach(Income inc in Incs) 
@@ -131,21 +131,21 @@ namespace BudggyTestClassLibrary
             int index2 = Bins.FindIndex(x => string.Compare(x.Name, bin2) == 0);
             if(bin1 != Savings.Name && bin2 != Savings.Name)
             {
-                if (amount > Bins[index2].GetBalance())
+                if (amount > Bins[index2].Balance)
                     return 0;
                 Incs.Add(new Income(amount, "[Transfer from] " + Bins[index2].Name, Bins[index1].Name, date));
                 Exps.Add(new Expense(amount, "[Transfer to] " + Bins[index1].Name, Bins[index2].Name, date));
                 
             } else if(index1 == -1)
             {
-                if (amount > Bins[index2].GetBalance())
+                if (amount > Bins[index2].Balance)
                     return 0;
                 Incs.Add(new Income(amount, "[Transfer from] " + Bins[index2].Name, Savings.Name, date));
                 Exps.Add(new Expense(amount, "[Transfer to] " + Savings.Name, Bins[index2].Name, date));               
                
             } else if(index2 == -1)
             {
-                if (amount > Savings.GetBalance())
+                if (amount > Savings.Balance)
                     return 0;
                 Incs.Add(new Income(amount, "[Transfer from] " + Savings.Name, Bins[index1].Name, date));
                 Exps.Add(new Expense(amount, "[Transfer to] " + Bins[index1].Name, Savings.Name, date));               

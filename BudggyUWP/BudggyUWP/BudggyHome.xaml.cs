@@ -23,11 +23,26 @@ namespace BudggyUWP
     /// </summary>
     public sealed partial class BudggyHome : Page
     {
-        Budget budget;
+        BudgetViewModel budget = new BudgetViewModel();
         public BudggyHome()
         {
-            this.InitializeComponent();           
-        }              
+            this.InitializeComponent();
+            
+          
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            var parameters = (BudgetViewModel)e.Parameter;
+            budget = parameters;
+            this.DataContext = budget;            
+            BinsCB.ItemsSource = budget.Budggy.Bins;
+
+
+
+        }
 
         private void ValueTB_KeyUp(object sender, KeyRoutedEventArgs e)
         {

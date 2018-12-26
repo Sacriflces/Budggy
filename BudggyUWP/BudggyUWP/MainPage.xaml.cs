@@ -23,7 +23,7 @@ namespace BudggyUWP
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        Budget budget = new Budget();
+        BudgetViewModel budget = new BudgetViewModel();
 
         public MainPage()
         {
@@ -40,12 +40,11 @@ namespace BudggyUWP
 
         private void BudggyLB_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Page page;
+            budget.Budggy.AddBin("Presents", "Money for Presents lol", .05);
             switch (budggyLB.SelectedIndex)
             {
-                case 0: TitleTB.Text = "Budggy";                    
-                    contentFrame.Navigate(typeof(BudggyHome));
-                        contentFrame.DataContext = budget;                        
+                case 0: TitleTB.Text = "Budggy";
+                    contentFrame.Navigate(typeof(BudggyHome),budget);                       
                     break;
                 case 1: TitleTB.Text = "Bins";
                     contentFrame.Navigate(typeof(BinsHome));

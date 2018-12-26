@@ -27,13 +27,18 @@
         </Grid.ColumnDefinitions>
         <RelativePanel Grid.Row="1" Grid.ColumnSpan="3">
             <StackPanel Grid.Row="1" Grid.ColumnSpan="3"
+                        
                         RelativePanel.AlignHorizontalCenterWithPanel="True"
                         RelativePanel.AlignVerticalCenterWithPanel="True"
                     Orientation="Horizontal">
-                <ComboBox x:Name="BinsCB" Width="100"
-                          Margin="0,0,20,0">
-                    
-
+                <ComboBox x:Name="BinsCB" Width="200"
+                          Margin="0,0,20,0">                    
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate  >
+                            <TextBlock Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                          
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
                 </ComboBox>
                 <ComboBox x:Name="IncExpCB" Width="100
                           "  >
