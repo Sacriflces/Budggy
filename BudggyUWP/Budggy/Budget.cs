@@ -14,10 +14,10 @@ namespace Budggy
     {
 
         public ObservableCollection<Bin> Bins = new ObservableCollection<Bin>()  {
-            new Bin("Savings", "", .15),
+            new Bin("Savings", "", .3),
             new Bin("Entertainment", "Going out money and gaming money", .5),
-            new Bin("Gas", "", .15),
-            new Bin("Food", "", .10),
+            new Bin("Gas", "", .1),
+            new Bin("Food", "", .05),
         };
         public ObservableCollection<Income> Incs = new ObservableCollection<Income>() {
             new Income(2500.00, "Money.. I wonder what happens if this description... isn't actually short and takes up A TON of space. You know what I mean?", "Savings", DateTime.Now),
@@ -46,7 +46,7 @@ namespace Budggy
             new Expense(49.43, "Amazon", "Presents", DateTime.Now),
         };
         public ObservableCollection<MonthBudget> MonthlyBudgets = new ObservableCollection<MonthBudget>() {
-            new MonthBudget(2500, 12, 2018),
+            
         };
        /* public List<Bin> Bins = new List<Bin>() {
          new Bin("Entertainment", "Going out money and gaming money", .5),
@@ -72,6 +72,8 @@ namespace Budggy
         public Budget()
         {
             DefaultMonthlyBudget = 2500;
+            CreateMonthlyBudget();
+            CalcMonthBudgetAll();
         }
         // Methods to add bins
         //check if multiplier is between 1 and 0
@@ -227,6 +229,7 @@ namespace Budggy
                 {
                     Incs.Add(new Income(value, destr, mode, date));
                     CalcBinBalance();
+                    OrganizeIncomesByDate();
                     return 1;
                 }
                 else
@@ -253,7 +256,7 @@ namespace Budggy
 
         public void AddExpense(double value, string destr, DateTime date, string bin)
         {
-            int index = -1;// Bins.FindIndex(x => string.Compare(x.Name, bin) == 0);
+            int index = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, bin) == 0).FirstOrDefault());
             if (index != -1)
             {
                 Exps.Add(new Expense(value, destr, Bins[index].Name, date));
@@ -279,7 +282,7 @@ namespace Budggy
         //Sorting Methods date and value
         public void OrganizeIncomesByDate()
         {
-            IEnumerable<Income> incomes = Incs.OrderBy(x => x.Date);
+            IEnumerable<Income> incomes = Incs.OrderByDescending(x => x.Date);
             int count = Incs.Count;
 
             foreach (Income inc in incomes)
@@ -313,7 +316,7 @@ namespace Budggy
 
         public void OrganizeExpensesByDate()
         {
-            IEnumerable<Expense> expenses = Exps.OrderBy(x => x.Date);
+            IEnumerable<Expense> expenses = Exps.OrderByDescending(x => x.Date);
             int count = Exps.Count;
 
             foreach (Expense exp in expenses)

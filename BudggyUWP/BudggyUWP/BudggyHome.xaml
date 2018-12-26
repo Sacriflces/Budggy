@@ -66,8 +66,7 @@
                          
                          Width="100" Margin="20,0,0,0"/>
                 <CalendarDatePicker Name="HomeCDP"
-                                    IsTodayHighlighted="True"
-                                    
+                                    IsTodayHighlighted="True"                                    
                                     Margin="20,0,0,0"/>
                 <Button Name="AddButton" Content="Add" 
                         Margin="20,0,0,0"                       
@@ -125,10 +124,30 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+
+        <RelativePanel Grid.ColumnSpan="2">
+            <StackPanel Name="BalanceSP"  RelativePanel.AlignHorizontalCenterWithPanel="True"
+                        RelativePanel.AlignVerticalCenterWithPanel="True">
+                <TextBlock Text="Budget" FontSize="36"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontSize="36" Text="Balance: $"/>
+                    <TextBlock Name="BudgetTB" FontSize="36" 
+                           Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+
+                
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" RelativePanel.Below="BalanceSP"
+                        RelativePanel.AlignHorizontalCenterWithPanel="True">
+                <TextBlock FontSize="36" Text="Income:"/>
+                <TextBlock FontSize="36" Text="Expenses:"
+                               Margin="50,0,0,0"/>
+            </StackPanel>
+        </RelativePanel>
         
         <!--
-        <!<Rectangle Grid.Row="1" Grid.ColumnSpan="3" Fill="Green"/> -->
+        <!<Rectangle Grid.Row="1" Grid.ColumnSpan="3" Fill="Green"/> 
         <Rectangle Grid.Row="0" Grid.ColumnSpan="3" Fill="Blue"/>
-       <!-- <Rectangle Grid.Row="2" Grid.ColumnSpan="3" Fill="Red"/> -->
+       <! <Rectangle Grid.Row="2" Grid.ColumnSpan="3" Fill="Red"/> -->
     </Grid>
 </Page>

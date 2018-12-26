@@ -27,6 +27,7 @@ namespace BudggyUWP
         public BudggyHome()
         {
             this.InitializeComponent();
+            BudgetTB.DataContext = budget.Budggy.MonthlyBudgets[budget.Budggy.MonthlyBudgets.Count - 1];
             HomeCDP.Date = DateTime.Now;
             
             
@@ -102,8 +103,33 @@ namespace BudggyUWP
       
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-           // budget.AddIncome
+            int index = HomeCDP.Date.ToString().IndexOf(' ');
+            string datestr = HomeCDP.Date.ToString().Remove(index);
+            string[] datearr = datestr.Split('/');
+            string binName;
+            if(IncExpCB.SelectedIndex == 0)
+            {
+                if (SplitTSW.IsOn == true)
+                {
+                    budget.Budggy.AddIncome(Convert.ToDouble(ValueTB.Text), DescriptionTB.Text,
+                        new DateTime(Convert.ToInt16(datearr[2]), Convert.ToInt16(datearr[0]), Convert.ToInt16(datearr[1])), "Split");
+                }
+                else
+                {
+                    binName = budget.Budggy.Bins[BinsCB.SelectedIndex].Name;
+                    budget.Budggy.AddIncome(Convert.ToDouble(ValueTB.Text), DescriptionTB.Text,
+                      new DateTime(Convert.ToInt16(datearr[2]), Convert.ToInt16(datearr[0]), Convert.ToInt16(datearr[1])), 
+                      budget.Budggy.Bins[BinsCB.SelectedIndex].Name);
+                }
+            } else
+            {
+                binName = budget.Budggy.Bins[BinsCB.SelectedIndex].Name;
+                budget.Budggy.AddExpense(Convert.ToDouble(ValueTB.Text), DescriptionTB.Text,
+                      new DateTime(Convert.ToInt16(datearr[2]), Convert.ToInt16(datearr[0]), Convert.ToInt16(datearr[1])),
+                      budget.Budggy.Bins[BinsCB.SelectedIndex].Name);
+            }
         }
+           
 
         string AddPeriod(string str)
         {
@@ -132,6 +158,8 @@ namespace BudggyUWP
                 SplitTSW.IsEnabled = false;
             }
         }
+
+
     }
 
 
