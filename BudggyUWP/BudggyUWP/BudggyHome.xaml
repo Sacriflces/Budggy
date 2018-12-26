@@ -40,6 +40,9 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
+                <!-- add a checkbox to split for income.. maybe for expense but income first
+                It'll grey out the Bin selection. Also have income as default and the checkbox
+                enabled by default-->
                 <ComboBox x:Name="IncExpCB" Width="100
                           "  >
                     <ComboBoxItem Content="Income"/>
