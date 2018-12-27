@@ -74,6 +74,7 @@ namespace Budggy
             DefaultMonthlyBudget = 2500;
             CreateMonthlyBudget();
             CalcMonthBudgetAll();
+            CalcMonthBudgetInc();
         }
         // Methods to add bins
         //check if multiplier is between 1 and 0
@@ -216,6 +217,7 @@ namespace Budggy
                         Incs.Add(new Income(value * bin.Percentage, destr, bin.Name, date));
                     }
                     CalcBinBalance();
+                    CalcMonthBudgetInc();
                     OrganizeIncomesByDate();
                     return 1;
                 }
@@ -394,7 +396,25 @@ namespace Budggy
                             bud.SubtractExpense(exp);
                         }
                     }
-                }                
+                }      
+               
+            }
+        }
+
+        public void CalcMonthBudgetInc()
+        {
+            foreach (MonthBudget bud in MonthlyBudgets)
+            {
+                foreach (Income inc in Incs)
+                {
+                    if (inc.Date.Month == bud.Month.Month && inc.Date.Year == bud.Month.Year)
+                    {
+                        if (!(inc.Description.Contains("[Transfer from]")))
+                        {
+                            bud.AddIncome(inc);
+                        }
+                    }
+                }
             }
         }
 

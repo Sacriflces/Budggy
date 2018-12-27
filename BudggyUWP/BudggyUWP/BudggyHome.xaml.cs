@@ -27,11 +27,13 @@ namespace BudggyUWP
         public BudggyHome()
         {
             this.InitializeComponent();
-            BudgetTB.DataContext = budget.Budggy.MonthlyBudgets[budget.Budggy.MonthlyBudgets.Count - 1];
+            BudgetBalRP.DataContext = budget.Budggy.MonthlyBudgets[budget.Budggy.MonthlyBudgets.Count - 1];
             HomeCDP.Date = DateTime.Now;
-            
-            
+           
           
+
+
+
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -128,6 +130,10 @@ namespace BudggyUWP
                       new DateTime(Convert.ToInt16(datearr[2]), Convert.ToInt16(datearr[0]), Convert.ToInt16(datearr[1])),
                       budget.Budggy.Bins[BinsCB.SelectedIndex].Name);
             }
+            // clear values
+            DescriptionTB.Text = "";
+            ValueTB.Text = "";
+            BudgetsignTB.Text = (budget.Budggy.MonthlyBudgets[budget.Budggy.MonthlyBudgets.Count - 1].Value < 0) ? "-" : "+";
         }
            
 

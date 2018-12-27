@@ -8,6 +8,8 @@ namespace Budggy
     {
         internal double BudgetVal { get; set; }
         public double Value { get; set; }
+        public double IncAmount { get; set; }
+        public double ExpAmount { get; set; }
         internal DateTime Month { get; set; }
         public string MonthStr { get; set; }
         public int YearInt { get; set; }
@@ -19,14 +21,25 @@ namespace Budggy
             Month = new DateTime(year, month, 1);
             MonthStr = MonthConvert(Month.Month);
             YearInt = Month.Year;
+            IncAmount = 0;
+            ExpAmount = 0;
         }
 
         internal void SubtractExpense(Expense exp)
         {
-            if(exp.Date.Month == Month.Month && exp.Date.Year == Month.Year)
-            {
+            //if(exp.Date.Month == Month.Month && exp.Date.Year == Month.Year)
+           // {
                 Value -= exp.Value;
-            }
+                ExpAmount += exp.Value;
+            //}
+        }
+
+        internal void AddIncome(Income inc)
+        {
+            //if(inc.Date.Month == Month.Month && inc.Date.Year == Month.Year)
+            //{
+                IncAmount += inc.Value;
+           //}
         }
 
         internal void NewBudget(double newVal)
@@ -39,29 +52,29 @@ namespace Budggy
         string MonthConvert(int num)
         {
             switch (num){
-                case 0:
-                    return "January";
                 case 1:
-                    return "February";
+                    return "January";
                 case 2:
-                    return "March";
+                    return "February";
                 case 3:
-                    return "April";
+                    return "March";
                 case 4:
-                    return "May";
+                    return "April";
                 case 5:
-                    return "June";
+                    return "May";
                 case 6:
-                    return "July";
+                    return "June";
                 case 7:
-                    return "August";
+                    return "July";
                 case 8:
-                    return "Sepetember";
+                    return "August";
                 case 9:
-                    return "October";
+                    return "Sepetember";
                 case 10:
-                    return "November";
+                    return "October";
                 case 11:
+                    return "November";
+                case 12:
                     return "December";
                 default:
                     return "Really bro???";

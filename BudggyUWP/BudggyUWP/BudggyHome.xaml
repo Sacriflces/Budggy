@@ -124,25 +124,61 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-
-        <RelativePanel Grid.ColumnSpan="2">
-            <StackPanel Name="BalanceSP"  RelativePanel.AlignHorizontalCenterWithPanel="True"
+        
+        <RelativePanel Name="BudgetBalRP" Grid.ColumnSpan="2">
+            <StackPanel Name="BalanceSP" Background="Purple"  RelativePanel.AlignHorizontalCenterWithPanel="True"
                         RelativePanel.AlignVerticalCenterWithPanel="True">
-                <TextBlock Text="Budget" FontSize="36"/>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock FontSize="36" Text="Balance: $"/>
+                    <TextBlock Text="Budget Balance for" FontSize="36"/>
+                    <TextBlock Name="BudgetMonthTB"  FontSize="36"
+                               Margin="10,0,10,0"
+                               Text="{Binding MonthStr,  UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Name="BudgetYearTB" FontSize="36"
+                               Text="{Binding YearInt, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+                
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock Name="BudgetsignTB" FontSize="36" Text="+"/>
                     <TextBlock Name="BudgetTB" FontSize="36" 
                            Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
-
-                
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" RelativePanel.Below="BalanceSP"
-                        RelativePanel.AlignHorizontalCenterWithPanel="True">
-                <TextBlock FontSize="36" Text="Income:"/>
-                <TextBlock FontSize="36" Text="Expenses:"
+               <!-- <StackPanel Orientation="Horizontal" Background="Green">
+                    <TextBlock FontSize="36" Text="Income"/>
+                    <TextBlock FontSize="36" Text="+" />
+                    <TextBlock FontSize="36" Text="{Binding IncAmount}"
+                               />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Background="Red">
+                    <TextBlock FontSize="36" Text="Expense"/>
+                    <TextBlock FontSize="36" Text="-" />
+                    <TextBlock FontSize="36" Text="{Binding ExpAmount}"
                                Margin="50,0,0,0"/>
+                </StackPanel> -->
+                
+
             </StackPanel>
+            <!-- Monthly income elements -->
+            <TextBlock Name="IncomeTB" FontSize="36" Text="Income" RelativePanel.AlignLeftWith="BalanceSP"
+                       RelativePanel.Below="BalanceSP"/>
+            <TextBlock Name="IncomeSignTB" FontSize="36" Text="+" RelativePanel.LeftOf="IncValueTB"
+                       RelativePanel.Below="BalanceSP"/>
+            <TextBlock Name="IncValueTB" FontSize="36" Text="{Binding IncAmount}"
+                       RelativePanel.AlignRightWith="BalanceSP"
+                       RelativePanel.Below="BalanceSP"/>
+            
+            <!-- Monthly expense elements-->            
+            <TextBlock FontSize="36" Text="Expense"
+                       RelativePanel.Below="IncomeTB" RelativePanel.AlignLeftWith="IncomeTB"/>
+            <TextBlock FontSize="36" Text="-" RelativePanel.LeftOf="ExpValueTB"
+                       RelativePanel.Below="IncomeSignTB"/>
+            <TextBlock Name="ExpValueTB" FontSize="36" Text="{Binding ExpAmount}"
+                       RelativePanel.AlignRightWith="BalanceSP"
+                       RelativePanel.Below="IncValueTB"/>
+    
+           <!-- <Rectangle Fill="Green" RelativePanel.Below="BalanceSP"
+                       RelativePanel.AlignRightWith="BalanceSP"
+                       RelativePanel.AlignLeftWith="BalanceSP"
+                       RelativePanel.AlignBottomWith="IncomeTB"/> -->
         </RelativePanel>
         
         <!--
