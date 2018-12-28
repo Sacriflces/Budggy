@@ -18,7 +18,8 @@ namespace Budggy
             new Bin("Entertainment", "Going out money and gaming money", .5),
             new Bin("Gas", "", .1),
             new Bin("Food", "", .05),
-        };
+            new Bin("Presents", "Money for Presents lol", .05),
+    };
         public ObservableCollection<Income> Incs = new ObservableCollection<Income>() {
             new Income(2500.00, "Money.. I wonder what happens if this description... isn't actually short and takes up A TON of space. You know what I mean?", "Savings", DateTime.Now),
             new Income(143.72, "Money", "Savings", DateTime.Now),
@@ -232,6 +233,7 @@ namespace Budggy
                     Incs.Add(new Income(value, destr, mode, date));
                     CalcBinBalance();
                     OrganizeIncomesByDate();
+                    CalcMonthBudgetInc();
                     return 1;
                 }
                 else
@@ -239,6 +241,7 @@ namespace Budggy
 
                 CalcBinBalance();
                 OrganizeIncomesByDate();
+                CalcMonthBudgetInc();
                 return index;
             }
           
@@ -405,6 +408,7 @@ namespace Budggy
         {
             foreach (MonthBudget bud in MonthlyBudgets)
             {
+                bud.IncAmount = 0;
                 foreach (Income inc in Incs)
                 {
                     if (inc.Date.Month == bud.Month.Month && inc.Date.Year == bud.Month.Year)

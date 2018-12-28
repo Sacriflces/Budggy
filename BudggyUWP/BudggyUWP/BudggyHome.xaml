@@ -138,47 +138,42 @@
                 </StackPanel>
                 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock Name="BudgetsignTB" FontSize="36" Text="+"/>
-                    <TextBlock Name="BudgetTB" FontSize="36" 
+                    <TextBlock Name="BudgetsignTB" FontSize="48" Text="+"/>
+                    <TextBlock Name="BudgetTB" FontSize="48" 
                            Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"/>
-                </StackPanel>
-               <!-- <StackPanel Orientation="Horizontal" Background="Green">
-                    <TextBlock FontSize="36" Text="Income"/>
-                    <TextBlock FontSize="36" Text="+" />
-                    <TextBlock FontSize="36" Text="{Binding IncAmount}"
-                               />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Background="Red">
-                    <TextBlock FontSize="36" Text="Expense"/>
-                    <TextBlock FontSize="36" Text="-" />
-                    <TextBlock FontSize="36" Text="{Binding ExpAmount}"
-                               Margin="50,0,0,0"/>
-                </StackPanel> -->
-                
+                </StackPanel>             
 
             </StackPanel>
             <!-- Monthly income elements -->
-            <TextBlock Name="IncomeTB" FontSize="36" Text="Income" RelativePanel.AlignLeftWith="BalanceSP"
-                       RelativePanel.Below="BalanceSP"/>
-            <TextBlock Name="IncomeSignTB" FontSize="36" Text="+" RelativePanel.LeftOf="IncValueTB"
-                       RelativePanel.Below="BalanceSP"/>
-            <TextBlock Name="IncValueTB" FontSize="36" Text="{Binding IncAmount}"
-                       RelativePanel.AlignRightWith="BalanceSP"
-                       RelativePanel.Below="BalanceSP"/>
-            
-            <!-- Monthly expense elements-->            
-            <TextBlock FontSize="36" Text="Expense"
-                       RelativePanel.Below="IncomeTB" RelativePanel.AlignLeftWith="IncomeTB"/>
-            <TextBlock FontSize="36" Text="-" RelativePanel.LeftOf="ExpValueTB"
-                       RelativePanel.Below="IncomeSignTB"/>
-            <TextBlock Name="ExpValueTB" FontSize="36" Text="{Binding ExpAmount}"
-                       RelativePanel.AlignRightWith="BalanceSP"
-                       RelativePanel.Below="IncValueTB"/>
-    
-           <!-- <Rectangle Fill="Green" RelativePanel.Below="BalanceSP"
-                       RelativePanel.AlignRightWith="BalanceSP"
-                       RelativePanel.AlignLeftWith="BalanceSP"
-                       RelativePanel.AlignBottomWith="IncomeTB"/> -->
+            <StackPanel Name="IncSP"
+                        RelativePanel.Below="BalanceSP"
+                        RelativePanel.AlignRightWith="BalanceSP"
+                        RelativePanel.AlignLeftWith="BalanceSP"
+                        Background="Green">
+                <RelativePanel>
+                    <TextBlock Name="IncomeTB" FontSize="36" Text="Income" 
+                               RelativePanel.AlignLeftWithPanel="True" />
+                    <TextBlock Name="IncomeSignTB" FontSize="36" Text="+" RelativePanel.LeftOf="IncValueTB"/>
+                    <TextBlock Name="IncValueTB" FontSize="36" Text="{Binding IncAmount, UpdateSourceTrigger=PropertyChanged}"
+                               RelativePanel.AlignRightWithPanel="True"/>
+                </RelativePanel>
+            </StackPanel>
+
+            <!-- Monthly expense elements-->
+            <StackPanel Name="ExpSP"
+                        RelativePanel.Below="IncSP"
+                        RelativePanel.AlignRightWith="IncSP"
+                        RelativePanel.AlignLeftWith="IncSP"
+                        Background="Red">
+                <RelativePanel>
+                    <TextBlock FontSize="36" Text="Expense"
+                               RelativePanel.AlignLeftWithPanel="True"/>
+                    <TextBlock FontSize="36" Text="-"
+                               RelativePanel.LeftOf="ExpValueTB"/>
+                    <TextBlock Name="ExpValueTB" FontSize="36" Text="{Binding ExpAmount, UpdateSourceTrigger=PropertyChanged}"
+                                RelativePanel.AlignRightWithPanel="True"/>
+                </RelativePanel>
+            </StackPanel>
         </RelativePanel>
         
         <!--

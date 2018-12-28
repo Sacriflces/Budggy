@@ -1,15 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace Budggy
 {
-   public class MonthBudget
+   public class MonthBudget : INotifyPropertyChanged
     {
+        #region INotifyPropertyChanged Members
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion
+        
+        void OnPropertyChanged(string propertyName)
+        {
+           if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         internal double BudgetVal { get; set; }
-        public double Value { get; set; }
-        public double IncAmount { get; set; }
-        public double ExpAmount { get; set; }
+
+        private double val;
+        public double Value { get { return val; }
+            set {
+                val = value;
+                OnPropertyChanged("Value");
+                }
+        }
+
+        private double incAmount;
+        public double IncAmount { get { return incAmount; }
+            set
+            {
+                incAmount = value;
+                OnPropertyChanged("IncAmount");
+            }
+        }
+
+        private double expAmount;
+        public double ExpAmount {
+            get { return expAmount; }
+            set
+            {
+                expAmount = value;
+                OnPropertyChanged("ExpAmount");
+            }
+        }
+
         internal DateTime Month { get; set; }
         public string MonthStr { get; set; }
         public int YearInt { get; set; }
@@ -79,6 +117,6 @@ namespace Budggy
                 default:
                     return "Really bro???";
             }
-        }
+        }        
     }
 }

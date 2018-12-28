@@ -23,11 +23,10 @@ namespace BudggyUWP
     /// </summary>
     public sealed partial class BudggyHome : Page
     {
-        BudgetViewModel budget = new BudgetViewModel();
+        BudgetViewModel budget;
         public BudggyHome()
         {
-            this.InitializeComponent();
-            BudgetBalRP.DataContext = budget.Budggy.MonthlyBudgets[budget.Budggy.MonthlyBudgets.Count - 1];
+            this.InitializeComponent();                       
             HomeCDP.Date = DateTime.Now;
            
           
@@ -46,7 +45,8 @@ namespace BudggyUWP
             BinsCB.ItemsSource = budget.Budggy.Bins;
             IncLB.ItemsSource = budget.Budggy.Incs;
             ExpLB.ItemsSource = budget.Budggy.Exps;
-            
+            BudgetBalRP.DataContext = budget.Budggy.MonthlyBudgets[budget.Budggy.MonthlyBudgets.Count - 1];
+
 
 
 
@@ -130,6 +130,7 @@ namespace BudggyUWP
                       new DateTime(Convert.ToInt16(datearr[2]), Convert.ToInt16(datearr[0]), Convert.ToInt16(datearr[1])),
                       budget.Budggy.Bins[BinsCB.SelectedIndex].Name);
             }
+
             // clear values
             DescriptionTB.Text = "";
             ValueTB.Text = "";

@@ -40,10 +40,10 @@ namespace BudggyUWP
 
         private void BudggyLB_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            budget.Budggy.AddBin("Presents", "Money for Presents lol", .05);
+            
             switch (budggyLB.SelectedIndex)
             {
-                case 0: TitleTB.Text = "Budggy";
+                case 0: TitleTB.Text = "Budggy";                    
                     contentFrame.Navigate(typeof(BudggyHome),budget);                       
                     break;
                 case 1: TitleTB.Text = "Bins";
