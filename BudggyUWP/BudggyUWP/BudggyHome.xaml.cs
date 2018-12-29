@@ -166,7 +166,15 @@ namespace BudggyUWP
             }
         }
 
+        private void IncDeleteBt_Click(object sender, RoutedEventArgs e)
+        {
 
+        }
+
+        private void ExpDeleteBt_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 
 
