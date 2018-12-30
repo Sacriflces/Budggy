@@ -168,13 +168,22 @@ namespace BudggyUWP
 
         private void IncDeleteBt_Click(object sender, RoutedEventArgs e)
         {
-
+           
+            
+            int index = IncLB.SelectedIndex;
+            budget.Budggy.DeleteIncome(budget.Budggy.Incs[index].Value, budget.Budggy.Incs[index].Description,
+                budget.Budggy.Incs[index].Date, budget.Budggy.Incs[index].Bin);
+            
         }
 
         private void ExpDeleteBt_Click(object sender, RoutedEventArgs e)
         {
-
+            int index = ExpLB.SelectedIndex;
+            budget.Budggy.DeleteExpense(budget.Budggy.Exps[index].Value, budget.Budggy.Exps[index].Description,
+                budget.Budggy.Exps[index].Date, budget.Budggy.Exps[index].Bin);
         }
+
+        
     }
 
 

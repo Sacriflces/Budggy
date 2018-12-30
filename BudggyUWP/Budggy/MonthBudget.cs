@@ -72,12 +72,23 @@ namespace Budggy
             //}
         }
 
+        internal void RemoveExpense(Expense exp)
+        {
+            Value += exp.Value;
+            ExpAmount -= exp.Value;
+        }
+
         internal void AddIncome(Income inc)
         {
             //if(inc.Date.Month == Month.Month && inc.Date.Year == Month.Year)
             //{
                 IncAmount += inc.Value;
            //}
+        }
+
+        internal void RemoveIncome(Income inc)
+        {
+            IncAmount -= inc.Value;
         }
 
         internal void NewBudget(double newVal)

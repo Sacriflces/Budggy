@@ -251,8 +251,16 @@ namespace Budggy
         public void DeleteIncome(double value, string destr, DateTime date, string bin)
         {
             int index = Incs.IndexOf(Incs.Where(x => string.Compare(x.Description, destr) == 0 && value == x.Value
-            && DateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0).FirstOrDefault()); //Incs.FindIndex(x => string.Compare(destr, x.Description) == 0 && value == x.Value 
-            //&& DateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0); 
+            && DateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0).FirstOrDefault());
+
+            foreach (MonthBudget bud in MonthlyBudgets)
+            {
+                if(Incs[index].Date.Month == bud.Month.Month && Incs[index].Date.Year == bud.Month.Year)
+                {
+                    bud.RemoveIncome(Incs[index]);
+                    break;
+                }
+            }
 
             Incs.RemoveAt(index);
             OrganizeIncomesByDate();
@@ -277,8 +285,17 @@ namespace Budggy
         public void DeleteExpense(double value, string destr, DateTime date, string bin)
         {
             int index = Exps.IndexOf(Exps.Where(x => string.Compare(x.Description, destr) == 0 && value == x.Value
-            && DateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0).FirstOrDefault());// Exps.FindIndex(x => string.Compare(destr, x.Description) == 0 && value == x.Value
-            //&& DateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0); FIX IT***
+            && DateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0).FirstOrDefault());
+
+            foreach (MonthBudget bud in MonthlyBudgets)
+            {
+                if (Exps[index].Date.Month == bud.Month.Month && Exps[index].Date.Year == bud.Month.Year)
+                {
+                    bud.RemoveExpense(Exps[index]);
+                    break;
+                }
+            }
+
 
             Exps.RemoveAt(index);
             OrganizeExpensesByDate();
