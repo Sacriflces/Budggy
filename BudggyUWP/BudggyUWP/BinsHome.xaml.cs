@@ -38,6 +38,7 @@ namespace BudggyUWP
             budget = parameters;
             this.DataContext = budget;
             
+            
 
 
 
