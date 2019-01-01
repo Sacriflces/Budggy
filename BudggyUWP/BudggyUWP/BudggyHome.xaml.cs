@@ -168,22 +168,37 @@ namespace BudggyUWP
 
         private void IncDeleteBt_Click(object sender, RoutedEventArgs e)
         {
+            FrameworkElement fe = sender as FrameworkElement;
+            if(fe != null)
+            {
+                //So since the data context is the specific item in the list, the listbox item and the button's data
+                // context are the same, so you can set that item as the selected item!!
+                IncLB.SelectedItem = fe.DataContext;
+                
+            }
            
-            
             int index = IncLB.SelectedIndex;
             budget.Budggy.DeleteIncome(budget.Budggy.Incs[index].Value, budget.Budggy.Incs[index].Description,
-                budget.Budggy.Incs[index].Date, budget.Budggy.Incs[index].Bin);
+                budget.Budggy.Incs[index].Date, budget.Budggy.Incs[index].Bin); 
             
         }
 
         private void ExpDeleteBt_Click(object sender, RoutedEventArgs e)
         {
+            FrameworkElement fe = sender as FrameworkElement;
+            if (fe != null)
+            {
+                //So since the data context is the specific item in the list, the listbox item and the button's data
+                // context are the same, so you can set that item as the selected item!!
+                ExpLB.SelectedItem = fe.DataContext;
+
+            }
             int index = ExpLB.SelectedIndex;
             budget.Budggy.DeleteExpense(budget.Budggy.Exps[index].Value, budget.Budggy.Exps[index].Description,
                 budget.Budggy.Exps[index].Date, budget.Budggy.Exps[index].Bin);
         }
 
-        
+       
     }
 
 

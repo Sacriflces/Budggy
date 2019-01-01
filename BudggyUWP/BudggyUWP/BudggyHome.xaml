@@ -85,7 +85,8 @@
         <ListBox Name="IncLB" Grid.Row="2" 
                  ScrollViewer.HorizontalScrollMode="Enabled"
                  ScrollViewer.HorizontalScrollBarVisibility="Visible"
-                 ScrollViewer.IsHorizontalRailEnabled="True">
+                 ScrollViewer.IsHorizontalRailEnabled="True"
+                  >
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     
@@ -127,7 +128,8 @@
                    
                     </DataTemplate>
             </ListBox.ItemTemplate>
-        </ListBox>
+                <Grid/>
+            </ListBox>
         </Border>
 
         <Border Grid.Row="2"
