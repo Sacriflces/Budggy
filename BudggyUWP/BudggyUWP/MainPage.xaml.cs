@@ -47,16 +47,16 @@ namespace BudggyUWP
                     contentFrame.Navigate(typeof(BudggyHome),budget);                       
                     break;
                 case 1: TitleTB.Text = "Bins";
-                    contentFrame.Navigate(typeof(BinsHome));
+                    contentFrame.Navigate(typeof(BinsHome),budget);
                     break;
                 case 2: TitleTB.Text = "Transfer";
-                    contentFrame.Navigate(typeof(TransferHome));
+                    contentFrame.Navigate(typeof(TransferHome),budget);
                     break;
                 case 3: TitleTB.Text = "Statistics";
-                    contentFrame.Navigate(typeof(StatisticsHome));
+                    contentFrame.Navigate(typeof(StatisticsHome),budget);
                     break;
                 case 4: TitleTB.Text = "Settings";
-                    contentFrame.Navigate(typeof(Settings));
+                    contentFrame.Navigate(typeof(Settings),budget);
                     break;
 
             }
