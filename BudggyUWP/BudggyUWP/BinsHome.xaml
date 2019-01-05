@@ -9,6 +9,52 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        
+       
+        <ListView Name="BinsLV" Background="AliceBlue"
+                  ScrollViewer.HorizontalScrollBarVisibility="Auto"                  
+                  ScrollViewer.HorizontalScrollMode="Auto">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"
+                                VerticalAlignment="Top"
+                                Margin="50"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel VerticalAlignment="Top">
+                        <TextBlock Text="{Binding Name}" 
+                                   HorizontalAlignment="Center"
+                                   FontSize="36"/>
+                        
+                        <TextBlock Text="{Binding Description}" 
+                                   HorizontalAlignment="Center"
+                                   FontSize="36"/>
+
+                        <TextBlock Text="{Binding Balance}"
+                                   HorizontalAlignment="Center"
+                                   FontSize="36"/>
+
+                        <TextBlock Text="{Binding Percentage}"
+                                   HorizontalAlignment="Center"
+                                   FontSize="36"/>
+
+                        <Button FontSize="36"
+                                HorizontalAlignment="Center"
+                                FontFamily="Segoe MDL2 Assets"
+                                Content="&#xE738;"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+          
+        </ListView>
+
+        <!--<ListBox>
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+        </ListBox> -->
     </Grid>
 </Page>

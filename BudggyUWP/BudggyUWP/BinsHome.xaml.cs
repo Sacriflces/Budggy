@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Budggy;
 
+
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace BudggyUWP
@@ -28,6 +29,7 @@ namespace BudggyUWP
         public BinsHome()
         {
             this.InitializeComponent();
+
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -37,6 +39,7 @@ namespace BudggyUWP
             var parameters = (BudgetViewModel)e.Parameter;
             budget = parameters;
             this.DataContext = budget;
+            BinsLV.ItemsSource = budget.Budggy.Bins;
             
             
 

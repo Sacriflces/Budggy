@@ -76,6 +76,7 @@ namespace Budggy
             CreateMonthlyBudget();
             CalcMonthBudgetAll();
             CalcMonthBudgetInc();
+            CalcBinBalance();
         }
         // Methods to add bins
         //check if multiplier is between 1 and 0

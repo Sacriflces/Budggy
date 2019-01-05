@@ -10,10 +10,10 @@ namespace Budggy
     {
        // internal List<Expense> Expenses = new List<Expense>();
         //internal List<Income> Incomes = new List<Income>();
-        string Description { get; set; }
+        public string Description { get; set; }
         public string Name { get; set; }
-        internal double Balance { get; set; }
-        internal double Percentage { get; set; }
+        public double Balance { get; set; }
+        public double Percentage { get; set; }
 
         internal double MinimumBalance { get; set; }
         internal double GoalBalance { get; set; }
