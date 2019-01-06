@@ -9,13 +9,18 @@ namespace Budggy
 {
     /* TAGS:
      * FIX IT***
+     * 
+     * 
+     * 
+     * Need to change the implementations of the delete functions. I can pass the object instead of its description only for incomes though. I don't want to be able
+     * to delete the savings bin
      */
     public class Budget
     {
 
         public ObservableCollection<Bin> Bins = new ObservableCollection<Bin>()  {
             new Bin("Savings", "", .3),
-            new Bin("Entertainment", "Going out money and gaming money", .5),
+            new Bin("Entertainment", "Going out money and gaming money, and whatever else I need to make this description longer", .5),
             new Bin("Gas", "", .1),
             new Bin("Food", "", .05),
             new Bin("Presents", "Money for Presents lol", .05),

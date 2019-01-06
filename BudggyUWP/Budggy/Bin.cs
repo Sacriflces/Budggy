@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace Budggy
 {
-   public class Bin
+   public class Bin //: INotifyPropertyChanged 
     {
        // internal List<Expense> Expenses = new List<Expense>();
         //internal List<Income> Incomes = new List<Income>();
@@ -14,6 +15,8 @@ namespace Budggy
         public string Name { get; set; }
         public double Balance { get; set; }
         public double Percentage { get; set; }
+
+
 
         internal double MinimumBalance { get; set; }
         internal double GoalBalance { get; set; }

@@ -22,28 +22,47 @@
             </ListView.ItemsPanel>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel VerticalAlignment="Top">
+                    <Border
+                        BorderBrush="White"
+                        BorderThickness="2"
+                        Padding="30"
+                        Background="AliceBlue"
+                        CornerRadius="5">
+                        <StackPanel>
                         <TextBlock Text="{Binding Name}" 
                                    HorizontalAlignment="Center"
                                    FontSize="36"/>
                         
                         <TextBlock Text="{Binding Description}" 
                                    HorizontalAlignment="Center"
-                                   FontSize="36"/>
+                                   MaxWidth="300"
+                                   TextWrapping="WrapWholeWords"
+                                   FontSize="18"/>
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Center">
 
-                        <TextBlock Text="{Binding Balance}"
+                                <TextBlock Text="Balance:"
+                                           Margin="0,0,10,0"
+                                           FontSize="24"/>
+                                <TextBlock Text="{Binding Balance}"                                   
+                                   FontSize="24"/>                                
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Center">
+                                <TextBlock Text="Split Income Percentage:"
+                                           Margin="0,0,10,0"
+                                           FontSize="24"/>
+                                <TextBlock Text="{Binding Percentage}"
                                    HorizontalAlignment="Center"
-                                   FontSize="36"/>
-
-                        <TextBlock Text="{Binding Percentage}"
-                                   HorizontalAlignment="Center"
-                                   FontSize="36"/>
-
+                                   FontSize="24"/>
+                            </StackPanel>
                         <Button FontSize="36"
                                 HorizontalAlignment="Center"
                                 FontFamily="Segoe MDL2 Assets"
-                                Content="&#xE738;"/>
+                                Content="&#xE738;"
+                                Click="Button_Click"/>
                     </StackPanel>
+                    </Border>
                 </DataTemplate>
             </ListView.ItemTemplate>
           

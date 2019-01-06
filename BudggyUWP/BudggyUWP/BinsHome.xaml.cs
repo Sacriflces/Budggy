@@ -40,13 +40,25 @@ namespace BudggyUWP
             budget = parameters;
             this.DataContext = budget;
             BinsLV.ItemsSource = budget.Budggy.Bins;
-            
-            
 
+            
 
 
 
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            int index;
+            FrameworkElement ele = sender as FrameworkElement;
+            if(ele != null)
+            {
+                BinsLV.SelectedItem = ele.DataContext;
+                index = BinsLV.SelectedIndex;
+
+                budget.Budggy.DeleteBin(budget.Budggy.Bins[index].Name);
+            }
+            
+        }
     }
 }
