@@ -83,18 +83,31 @@ namespace Budggy
             CalcMonthBudgetInc();
             CalcBinBalance();
         }
-        // Methods to add bins
-        //check if multiplier is between 1 and 0
-        public void AddBin(string name, string description, double percentage, double minimumBalance, double goalBalance, double multiplier)
+        // Methods to add bins       
+        public int AddBin(string name, string description, double percentage, double minimumBalance, double goalBalance, double multiplier)
         {
+            foreach (Bin bin in Bins)
+            {
+                if (string.Compare(name.ToLower(), bin.Name.ToLower()) == 0)
+                    return 0;
+            }
+
             Bins.Add(new Bin(name, description, percentage, minimumBalance, goalBalance, multiplier));
+            return 1;
         }
 
-        public void AddBin(string name, string description, double percentage)
+        public int AddBin(string name, string description, double percentage)
         {
+            foreach (Bin bin in Bins)
+            {
+                if (string.Compare(name.ToLower(), bin.Name.ToLower()) == 0)
+                    return 0;
+            }
 
             Bins.Add(new Bin(name, description, percentage));
+                return 1;
         }
+
         internal void BinBalanceToZero()
         {            
             foreach (Bin bin in Bins)
@@ -144,7 +157,8 @@ namespace Budggy
         public void DeleteBin(string bin)
         {
             int index = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, bin) == 0).FirstOrDefault());
-            // Bins.FindIndex(x => string.Compare(x.Name, bin) == 0); FIX IT***
+
+            // Cannot delete the Savings Bin
             if (index == 0) return;
             double balance = Bins[index].GetBalance();
 
@@ -270,6 +284,7 @@ namespace Budggy
 
             Incs.RemoveAt(index);
             OrganizeIncomesByDate();
+            CalcBinBalance();
         }
         //maybe add a split functionality later on as well
 
@@ -305,6 +320,7 @@ namespace Budggy
 
             Exps.RemoveAt(index);
             OrganizeExpensesByDate();
+            CalcBinBalance();
         }
 
         //Sorting Methods date and value

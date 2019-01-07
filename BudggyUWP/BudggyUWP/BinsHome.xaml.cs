@@ -60,5 +60,97 @@ namespace BudggyUWP
             }
             
         }
+
+        private void CreateBinButton_Click(object sender, RoutedEventArgs e)
+        {
+            budget.Budggy.AddBin(BinNameTB.Text,BinDescrTB.Text,Convert.ToDouble(BinPercentageTB.Text));
+        }
+
+        private void BinPercentageTB_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            
+            int index = BinPercentageTB.SelectionStart;
+            int index2;
+            try
+            {
+                char str = BinPercentageTB.Text[index - 1];
+                if (str != '.' && str != ',' && !Char.IsControl(str) && !Char.IsNumber(str))
+                {
+                    index2 = BinPercentageTB.Text.IndexOf(str);
+
+                    if (index2 >= 0)
+                    {
+                        BinPercentageTB.Text = BinPercentageTB.Text.Remove(index2, 1);
+                        BinPercentageTB.SelectionStart = index - 1;
+                    }
+                }
+                /*
+                while(ValueTB.Text.Length < 2)
+                {
+                    ValueTB.Text = ValueTB.Text.Insert(0, "0");
+                }
+
+                ValueTB.Text = AddPeriod(ValueTB.Text); */
+
+                else if (str == '.')
+
+                {
+                    if (BinPercentageTB.Text.IndexOf('.') != BinPercentageTB.Text.LastIndexOf('.'))
+                    {
+
+                        BinPercentageTB.Text = BinPercentageTB.Text.Remove(BinPercentageTB.Text.LastIndexOf('.'), 1);
+                        BinPercentageTB.SelectionStart = index - 1;
+                    }
+                }
+
+            }
+            catch
+            {
+                return;
+            }
+        }
+
+        private void BinGoalBalTB_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            int index = BinGoalBalTB.SelectionStart;
+            int index2;
+            try
+            {
+                char str = BinGoalBalTB.Text[index - 1];
+                if (str != '.' && str != ',' && !Char.IsControl(str) && !Char.IsNumber(str))
+                {
+                    index2 = BinGoalBalTB.Text.IndexOf(str);
+
+                    if (index2 >= 0)
+                    {
+                        BinGoalBalTB.Text = BinGoalBalTB.Text.Remove(index2, 1);
+                        BinGoalBalTB.SelectionStart = index - 1;
+                    }
+                }
+                /*
+                while(ValueTB.Text.Length < 2)
+                {
+                    ValueTB.Text = ValueTB.Text.Insert(0, "0");
+                }
+
+                ValueTB.Text = AddPeriod(ValueTB.Text); */
+
+                else if (str == '.')
+
+                {
+                    if (BinGoalBalTB.Text.IndexOf('.') != BinGoalBalTB.Text.LastIndexOf('.'))
+                    {
+
+                        BinGoalBalTB.Text = BinGoalBalTB.Text.Remove(BinGoalBalTB.Text.LastIndexOf('.'), 1);
+                        BinGoalBalTB.SelectionStart = index - 1;
+                    }
+                }
+
+            }
+            catch
+            {
+                return;
+            }
+        }
     }
 }

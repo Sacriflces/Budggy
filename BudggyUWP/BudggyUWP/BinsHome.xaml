@@ -7,10 +7,58 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Dictionary1.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
     <Grid>
-       
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Margin="0,20,0,0">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Name:" Style="{StaticResource MyBinsHomeTextBlockStyle}"/>
+                <TextBox Name="BinNameTB"
+                         Style="{StaticResource MyBinsHomeTextBoxStyle}"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Description:" Style="{StaticResource MyBinsHomeTextBlockStyle}"/>
+                <TextBox Name="BinDescrTB"
+                         Style="{StaticResource MyBinsHomeTextBoxStyle}"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Percentage:" Style="{StaticResource MyBinsHomeTextBlockStyle}"/>
+                <TextBox Name="BinPercentageTB"
+                         Text="0"
+                         KeyUp="BinPercentageTB_KeyUp"
+                         Style="{StaticResource MyBinsHomeTextBoxStyle}"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Goal Balance:" Style="{StaticResource MyBinsHomeTextBlockStyle}"/>
+                <TextBox Name="BinGoalBalTB"
+                         KeyUp="BinGoalBalTB_KeyUp"
+                         Style="{StaticResource MyBinsHomeTextBoxStyle}"/>
+            </StackPanel>
+
+            <Button Name="CreateBinButton" 
+                    Content="Add"
+                    Click="CreateBinButton_Click"
+                    HorizontalAlignment="Center"/>
+
+
+
+        </StackPanel>
+        
         <ListView Name="BinsLV" Background="AliceBlue"
+                  Grid.Column="1"
                   ScrollViewer.HorizontalScrollBarVisibility="Auto"                  
                   ScrollViewer.HorizontalScrollMode="Auto">
             <ListView.ItemsPanel>
@@ -55,6 +103,9 @@
                                 <TextBlock Text="{Binding Percentage}"
                                    HorizontalAlignment="Center"
                                    FontSize="24"/>
+                                <TextBlock Text="%"
+                                           HorizontalAlignment="Center"
+                                           FontSize="24"/>
                             </StackPanel>
                         <Button FontSize="36"
                                 HorizontalAlignment="Center"

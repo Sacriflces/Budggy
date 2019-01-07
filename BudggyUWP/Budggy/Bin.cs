@@ -7,19 +7,84 @@ using System.ComponentModel;
 
 namespace Budggy
 {
-   public class Bin //: INotifyPropertyChanged 
+   public class Bin : INotifyPropertyChanged 
     {
-       // internal List<Expense> Expenses = new List<Expense>();
-        //internal List<Income> Incomes = new List<Income>();
-        public string Description { get; set; }
-        public string Name { get; set; }
-        public double Balance { get; set; }
-        public double Percentage { get; set; }
+        #region INotifyPropertyChanged Members
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion
+
+        void OnPropertyChange(string propertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        // internal List<Expense> Expenses = new List<Expense>();
+        //internal List<Income> Incomes = new List<Income>();
+
+        private string _description;
+        public string Description
+        {
+            get { return _description;}
+            set
+            {
+                _description = value;
+                OnPropertyChange("Description");
+            }
+        }
+
+        private string _name;
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                _name = value;
+                OnPropertyChange("Name");
+            }
+        }
+
+        private double _balance;
+        public double Balance {
+            get { return _balance; }
+            set
+            {
+                _balance = value;
+                OnPropertyChange("Balance");
+            }
+        }
+
+        private double _percentage;
+        public double Percentage {
+            get {return _percentage * 100; }
+            set
+            {
+                if (value <= 1)
+                    _percentage = value;
+                else
+                    _percentage = value / 100;
+                OnPropertyChange("Perccentage");
+            }
+        }
 
 
         internal double MinimumBalance { get; set; }
-        internal double GoalBalance { get; set; }
+
+        private double _goalBalance;
+        public double GoalBalance {
+            get
+            {
+                return _goalBalance;
+            }
+            set
+            {
+                _goalBalance = value;
+                OnPropertyChange("GoalBlanace");
+            }
+        }
+
         internal double Multiplier { get; set; }
 
         public Bin()
