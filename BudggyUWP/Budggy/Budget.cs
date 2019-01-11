@@ -84,7 +84,7 @@ namespace Budggy
             CalcBinBalance();
         }
         // Methods to add bins       
-        public int AddBin(string name, string description, double percentage, double minimumBalance, double goalBalance, double multiplier)
+        public int AddBin(string name, string description, double percentage, double goalBalance = 2500, double minimumBalance = 0, double multiplier = 1)
         {
             foreach (Bin bin in Bins)
             {
@@ -226,7 +226,7 @@ namespace Budggy
                 }
                 
 
-                if (percentage > 1)
+                if (percentage > 100)
                 {
                     return 0;
                 }
@@ -235,7 +235,7 @@ namespace Budggy
                     
                     foreach (Bin bin in Bins)
                     {
-                        Incs.Add(new Income(value * bin.Percentage, destr, bin.Name, date));
+                        Incs.Add(new Income(value * bin.Percentage / 100, destr, bin.Name, date));
                     }
                     CalcBinBalance();
                     CalcMonthBudgetInc();
@@ -482,12 +482,12 @@ namespace Budggy
         
     }
 
-    public class BudgetViewModel
+   /* public class BudgetViewModel
     {
         private Budget budget = new Budget();
         public Budget Budggy { get
             {
                 return budget;
             } }
-    }
+    } */
 }

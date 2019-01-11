@@ -65,7 +65,7 @@ namespace Budggy
                     _percentage = value;
                 else
                     _percentage = value / 100;
-                OnPropertyChange("Perccentage");
+                OnPropertyChange("Percentage");
             }
         }
 

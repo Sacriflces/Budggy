@@ -19,6 +19,10 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
         <StackPanel Margin="0,20,0,0">
             <StackPanel Orientation="Horizontal">
@@ -47,18 +51,62 @@
                          KeyUp="BinGoalBalTB_KeyUp"
                          Style="{StaticResource MyBinsHomeTextBoxStyle}"/>
             </StackPanel>
-
-            <Button Name="CreateBinButton" 
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <Button Name="CreateBinButton" 
                     Content="Add"
                     Click="CreateBinButton_Click"
-                    HorizontalAlignment="Center"/>
+                    HorizontalAlignment="Center"
+                        Margin="20,0,20,0"/>
 
+                <Button Name="EditBinButton" 
+                    Content="Edit"
+                    Click="EditBinButton_Click"
+                    HorizontalAlignment="Center"
+                        Margin="20,0,20,0"/>
 
-
+            </StackPanel>
         </StackPanel>
+
+        <ListView Name="BinsEditLV" Background="AliceBlue"
+                  Grid.Row="1"
+                  ScrollViewer.HorizontalScrollBarVisibility="Auto"                  
+                  ScrollViewer.HorizontalScrollMode="Auto">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Name:" FontSize="12"
+                                       Margin="0,0,20,0"/>
+                            <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Description:" FontSize="12"
+                                       Margin="0,0,20,0"/>
+                            <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Percentage:" FontSize="12"
+                                       Margin="0,0,20,0"/>
+                            <TextBox Text="{Binding Percentage, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Goal Balance:" FontSize="12"
+                                       Margin="0,0,20,0"/>
+                            <TextBox Text="{Binding GoalBalance, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            
+        </ListView>
         
         <ListView Name="BinsLV" Background="AliceBlue"
                   Grid.Column="1"
+                  Grid.RowSpan="2"
                   ScrollViewer.HorizontalScrollBarVisibility="Auto"                  
                   ScrollViewer.HorizontalScrollMode="Auto">
             <ListView.ItemsPanel>
@@ -77,11 +125,11 @@
                         Background="AliceBlue"
                         CornerRadius="5">
                         <StackPanel>
-                        <TextBlock Text="{Binding Name}" 
+                        <TextBlock Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" 
                                    HorizontalAlignment="Center"
                                    FontSize="36"/>
-                        
-                        <TextBlock Text="{Binding Description}" 
+
+                            <TextBlock Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" 
                                    HorizontalAlignment="Center"
                                    MaxWidth="300"
                                    TextWrapping="WrapWholeWords"
@@ -92,7 +140,7 @@
                                 <TextBlock Text="Balance:"
                                            Margin="0,0,10,0"
                                            FontSize="24"/>
-                                <TextBlock Text="{Binding Balance}"                                   
+                                <TextBlock Text="{Binding Balance, UpdateSourceTrigger=PropertyChanged}"                                   
                                    FontSize="24"/>                                
                             </StackPanel>
                             <StackPanel Orientation="Horizontal"
@@ -100,7 +148,7 @@
                                 <TextBlock Text="Split Income Percentage:"
                                            Margin="0,0,10,0"
                                            FontSize="24"/>
-                                <TextBlock Text="{Binding Percentage}"
+                                <TextBlock Text="{Binding Percentage, UpdateSourceTrigger=PropertyChanged}"
                                    HorizontalAlignment="Center"
                                    FontSize="24"/>
                                 <TextBlock Text="%"

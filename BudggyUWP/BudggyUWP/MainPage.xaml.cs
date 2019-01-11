@@ -23,7 +23,7 @@ namespace BudggyUWP
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        BudgetViewModel budget = new BudgetViewModel();
+        Budget budget = new Budget();
 
         public MainPage()
         {

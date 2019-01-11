@@ -23,7 +23,7 @@ namespace BudggyUWP
     /// </summary>
     public sealed partial class BudggyHome : Page
     {
-        BudgetViewModel budget;
+        Budget budget;
         public BudggyHome()
         {
             this.InitializeComponent();                       
@@ -39,13 +39,13 @@ namespace BudggyUWP
         {
             base.OnNavigatedTo(e);
 
-            var parameters = (BudgetViewModel)e.Parameter;
+            var parameters = (Budget)e.Parameter;
             budget = parameters;
             this.DataContext = budget;            
-            BinsCB.ItemsSource = budget.Budggy.Bins;
-            IncLB.ItemsSource = budget.Budggy.Incs;
-            ExpLB.ItemsSource = budget.Budggy.Exps;
-            BudgetBalRP.DataContext = budget.Budggy.MonthlyBudgets[budget.Budggy.MonthlyBudgets.Count - 1];
+            BinsCB.ItemsSource = budget.Bins;
+            IncLB.ItemsSource = budget.Incs;
+            ExpLB.ItemsSource = budget.Exps;
+            BudgetBalRP.DataContext = budget.MonthlyBudgets[budget.MonthlyBudgets.Count - 1];
 
 
 
@@ -113,28 +113,28 @@ namespace BudggyUWP
             {
                 if (SplitTSW.IsOn == true)
                 {
-                    budget.Budggy.AddIncome(Convert.ToDouble(ValueTB.Text), DescriptionTB.Text,
+                    budget.AddIncome(Convert.ToDouble(ValueTB.Text), DescriptionTB.Text,
                         new DateTime(Convert.ToInt16(datearr[2]), Convert.ToInt16(datearr[0]), Convert.ToInt16(datearr[1])), "Split");
                 }
                 else
                 {
-                    binName = budget.Budggy.Bins[BinsCB.SelectedIndex].Name;
-                    budget.Budggy.AddIncome(Convert.ToDouble(ValueTB.Text), DescriptionTB.Text,
+                    binName = budget.Bins[BinsCB.SelectedIndex].Name;
+                    budget.AddIncome(Convert.ToDouble(ValueTB.Text), DescriptionTB.Text,
                       new DateTime(Convert.ToInt16(datearr[2]), Convert.ToInt16(datearr[0]), Convert.ToInt16(datearr[1])), 
-                      budget.Budggy.Bins[BinsCB.SelectedIndex].Name);
+                      budget.Bins[BinsCB.SelectedIndex].Name);
                 }
             } else
             {
-                binName = budget.Budggy.Bins[BinsCB.SelectedIndex].Name;
-                budget.Budggy.AddExpense(Convert.ToDouble(ValueTB.Text), DescriptionTB.Text,
+                binName = budget.Bins[BinsCB.SelectedIndex].Name;
+                budget.AddExpense(Convert.ToDouble(ValueTB.Text), DescriptionTB.Text,
                       new DateTime(Convert.ToInt16(datearr[2]), Convert.ToInt16(datearr[0]), Convert.ToInt16(datearr[1])),
-                      budget.Budggy.Bins[BinsCB.SelectedIndex].Name);
+                      budget.Bins[BinsCB.SelectedIndex].Name);
             }
 
             // clear values
             DescriptionTB.Text = "";
             ValueTB.Text = "";
-            BudgetsignTB.Text = (budget.Budggy.MonthlyBudgets[budget.Budggy.MonthlyBudgets.Count - 1].Value < 0) ? "-" : "+";
+            BudgetsignTB.Text = (budget.MonthlyBudgets[budget.MonthlyBudgets.Count - 1].Value < 0) ? "-" : "+";
         }
            
 
@@ -178,8 +178,8 @@ namespace BudggyUWP
             }
            
             int index = IncLB.SelectedIndex;
-            budget.Budggy.DeleteIncome(budget.Budggy.Incs[index].Value, budget.Budggy.Incs[index].Description,
-                budget.Budggy.Incs[index].Date, budget.Budggy.Incs[index].Bin); 
+            budget.DeleteIncome(budget.Incs[index].Value, budget.Incs[index].Description,
+                budget.Incs[index].Date, budget.Incs[index].Bin); 
             
         }
 
@@ -194,8 +194,8 @@ namespace BudggyUWP
 
             }
             int index = ExpLB.SelectedIndex;
-            budget.Budggy.DeleteExpense(budget.Budggy.Exps[index].Value, budget.Budggy.Exps[index].Description,
-                budget.Budggy.Exps[index].Date, budget.Budggy.Exps[index].Bin);
+            budget.DeleteExpense(budget.Exps[index].Value, budget.Exps[index].Description,
+                budget.Exps[index].Date, budget.Exps[index].Bin);
         }
 
        

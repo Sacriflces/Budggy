@@ -24,7 +24,7 @@ namespace BudggyUWP
     /// </summary>
     public sealed partial class BinsHome : Page
     {
-        BudgetViewModel budget;
+        Budget budget;
 
         public BinsHome()
         {
@@ -36,10 +36,11 @@ namespace BudggyUWP
         {
             base.OnNavigatedTo(e);
 
-            var parameters = (BudgetViewModel)e.Parameter;
+            var parameters = (Budget)e.Parameter;
             budget = parameters;
             this.DataContext = budget;
-            BinsLV.ItemsSource = budget.Budggy.Bins;
+            BinsLV.ItemsSource = budget.Bins;
+            BinsEditLV.ItemsSource = budget.Bins;
 
             
 
@@ -56,14 +57,23 @@ namespace BudggyUWP
                 BinsLV.SelectedItem = ele.DataContext;
                 index = BinsLV.SelectedIndex;
 
-                budget.Budggy.DeleteBin(budget.Budggy.Bins[index].Name);
+                budget.DeleteBin(budget.Bins[index].Name);
             }
             
         }
 
         private void CreateBinButton_Click(object sender, RoutedEventArgs e)
         {
-            budget.Budggy.AddBin(BinNameTB.Text,BinDescrTB.Text,Convert.ToDouble(BinPercentageTB.Text));
+            double goalBalance;
+            try
+            {
+                goalBalance = Convert.ToDouble(BinGoalBalTB.Text);
+            }
+            catch
+            {
+                goalBalance = 2500;
+            }
+            budget.AddBin(BinNameTB.Text, BinDescrTB.Text, Convert.ToDouble(BinPercentageTB.Text), goalBalance);
         }
 
         private void BinPercentageTB_KeyUp(object sender, KeyRoutedEventArgs e)
@@ -151,6 +161,11 @@ namespace BudggyUWP
             {
                 return;
             }
+        }
+
+        private void EditBinButton_Click(object sender, RoutedEventArgs e)
+        {
+            budget.Bins[1].Description = "DOes this acutally change??????";
         }
     }
 }
