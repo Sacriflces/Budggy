@@ -165,7 +165,7 @@ namespace BudggyUWP
 
         private void EditBinButton_Click(object sender, RoutedEventArgs e)
         {
-            budget.Bins[1].Description = "DOes this acutally change??????";
+            BinsEditLV.Visibility = (BinsEditLV.Visibility == Visibility.Collapsed) ? Visibility.Visible : Visibility.Collapsed;
         }
     }
 }

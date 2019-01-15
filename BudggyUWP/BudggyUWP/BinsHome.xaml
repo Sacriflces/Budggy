@@ -71,32 +71,33 @@
         <ListView Name="BinsEditLV" Background="AliceBlue"
                   Grid.Row="1"
                   ScrollViewer.HorizontalScrollBarVisibility="Auto"                  
-                  ScrollViewer.HorizontalScrollMode="Auto">
+                  ScrollViewer.HorizontalScrollMode="Auto"
+                  Visibility="Collapsed">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Name:" FontSize="12"
                                        Margin="0,0,20,0"/>
-                            <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBox Text="{Binding Name, Mode=TwoWay}"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Description:" FontSize="12"
                                        Margin="0,0,20,0"/>
-                            <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBox Text="{Binding Description,  Mode=TwoWay}"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Percentage:" FontSize="12"
                                        Margin="0,0,20,0"/>
-                            <TextBox Text="{Binding Percentage, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBox Text="{Binding Percentage, Mode=TwoWay}"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Goal Balance:" FontSize="12"
                                        Margin="0,0,20,0"/>
-                            <TextBox Text="{Binding GoalBalance, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBox Text="{Binding GoalBalance, Mode=TwoWay}"/>
                         </StackPanel>
                     </StackPanel>
                 </DataTemplate>
