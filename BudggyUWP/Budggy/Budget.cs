@@ -53,27 +53,10 @@ namespace Budggy
         };
         public ObservableCollection<MonthBudget> MonthlyBudgets = new ObservableCollection<MonthBudget>() {
             
-        };
-       /* public List<Bin> Bins = new List<Bin>() {
-         new Bin("Entertainment", "Going out money and gaming money", .5),
-        };
-        List<Income> Incs = new List<Income>()
-        {
-            new Income(2500, "Money", "Savings", DateTime.Now),
-        };
-        List<Expense> Exps = new List<Expense>()
-        {
-            new Expense(15, "Money", "Savings", DateTime.Now),
-        };
-        public List<MonthBudget> MonthlyBudgets = new List<MonthBudget>() {
-            new MonthBudget(2500, 12, 2018),
-        };*/
-        public double DefaultMonthlyBudget { get; set; }
-        //string Name { get; set; }
+        };      
+        public double DefaultMonthlyBudget { get; set; }       
         double Balance { get; set; }
-        //public Savings Savings = new Savings("Savings", "", .15);
-/* think about putting all the incs and exps in the budget class, instead of the Bins and just have a string that states what bin its apart of 
-  I'm liking this idea. it'll be easier to use MVVM did it*/
+      
 
         public Budget()
         {
@@ -83,31 +66,50 @@ namespace Budggy
             CalcMonthBudgetInc();
             CalcBinBalance();
         }
-        // Methods to add bins       
+        // Adds a bin to the Bins collection.  
         public int AddBin(string name, string description, double percentage, double goalBalance = 2500, double minimumBalance = 0, double multiplier = 1)
         {
+            double currentSplit = 0;
+            double diff;
+
+            //return something difficult for each case? Also returns -1 if the percentage is too large.
+            if (percentage > 100) return -1;            
+
+            //checks for a name match among the already created bins.
             foreach (Bin bin in Bins)
             {
                 if (string.Compare(name.ToLower(), bin.Name.ToLower()) == 0)
                     return 0;
+                currentSplit += bin.Percentage;
+            }
+
+            percentage = (percentage < 1) ? percentage * 100 : percentage;
+
+            //correcting percentage if the new bin's percentage increases the split to above 100%
+            if(currentSplit + percentage > 100)
+            {
+                diff = 100 - currentSplit + percentage;
+                
+                foreach(Bin bin in Bins)
+                {
+                    if(diff < bin.Percentage)
+                    {
+                        bin.Percentage -= diff;
+                        diff = 0;
+                        break;
+                    } else
+                    {
+                        diff -= bin.Percentage;
+                        bin.Percentage = 0;
+                    }
+                }
             }
 
             Bins.Add(new Bin(name, description, percentage, minimumBalance, goalBalance, multiplier));
             return 1;
-        }
+        }     
 
-        public int AddBin(string name, string description, double percentage)
-        {
-            foreach (Bin bin in Bins)
-            {
-                if (string.Compare(name.ToLower(), bin.Name.ToLower()) == 0)
-                    return 0;
-            }
-
-            Bins.Add(new Bin(name, description, percentage));
-                return 1;
-        }
-
+        //Sets all Bins' balances to zero.
         internal void BinBalanceToZero()
         {            
             foreach (Bin bin in Bins)
@@ -115,6 +117,8 @@ namespace Budggy
                 bin.Balance = 0;
             }
         }
+
+        //Calculates the Bin balance based on the incomes and expenses.
         public void CalcBinBalance()
         {
             int index;
@@ -153,7 +157,7 @@ namespace Budggy
             return Balance;
         }
        
-        // Delete a bin and transfer funds into another bin... (maybe savings by default? which mean I'd have to make that bin type)
+        // Delete a specific bin and transfer its balance to the Savings Bin
         public void DeleteBin(string bin)
         {
             int index = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, bin) == 0).FirstOrDefault());
@@ -180,45 +184,33 @@ namespace Budggy
             Bins.RemoveAt(index);
         }
 
-        //transfer funds from one bin to another (from index2 to index1) ** change it to be based on strings 
+        //transfer funds from one bin to another (from bin2 to bin1)  
         public int TransferFunds(string bin1, string bin2, double amount, DateTime date)
         {
+            //finds the indexes of the bins.
             int index1 = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, bin1) == 0).FirstOrDefault());
-            int index2 = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, bin2) == 0).FirstOrDefault()); 
-           // if (bin1 != Savings.Name && bin2 != Savings.Name)
-            //{
-                if (amount > Bins[index2].GetBalance())
-                    return 0;
-                Incs.Add(new Income(amount, "[Transfer from] " + Bins[index2].Name, Bins[index1].Name, date));
-                Exps.Add(new Expense(amount, "[Transfer to] " + Bins[index1].Name, Bins[index2].Name, date));
-                
-           /* } else if(index1 == -1)
-            {
-                if (amount > Bins[index2].GetBalance())
-                    return 0;
-                Incs.Add(new Income(amount, "[Transfer from] " + Bins[index2].Name, Savings.Name, date));
-                Exps.Add(new Expense(amount, "[Transfer to] " + Savings.Name, Bins[index2].Name, date));               
-               
-            } else if(index2 == -1)
-            {
-                if (amount > Savings.GetBalance())
-                    return 0;
-                Incs.Add(new Income(amount, "[Transfer from] " + Savings.Name, Bins[index1].Name, date));
-                Exps.Add(new Expense(amount, "[Transfer to] " + Bins[index1].Name, Savings.Name, date));               
-            } */
+            int index2 = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, bin2) == 0).FirstOrDefault());
+
+            //if the amount is too large return 0
+            if (amount > Bins[index2].GetBalance())
+                return 0;
+
+            //creates the transfer.
+            Incs.Add(new Income(amount, "[Transfer from] " + Bins[index2].Name, Bins[index1].Name, date));
+            Exps.Add(new Expense(amount, "[Transfer to] " + Bins[index1].Name, Bins[index2].Name, date));
 
             CalcBinBalance();
             return 1;
 
         }
 
-        //split income into each bin based on their percentage preset
-        //On another note. should we have the budget contain the percentage preset? It might be easier to manage and check
+        //Adds an income to the incs list either splitting it into the bins or into one list.
         public int AddIncome(double value, string destr, DateTime date, string mode)
         {
             int index;
             if(mode == "Split")
             {
+                //checks the percentage. if it is greater than 100 then it returns.
                 double percentage = 0;
                 foreach (Bin bin in Bins)
                 {
@@ -228,11 +220,11 @@ namespace Budggy
 
                 if (percentage > 100)
                 {
-                    return 0;
+                    return -1;
                 }
                 else
                 {                    
-                    
+                    //splits the income across the bins based on their percentage.
                     foreach (Bin bin in Bins)
                     {
                         Incs.Add(new Income(value * bin.Percentage / 100, destr, bin.Name, date));
@@ -244,7 +236,7 @@ namespace Budggy
                 }
 
             }
-            else
+            else //income goes into a specific bin
             {
                 index = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, mode) == 0).FirstOrDefault());
 
@@ -268,11 +260,14 @@ namespace Budggy
 
         }
         
+        //Deletes an income from incs list.
         public void DeleteIncome(double value, string destr, DateTime date, string bin)
         {
+            //finds the income object that needs to be deleted.
             int index = Incs.IndexOf(Incs.Where(x => string.Compare(x.Description, destr) == 0 && value == x.Value
             && DateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0).FirstOrDefault());
 
+            //finds the MonthBudget that is associated with the income object and removes it from its list.
             foreach (MonthBudget bud in MonthlyBudgets)
             {
                 if(Incs[index].Date.Month == bud.Month.Month && Incs[index].Date.Year == bud.Month.Year)
