@@ -20,17 +20,28 @@ namespace BudggyUWP
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
+    /// </summary> Don't like having to keep making a new Settings. Having an "ambiguity between Mainpage.Settings and Mainpage.Settings".. confused
     public sealed partial class MainPage : Page
     {
         Budget budget = new Budget();
+        public MySettings Settings = new MySettings();
 
         public MainPage()
         {
+            
             this.InitializeComponent();
+            MySettings Settings = new MySettings();
             budggyLB.SelectedIndex = 0;
-            
-            
+            try
+            {
+                budget = Settings.Read("XMLSettings.xml");
+                
+            }
+            catch
+            {
+                budget = new Budget();
+            }
+
         }
 
         private void MenuButton_Click(object sender, RoutedEventArgs e)
@@ -61,6 +72,13 @@ namespace BudggyUWP
 
             }
            
+        }
+
+        private void SearchBT_Click(object sender, RoutedEventArgs e)
+        {
+            File.Delete("XMLSettings.xml");
+            MySettings Settings = new MySettings();
+            Settings.Save("XMLSettings.xml", budget);
         }
     }
 }
