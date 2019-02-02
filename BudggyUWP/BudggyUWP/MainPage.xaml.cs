@@ -13,6 +13,9 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Budggy;
+using Windows.Storage;
+using Newtonsoft.Json;
+
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -23,24 +26,15 @@ namespace BudggyUWP
     /// </summary> Don't like having to keep making a new Settings. Having an "ambiguity between Mainpage.Settings and Mainpage.Settings".. confused
     public sealed partial class MainPage : Page
     {
-        Budget budget = new Budget();
-        public MySettings Settings = new MySettings();
-
+        Budget budget;
+      //  MySettings mySettings = new MySettings();
+        
         public MainPage()
         {
-            
-            this.InitializeComponent();
-            MySettings Settings = new MySettings();
+            Load();
+            this.InitializeComponent();            
             budggyLB.SelectedIndex = 0;
-            try
-            {
-                budget = Settings.Read("XMLSettings.xml");
-                
-            }
-            catch
-            {
-                budget = new Budget();
-            }
+            
 
         }
 
@@ -76,9 +70,39 @@ namespace BudggyUWP
 
         private void SearchBT_Click(object sender, RoutedEventArgs e)
         {
-            File.Delete("XMLSettings.xml");
-            MySettings Settings = new MySettings();
-            Settings.Save("XMLSettings.xml", budget);
+            Save();
+
+           
+        }
+
+        private async void Save()
+        {
+            StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
+
+            StorageFile budggyFile = await storageFolder.CreateFileAsync("budggy.txt", CreationCollisionOption.OpenIfExists);
+
+            var serializedBudggy = JsonConvert.SerializeObject(budget);
+
+            await FileIO.WriteTextAsync(budggyFile, serializedBudggy);
+        }
+
+        private async void Load()
+        {
+            StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
+
+            StorageFile budggyFile = await storageFolder.CreateFileAsync("budggy.txt", CreationCollisionOption.OpenIfExists);
+
+            string serializedbudggy = await FileIO.ReadTextAsync(budggyFile);
+
+            if (serializedbudggy != null && serializedbudggy != "null")
+            {
+                budget = JsonConvert.DeserializeObject<Budget>(serializedbudggy);
+                //budget = new Budget();
+            }
+            else
+                budget = new Budget();
+
+
         }
     }
 }

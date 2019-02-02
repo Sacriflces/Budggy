@@ -72,7 +72,7 @@ namespace Budggy
         }
 
 
-        internal double MinimumBalance { get; set; }
+        public double MinimumBalance { get; set; }
 
         private double _goalBalance;
         public double GoalBalance {

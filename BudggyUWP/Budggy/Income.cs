@@ -16,7 +16,7 @@ namespace Budggy
         public DateTime Date { get; set; }
         public string DateStr { get; set; }
 
-        internal Income(double value, string destr, string bin, DateTime date)
+        public Income(double value, string destr, string bin, DateTime date)
         {
             Value = value;
             ValueStr = String.Format("{0:C}", value);

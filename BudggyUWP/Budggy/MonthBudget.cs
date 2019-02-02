@@ -19,7 +19,7 @@ namespace Budggy
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        internal double BudgetVal { get; set; }
+        public double BudgetVal { get; set; }
 
         private double val;
         public double Value { get { return val; }
@@ -48,11 +48,11 @@ namespace Budggy
             }
         }
 
-        internal DateTime Month { get; set; }
+        public DateTime Month { get; set; }
         public string MonthStr { get; set; }
         public int YearInt { get; set; }
 
-        internal MonthBudget(double value, int month, int year)
+        public MonthBudget(double value, int month, int year)
         {
             Value = value;
             BudgetVal = value;

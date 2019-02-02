@@ -8,7 +8,7 @@ namespace Budggy
 {
     public class Expense : Income
     {
-        internal Expense(double value, string destr, string bin, DateTime date) : base(value, destr, bin, date)
+        public Expense(double value, string destr, string bin, DateTime date) : base(value, destr, bin, date)
         {
             
         } 
