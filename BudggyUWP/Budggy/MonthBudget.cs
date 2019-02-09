@@ -65,11 +65,9 @@ namespace Budggy
 
         internal void SubtractExpense(Expense exp)
         {
-            //if(exp.Date.Month == Month.Month && exp.Date.Year == Month.Year)
-           // {
                 Value -= exp.Value;
                 ExpAmount += exp.Value;
-            //}
+          
         }
 
         internal void RemoveExpense(Expense exp)
@@ -79,11 +77,9 @@ namespace Budggy
         }
 
         internal void AddIncome(Income inc)
-        {
-            //if(inc.Date.Month == Month.Month && inc.Date.Year == Month.Year)
-            //{
+        {           
                 IncAmount += inc.Value;
-           //}
+           
         }
 
         internal void RemoveIncome(Income inc)

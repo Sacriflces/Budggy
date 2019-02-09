@@ -26,12 +26,12 @@ namespace BudggyUWP
     /// </summary> Don't like having to keep making a new Settings. Having an "ambiguity between Mainpage.Settings and Mainpage.Settings".. confused
     public sealed partial class MainPage : Page
     {
-        Budget budget;
-      //  MySettings mySettings = new MySettings();
+        Budget budget = new Budget();
+      
         
         public MainPage()
         {
-            Load();
+          //  Load();
             this.InitializeComponent();            
             budggyLB.SelectedIndex = 0;
             
@@ -70,12 +70,12 @@ namespace BudggyUWP
 
         private void SearchBT_Click(object sender, RoutedEventArgs e)
         {
-            Save();
+          //  Save();
 
            
         }
 
-        private async void Save()
+       /* private async void Save()
         {
             StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
 
@@ -103,6 +103,6 @@ namespace BudggyUWP
                 budget = new Budget();
 
 
-        }
+        } */
     }
 }
