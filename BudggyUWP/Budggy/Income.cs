@@ -26,5 +26,11 @@ namespace Budggy
             DateStr = date.ToString("d");
                
         }
+
+        public override string ToString() 
+        {
+            return $"Income: {Value} {Bin} {DateStr}";
+            
+        }
     }
 }

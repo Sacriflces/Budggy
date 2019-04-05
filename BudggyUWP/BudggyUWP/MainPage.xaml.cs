@@ -70,39 +70,58 @@ namespace BudggyUWP
 
         private void SearchBT_Click(object sender, RoutedEventArgs e)
         {
-          //  Save();
+          //  
 
            
         }
 
-       /* private async void Save()
+        private void SaveBT_Click(object sender, RoutedEventArgs e)
         {
-            StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
-
-            StorageFile budggyFile = await storageFolder.CreateFileAsync("budggy.txt", CreationCollisionOption.OpenIfExists);
-
-            var serializedBudggy = JsonConvert.SerializeObject(budget);
-
-            await FileIO.WriteTextAsync(budggyFile, serializedBudggy);
+            Save();
+           // StorageFolder localFolder = ApplicationData.Current.LocalFolder;
         }
 
-        private async void Load()
+        private void Save()
         {
-            StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
-
-            StorageFile budggyFile = await storageFolder.CreateFileAsync("budggy.txt", CreationCollisionOption.OpenIfExists);
-
-            string serializedbudggy = await FileIO.ReadTextAsync(budggyFile);
-
-            if (serializedbudggy != null && serializedbudggy != "null")
+            string filepath = @".\Settings.txt";
+            if (File.Exists(filepath))
             {
-                budget = JsonConvert.DeserializeObject<Budget>(serializedbudggy);
-                //budget = new Budget();
+                File.Delete(filepath);
             }
-            else
-                budget = new Budget();
+
+            using (FileStream fs = File.Create(filepath))
+            {
+                budget.to
+            }
+        }
+        /* private async void Save()
+         {
+             StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
+
+             StorageFile budggyFile = await storageFolder.CreateFileAsync("budggy.txt", CreationCollisionOption.OpenIfExists);
+
+             var serializedBudggy = JsonConvert.SerializeObject(budget);
+
+             await FileIO.WriteTextAsync(budggyFile, serializedBudggy);
+         }
+
+         private async void Load()
+         {
+             StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
+
+             StorageFile budggyFile = await storageFolder.CreateFileAsync("budggy.txt", CreationCollisionOption.OpenIfExists);
+
+             string serializedbudggy = await FileIO.ReadTextAsync(budggyFile);
+
+             if (serializedbudggy != null && serializedbudggy != "null")
+             {
+                 budget = JsonConvert.DeserializeObject<Budget>(serializedbudggy);
+                 //budget = new Budget();
+             }
+             else
+                 budget = new Budget();
 
 
-        } */
+         } */
     }
 }
