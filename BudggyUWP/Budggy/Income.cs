@@ -13,7 +13,7 @@ namespace Budggy
        
         public string Description { get; set; }
         public string Bin { get; set; }
-        public DateTime Date { get; set; }
+        public myDateTime Date { get; set; }
         public string DateStr { get; set; }
 
         public Income(double value, string destr, string bin, DateTime date)
@@ -22,7 +22,7 @@ namespace Budggy
             ValueStr = String.Format("{0:C}", value);
             Description = destr;
             Bin = bin;
-            Date = date;
+            Date = new myDateTime(date);
             DateStr = date.ToString("d");
                
         }

@@ -19,14 +19,14 @@ namespace Budggy
     {
 
         public ObservableCollection<Bin> Bins = new ObservableCollection<Bin>()  {
-            new Bin("Savings", "", .3),
+         /*   new Bin("Savings", "", .3),
             new Bin("Entertainment", "Going out money and gaming money, and whatever else I need to make this description longer", .5),
             new Bin("Gas", "", .1),
             new Bin("Food", "", .05),
-            new Bin("Presents", "Money for Presents lol", .05),
+            new Bin("Presents", "Money for Presents lol", .05), */
     };
         public ObservableCollection<Income> Incs = new ObservableCollection<Income>() {
-            new Income(2500.00, "Money.. I wonder what happens if this description... isn't actually short and takes up A TON of space. You know what I mean?", "Savings", DateTime.Now),
+          /*  new Income(2500.00, "Money.. I wonder what happens if this description... isn't actually short and takes up A TON of space. You know what I mean?", "Savings", DateTime.Now),
             new Income(143.72, "Money", "Savings", DateTime.Now),
             new Income(28.00, "Money", "Savings", DateTime.Now),
             new Income(55.53, "Money", "Savings", DateTime.Now),
@@ -36,10 +36,10 @@ namespace Budggy
             new Income(192, "Money", "Savings", DateTime.Now),
             new Income(10.10, "Money", "Savings", DateTime.Now),
             new Income(172.46, "Money", "Savings", DateTime.Now),
-            new Income(60.18, "Money", "Savings", DateTime.Now),
+            new Income(60.18, "Money", "Savings", DateTime.Now), */
         };
         public ObservableCollection<Expense> Exps = new ObservableCollection<Expense>()  {
-            new Expense(3, "Money", "Entertainment", DateTime.Now),
+         /*   new Expense(3, "Money", "Entertainment", DateTime.Now),
             new Expense(14.18, "Money", "Entertainment", DateTime.Now),
             new Expense(29.37, "Money", "Gas", DateTime.Now),
             new Expense(8.47, "Money", "Food", DateTime.Now),
@@ -49,7 +49,7 @@ namespace Budggy
             new Expense(2.25, "Money", "Food", DateTime.Now),
             new Expense(28.40, "Money", "Gas", DateTime.Now),
             new Expense(13.99, "Amazon", "Entertainment", DateTime.Now),
-            new Expense(49.43, "Amazon", "Presents", DateTime.Now),
+            new Expense(49.43, "Amazon", "Presents", DateTime.Now), */
         };
         public ObservableCollection<MonthBudget> MonthlyBudgets = new ObservableCollection<MonthBudget>() {
             
@@ -61,7 +61,7 @@ namespace Budggy
         public Budget()
         {
             DefaultMonthlyBudget = 2500;
-            CreateMonthlyBudget();
+           // CreateMonthlyBudget();
             CalcMonthBudgetAll();
             CalcMonthBudgetInc();
             CalcBinBalance();
@@ -261,16 +261,16 @@ namespace Budggy
         }
         
         //Deletes an income from incs list.
-        public void DeleteIncome(double value, string destr, DateTime date, string bin)
+        public void DeleteIncome(double value, string destr, myDateTime date, string bin)
         {
             //finds the income object that needs to be deleted.
             int index = Incs.IndexOf(Incs.Where(x => string.Compare(x.Description, destr) == 0 && value == x.Value
-            && DateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0).FirstOrDefault());
+            && myDateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0).FirstOrDefault());
 
             //finds the MonthBudget that is associated with the income object and removes it from its list.
             foreach (MonthBudget bud in MonthlyBudgets)
             {
-                if(Incs[index].Date.Month == bud.Month.Month && Incs[index].Date.Year == bud.Month.Year)
+                if(Incs[index].Date.Month == bud.Date.Month && Incs[index].Date.Year == bud.Date.Year)
                 {
                     bud.RemoveIncome(Incs[index]);
                     break;
@@ -298,14 +298,14 @@ namespace Budggy
             OrganizeExpensesByDate();
         }
 
-        public void DeleteExpense(double value, string destr, DateTime date, string bin)
+        public void DeleteExpense(double value, string destr, myDateTime date, string bin)
         {
             int index = Exps.IndexOf(Exps.Where(x => string.Compare(x.Description, destr) == 0 && value == x.Value
-            && DateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0).FirstOrDefault());
+            && myDateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0).FirstOrDefault());
 
             foreach (MonthBudget bud in MonthlyBudgets)
             {
-                if (Exps[index].Date.Month == bud.Month.Month && Exps[index].Date.Year == bud.Month.Year)
+                if (Exps[index].Date.Month == bud.Date.Month && Exps[index].Date.Year == bud.Date.Year)
                 {
                     bud.RemoveExpense(Exps[index]);
                     break;
@@ -404,7 +404,7 @@ namespace Budggy
 
             for(int i = 0; i<MonthlyBudgets.Count; i++)
             {
-                if (MonthlyBudgets[i].Month.Month == DateTime.Now.Month && MonthlyBudgets[i].Month.Year == DateTime.Now.Year)
+                if (MonthlyBudgets[i].Date.Month == DateTime.Now.Month && MonthlyBudgets[i].Date.Year == DateTime.Now.Year)
                 {
                     found = 1;
                     break;
@@ -426,7 +426,7 @@ namespace Budggy
                 bud.Value = bud.BudgetVal;
                 foreach(Expense exp in Exps)
                 {
-                    if(exp.Date.Month == bud.Month.Month && exp.Date.Year == bud.Month.Year)
+                    if(exp.Date.Month == bud.Date.Month && exp.Date.Year == bud.Date.Year)
                     {
                         if (!(exp.Description.Contains("[Transfer to]")))
                         {
@@ -445,7 +445,7 @@ namespace Budggy
                 bud.IncAmount = 0;
                 foreach (Income inc in Incs)
                 {
-                    if (inc.Date.Month == bud.Month.Month && inc.Date.Year == bud.Month.Year)
+                    if (inc.Date.Month == bud.Date.Month && inc.Date.Year == bud.Date.Year)
                     {
                         if (!(inc.Description.Contains("[Transfer from]")))
                         {

@@ -34,7 +34,7 @@
                     RelativePanel.RightOf="menuButton" 
                     Visibility="Collapsed"/>
 
-            <TextBlock Name="TitleTB" Text="Budggy" 
+            <TextBlock Name="TitleTB" Text="Budggy or Cabinet" 
                        Style="{StaticResource MyTextBlockStyle}"
                        FontWeight="Bold" 
                        RelativePanel.RightOf="backButton"/>

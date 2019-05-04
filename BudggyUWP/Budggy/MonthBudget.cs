@@ -5,7 +5,47 @@ using System.Text;
 
 namespace Budggy
 {
-   public class MonthBudget : INotifyPropertyChanged
+    public class myDateTime
+    {
+        public static int Compare(myDateTime lhs, myDateTime rhs)
+        {
+            if(lhs.Year < rhs.Year)
+            {
+                return -1;
+            }
+            else if(lhs.Year > rhs.Year)
+            {
+                return 1;
+            }
+            else
+            {
+                if (lhs.Month < rhs.Month)
+                {
+                    return -1;
+                }
+                else if (lhs.Month > rhs.Month)
+                {
+                    return 1;
+                }
+                else
+                    return 0;
+            }
+        }
+        public myDateTime(int month, int year)
+        {
+            Month = month;
+            Year = year;
+        }
+        public myDateTime(DateTime date)
+        {
+            Month = date.Month;
+            Year = date.Year;
+        }
+        public int Month;
+        public int Year;
+    }
+
+    public class MonthBudget : INotifyPropertyChanged
     {
         #region INotifyPropertyChanged Members
 
@@ -48,7 +88,7 @@ namespace Budggy
             }
         }
 
-        public DateTime Month { get; set; }
+        public myDateTime Date { get; set; }
         public string MonthStr { get; set; }
         public int YearInt { get; set; }
 
@@ -56,9 +96,9 @@ namespace Budggy
         {
             Value = value;
             BudgetVal = value;
-            Month = new DateTime(year, month, 1);
-            MonthStr = MonthConvert(Month.Month);
-            YearInt = Month.Year;
+            Date = new myDateTime(month, year);
+            MonthStr = MonthConvert(Date.Month);
+            YearInt = Date.Year;
             IncAmount = 0;
             ExpAmount = 0;
         }
@@ -114,7 +154,7 @@ namespace Budggy
                 case 8:
                     return "August";
                 case 9:
-                    return "Sepetember";
+                    return "September";
                 case 10:
                     return "October";
                 case 11:
