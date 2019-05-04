@@ -45,6 +45,8 @@
 
             <Button Name="searchBT" Click="SearchBT_Click" Style="{StaticResource MyMenuButtonStyle}"
                     Content="&#xE1A3;" RelativePanel.AlignRightWithPanel="True"/>
+            <Button Name="saveBT" Click="SaveBT_Click" Style="{StaticResource MyMenuButtonStyle}"
+                    Content="&#xE1A1;" RelativePanel.LeftOf="searchTextBox" />
         </RelativePanel>
         
         <SplitView 
