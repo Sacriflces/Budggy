@@ -8,6 +8,10 @@ namespace Budggy
 {
     public class Expense : Income
     {
+        public Expense() : base()
+        {
+
+        }
         public Expense(double value, string destr, string bin, DateTime date) : base(value, destr, bin, date)
         {
             

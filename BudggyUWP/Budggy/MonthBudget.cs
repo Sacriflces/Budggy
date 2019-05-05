@@ -5,8 +5,15 @@ using System.Text;
 
 namespace Budggy
 {
-    public class myDateTime
+    public class myDateTime : IComparable
     {
+        public int CompareTo(object obj)
+        {
+            if (obj == null) return 1;
+
+            myDateTime otherDateTime = obj as myDateTime;
+            return Compare(this, otherDateTime);
+        }
         public static int Compare(myDateTime lhs, myDateTime rhs)
         {
             if(lhs.Year < rhs.Year)
@@ -31,6 +38,11 @@ namespace Budggy
                     return 0;
             }
         }
+        public myDateTime()
+        {
+
+        }
+    
         public myDateTime(int month, int year)
         {
             Month = month;

@@ -33,7 +33,7 @@ namespace BudggyUWP
         public MainPage()
         {
           Load();
-        //   budget = new Budget();
+           // budget = new Budget();
             this.InitializeComponent();            
             budggyLB.SelectedIndex = 0;
             
@@ -91,9 +91,9 @@ namespace BudggyUWP
 
             StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
 
-            StorageFile budggyFile = await storageFolder.CreateFileAsync("Budggy.txt", CreationCollisionOption.OpenIfExists);
+            StorageFile budggyFile = await storageFolder.CreateFileAsync("Budggy.txt", CreationCollisionOption.ReplaceExisting);
            // File.Create("Budggy.txt", CreationCollisionOption.OpenIfExists)
-            var serializedBudggy = JsonConvert.SerializeObject(budget);
+            var serializedBudggy = JsonConvert.SerializeObject(budget,Formatting.Indented);
 
             await FileIO.WriteTextAsync(budggyFile, serializedBudggy); 
         } 

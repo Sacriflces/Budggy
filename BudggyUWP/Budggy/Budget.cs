@@ -19,7 +19,7 @@ namespace Budggy
     {
 
         public ObservableCollection<Bin> Bins = new ObservableCollection<Bin>()  {
-         /*   new Bin("Savings", "", .3),
+          /*  new Bin("Savings", "", .3),
             new Bin("Entertainment", "Going out money and gaming money, and whatever else I need to make this description longer", .5),
             new Bin("Gas", "", .1),
             new Bin("Food", "", .05),
@@ -39,7 +39,7 @@ namespace Budggy
             new Income(60.18, "Money", "Savings", DateTime.Now), */
         };
         public ObservableCollection<Expense> Exps = new ObservableCollection<Expense>()  {
-         /*   new Expense(3, "Money", "Entertainment", DateTime.Now),
+           /* new Expense(3, "Money", "Entertainment", DateTime.Now),
             new Expense(14.18, "Money", "Entertainment", DateTime.Now),
             new Expense(29.37, "Money", "Gas", DateTime.Now),
             new Expense(8.47, "Money", "Food", DateTime.Now),
@@ -61,7 +61,7 @@ namespace Budggy
         public Budget()
         {
             DefaultMonthlyBudget = 2500;
-           // CreateMonthlyBudget();
+            CreateMonthlyBudget();
             CalcMonthBudgetAll();
             CalcMonthBudgetInc();
             CalcBinBalance();
@@ -355,6 +355,7 @@ namespace Budggy
 
         public void OrganizeExpensesByDate()
         {
+            
             IEnumerable<Expense> expenses = Exps.OrderByDescending(x => x.Date);
             int count = Exps.Count;
 

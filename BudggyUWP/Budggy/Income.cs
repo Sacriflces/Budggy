@@ -16,6 +16,11 @@ namespace Budggy
         public myDateTime Date { get; set; }
         public string DateStr { get; set; }
 
+        public Income()
+        {
+
+        }
+
         public Income(double value, string destr, string bin, DateTime date)
         {
             Value = value;
