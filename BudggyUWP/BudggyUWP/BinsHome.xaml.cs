@@ -64,16 +64,16 @@ namespace BudggyUWP
 
         private void CreateBinButton_Click(object sender, RoutedEventArgs e)
         {
-            double goalBalance;
+            decimal goalBalance;
             try
             {
-                goalBalance = Convert.ToDouble(BinGoalBalTB.Text);
+                goalBalance = Convert.ToDecimal(BinGoalBalTB.Text);
             }
             catch
             {
-                goalBalance = 2500;
+                goalBalance = 2500m;
             }
-            budget.AddBin(BinNameTB.Text, BinDescrTB.Text, Convert.ToDouble(BinPercentageTB.Text), goalBalance);
+            budget.AddBin(BinNameTB.Text, BinDescrTB.Text, Convert.ToDecimal(BinPercentageTB.Text), goalBalance);
         }
 
         private void BinPercentageTB_KeyUp(object sender, KeyRoutedEventArgs e)

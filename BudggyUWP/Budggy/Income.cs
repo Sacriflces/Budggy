@@ -9,7 +9,7 @@ namespace Budggy
      public class Income
     {
         public string ValueStr { get; set; }
-        public double Value { get; set; }
+        public decimal Value { get; set; }
        
         public string Description { get; set; }
         public string Bin { get; set; }
@@ -21,7 +21,7 @@ namespace Budggy
 
         }
 
-        public Income(double value, string destr, string bin, DateTime date)
+        public Income(decimal value, string destr, string bin, DateTime date)
         {
             Value = value;
             ValueStr = String.Format("{0:C}", value);

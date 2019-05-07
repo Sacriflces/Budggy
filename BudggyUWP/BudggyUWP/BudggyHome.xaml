@@ -221,7 +221,7 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <TextBlock Name="BudgetsignTB" FontSize="48" Text="+"/>
                     <TextBlock Name="BudgetTB" FontSize="48" 
-                           Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"/>
+                           Text="{Binding ValString, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>             
 
             </StackPanel>
@@ -235,7 +235,7 @@
                     <TextBlock Name="IncomeTB" FontSize="36" Text="Income" 
                                RelativePanel.AlignLeftWithPanel="True" />
                     <TextBlock Name="IncomeSignTB" FontSize="36" Text="+" RelativePanel.LeftOf="IncValueTB"/>
-                    <TextBlock Name="IncValueTB" FontSize="36" Text="{Binding IncAmount, UpdateSourceTrigger=PropertyChanged}"
+                    <TextBlock Name="IncValueTB" FontSize="36" Text="{Binding IncString, UpdateSourceTrigger=PropertyChanged}"
                                RelativePanel.AlignRightWithPanel="True"/>
                 </RelativePanel>
             </StackPanel>
@@ -251,7 +251,7 @@
                                RelativePanel.AlignLeftWithPanel="True"/>
                     <TextBlock FontSize="36" Text="-"
                                RelativePanel.LeftOf="ExpValueTB"/>
-                    <TextBlock Name="ExpValueTB" FontSize="36" Text="{Binding ExpAmount, UpdateSourceTrigger=PropertyChanged}"
+                    <TextBlock Name="ExpValueTB" FontSize="36" Text="{Binding ExpString, UpdateSourceTrigger=PropertyChanged}"
                                 RelativePanel.AlignRightWithPanel="True"/>
                 </RelativePanel>
             </StackPanel>

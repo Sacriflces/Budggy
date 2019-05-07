@@ -71,40 +71,85 @@ namespace Budggy
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public double BudgetVal { get; set; }
+        public decimal BudgetVal { get; set; }
 
-        private double val;
-        public double Value { get { return val; }
+        private decimal val;
+        public decimal Value { get { return val; }
             set {
                 val = value;
                 OnPropertyChanged("Value");
+                if (value > 0.00m)
+                    valString = val.ToString("C");
+                else
+                {
+                    ValString = $"-${(-1 * value).ToString("G")}";
                 }
+            }
         }
 
-        private double incAmount;
-        public double IncAmount { get { return incAmount; }
+        private string valString;
+        public string ValString
+        {
+            get { return valString; }
+            set
+            {
+                valString = value;
+                OnPropertyChanged("ValString");
+            }
+
+        }
+
+        private decimal incAmount;
+        public decimal IncAmount { get { return incAmount; }
             set
             {
                 incAmount = value;
                 OnPropertyChanged("IncAmount");
+                IncString = incAmount.ToString("C");
+
             }
         }
 
-        private double expAmount;
-        public double ExpAmount {
+        private string incString;
+        public string IncString
+        {
+            get { return incString; }
+            set
+            {
+                incString = value;
+                OnPropertyChanged("IncString");
+            }
+
+        }
+
+        private decimal expAmount;
+        public decimal ExpAmount {
             get { return expAmount; }
             set
             {
                 expAmount = value;
                 OnPropertyChanged("ExpAmount");
+                ExpString = expAmount.ToString("C");
             }
+        }
+
+        private string expString;
+        public string ExpString
+        {
+            get { return expString; }
+            set
+            {
+                expString = value;
+                OnPropertyChanged("ExpString");
+            }
+
         }
 
         public myDateTime Date { get; set; }
         public string MonthStr { get; set; }
         public int YearInt { get; set; }
 
-        public MonthBudget(double value, int month, int year)
+        public MonthBudget(decimal value, int month, int year)
         {
             Value = value;
             BudgetVal = value;
@@ -139,9 +184,9 @@ namespace Budggy
             IncAmount -= inc.Value;
         }
 
-        internal void NewBudget(double newVal)
+        internal void NewBudget(decimal newVal)
         {
-            double diff = BudgetVal - Value;
+            decimal diff = BudgetVal - Value;
             BudgetVal = newVal;
             Value = newVal - diff;
         }

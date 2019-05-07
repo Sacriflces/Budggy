@@ -6,12 +6,12 @@ namespace Budggy
 {
     public class Savings : Bin
     {
-        public Savings(string name, string description, double percentage) : base(name, description, percentage)
+        public Savings(string name, string description, decimal percentage) : base(name, description, percentage)
         {
             Balance = 0;
         }
 
-        public Savings(string name, string description, double percentage, double minimumBalance, double goalBalance, double multiplier) : base(name, description, percentage, minimumBalance, goalBalance, multiplier)
+        public Savings(string name, string description, decimal percentage, decimal minimumBalance, decimal goalBalance, decimal multiplier) : base(name, description, percentage, minimumBalance, goalBalance, multiplier)
         {
             Balance = 0;
         }

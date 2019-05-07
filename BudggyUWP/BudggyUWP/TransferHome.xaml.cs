@@ -48,7 +48,7 @@ namespace BudggyUWP
             string[] datearr = datestr.Split('/');
             try
             {
-                budget.TransferFunds(budget.Bins[ToBinsCB.SelectedIndex].Name, budget.Bins[FromBinsCB.SelectedIndex].Name, Convert.ToDouble(ValueTB.Text),
+                budget.TransferFunds(budget.Bins[ToBinsCB.SelectedIndex].Name, budget.Bins[FromBinsCB.SelectedIndex].Name, Convert.ToDecimal(ValueTB.Text),
                      new DateTime(Convert.ToInt16(datearr[2]), Convert.ToInt16(datearr[0]), Convert.ToInt16(datearr[1])));
                 ValueTB.Text = "";
             }

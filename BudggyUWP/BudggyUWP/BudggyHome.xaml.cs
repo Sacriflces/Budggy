@@ -114,20 +114,20 @@ namespace BudggyUWP
             {
                 if (SplitTSW.IsOn == true)
                 {
-                    budget.AddIncome(Convert.ToDouble(ValueTB.Text), DescriptionTB.Text,
+                    budget.AddIncome(Convert.ToDecimal(ValueTB.Text), DescriptionTB.Text,
                         new DateTime(Convert.ToInt16(datearr[2]), Convert.ToInt16(datearr[0]), Convert.ToInt16(datearr[1])), "Split");
                 }
                 else
                 {
                     binName = budget.Bins[BinsCB.SelectedIndex].Name;
-                    budget.AddIncome(Convert.ToDouble(ValueTB.Text), DescriptionTB.Text,
+                    budget.AddIncome(Convert.ToDecimal(ValueTB.Text), DescriptionTB.Text,
                       new DateTime(Convert.ToInt16(datearr[2]), Convert.ToInt16(datearr[0]), Convert.ToInt16(datearr[1])), 
                       budget.Bins[BinsCB.SelectedIndex].Name);
                 }
             } else
             {
                 binName = budget.Bins[BinsCB.SelectedIndex].Name;
-                budget.AddExpense(Convert.ToDouble(ValueTB.Text), DescriptionTB.Text,
+                budget.AddExpense(Convert.ToDecimal(ValueTB.Text), DescriptionTB.Text,
                       new DateTime(Convert.ToInt16(datearr[2]), Convert.ToInt16(datearr[0]), Convert.ToInt16(datearr[1])),
                       budget.Bins[BinsCB.SelectedIndex].Name);
             }

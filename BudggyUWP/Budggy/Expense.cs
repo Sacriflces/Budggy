@@ -12,7 +12,7 @@ namespace Budggy
         {
 
         }
-        public Expense(double value, string destr, string bin, DateTime date) : base(value, destr, bin, date)
+        public Expense(decimal value, string destr, string bin, DateTime date) : base(value, destr, bin, date)
         {
             
         } 

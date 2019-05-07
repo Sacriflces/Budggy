@@ -52,18 +52,35 @@ namespace Budggy
             }
         }
 
-        private double _balance;
-        public double Balance {
+        private decimal _balance;
+        public decimal Balance {
             get { return _balance; }
             set
             {
                 _balance = value;
                 OnPropertyChange("Balance");
+                if(value > 0.00m)
+                BalanceString = _balance.ToString("C");
+                else
+                {
+                    BalanceString = $"-${(-1 * value).ToString("G")}";
+                }
             }
         }
 
-        private double _percentage;
-        public double Percentage {
+        private string _balanceString;
+        public string BalanceString
+        {
+            get { return _balanceString; }
+            set
+            {
+                _balanceString = value;
+                OnPropertyChange("BalanceString");
+            }
+        }
+
+        private decimal _percentage;
+        public decimal Percentage {
             get {return _percentage * 100; }
             set
             {
@@ -78,10 +95,10 @@ namespace Budggy
         }
 
 
-        public double MinimumBalance { get; set; }
+        public decimal MinimumBalance { get; set; }
 
-        private double _goalBalance;
-        public double GoalBalance {
+        private decimal _goalBalance;
+        public decimal GoalBalance {
             get
             {
                 return _goalBalance;
@@ -93,14 +110,14 @@ namespace Budggy
             }
         }
 
-        internal double Multiplier { get; set; }
+        internal decimal Multiplier { get; set; }
 
         public Bin()
         {
 
         }
 
-        public Bin(string name, string description, double percentage, double minimumBalance, double goalBalance, double multiplier)
+        public Bin(string name, string description, decimal percentage, decimal minimumBalance, decimal goalBalance, decimal multiplier)
         {
             Name = name;
             Description = description;
@@ -111,7 +128,7 @@ namespace Budggy
             Balance = 0;
         }
 
-        public Bin(string name, string description, double percentage)
+        public Bin(string name, string description, decimal percentage)
         {
             Name = name;
             Description = description;
@@ -170,7 +187,7 @@ namespace Budggy
             return Incomes[index].Value;
         } */
         
-        public double GetBalance()
+        public decimal GetBalance()
         {
             return Balance;
         }
@@ -213,7 +230,7 @@ namespace Budggy
             Expenses.Sort((x, y) => DCompare(x.Value, y.Value));
         } */
 
-        int DCompare(double x, double y)
+        int DCompare(decimal x, decimal y)
         {
             if (x - y > 0) return 1;
             else if (x - y < 0) return -1;

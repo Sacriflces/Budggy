@@ -19,43 +19,43 @@ namespace Budggy
     {
 
         public ObservableCollection<Bin> Bins = new ObservableCollection<Bin>()  {
-          /*  new Bin("Savings", "", .3),
-            new Bin("Entertainment", "Going out money and gaming money, and whatever else I need to make this description longer", .5),
-            new Bin("Gas", "", .1),
-            new Bin("Food", "", .05),
-            new Bin("Presents", "Money for Presents lol", .05), */
+            new Bin("Savings", "", .3m),
+            new Bin("Entertainment", "Going out money and gaming money, and whatever else I need to make this description longer", .5m),
+            new Bin("Gas", "", .1m),
+            new Bin("Food", "", .05m),
+            new Bin("Presents", "Money for Presents lol", .05m), 
     };
         public ObservableCollection<Income> Incs = new ObservableCollection<Income>() {
-          /*  new Income(2500.00, "Money.. I wonder what happens if this description... isn't actually short and takes up A TON of space. You know what I mean?", "Savings", DateTime.Now),
-            new Income(143.72, "Money", "Savings", DateTime.Now),
-            new Income(28.00, "Money", "Savings", DateTime.Now),
-            new Income(55.53, "Money", "Savings", DateTime.Now),
-            new Income(200, "Money", "Savings", DateTime.Now),
-            new Income(50.21, "Money", "Savings", DateTime.Now),
-            new Income(77.73, "Money", "Savings", DateTime.Now),
-            new Income(192, "Money", "Savings", DateTime.Now),
-            new Income(10.10, "Money", "Savings", DateTime.Now),
-            new Income(172.46, "Money", "Savings", DateTime.Now),
-            new Income(60.18, "Money", "Savings", DateTime.Now), */
+            new Income(2500.00m, "Money.. I wonder what happens if this description... isn't actually short and takes up A TON of space. You know what I mean?", "Savings", DateTime.Now),
+            new Income(143.72m, "Money", "Savings", DateTime.Now),
+            new Income(28.00m, "Money", "Savings", DateTime.Now),
+            new Income(55.53m, "Money", "Savings", DateTime.Now),
+            new Income(200m, "Money", "Savings", DateTime.Now),
+            new Income(50.21m, "Money", "Savings", DateTime.Now),
+            new Income(77.73m, "Money", "Savings", DateTime.Now),
+            new Income(192m, "Money", "Savings", DateTime.Now),
+            new Income(10.10m, "Money", "Savings", DateTime.Now),
+            new Income(172.46m, "Money", "Savings", DateTime.Now),
+            new Income(60.18m, "Money", "Savings", DateTime.Now), 
         };
         public ObservableCollection<Expense> Exps = new ObservableCollection<Expense>()  {
-           /* new Expense(3, "Money", "Entertainment", DateTime.Now),
-            new Expense(14.18, "Money", "Entertainment", DateTime.Now),
-            new Expense(29.37, "Money", "Gas", DateTime.Now),
-            new Expense(8.47, "Money", "Food", DateTime.Now),
-            new Expense(5.04, "Money", "Presents", DateTime.Now),
-            new Expense(6.55, "Money", "Food", DateTime.Now),
-            new Expense(30.05, "Money", "Food", DateTime.Now),
-            new Expense(2.25, "Money", "Food", DateTime.Now),
-            new Expense(28.40, "Money", "Gas", DateTime.Now),
-            new Expense(13.99, "Amazon", "Entertainment", DateTime.Now),
-            new Expense(49.43, "Amazon", "Presents", DateTime.Now), */
+            new Expense(3m, "Money", "Entertainment", DateTime.Now),
+            new Expense(14.18m, "Money", "Entertainment", DateTime.Now),
+            new Expense(29.37m, "Money", "Gas", DateTime.Now),
+            new Expense(8.47m, "Money", "Food", DateTime.Now),
+            new Expense(5.04m, "Money", "Presents", DateTime.Now),
+            new Expense(6.55m, "Money", "Food", DateTime.Now),
+            new Expense(30.05m, "Money", "Food", DateTime.Now),
+            new Expense(2.25m, "Money", "Food", DateTime.Now),
+            new Expense(28.40m, "Money", "Gas", DateTime.Now),
+            new Expense(13.99m, "Amazon", "Entertainment", DateTime.Now),
+            new Expense(49.43m, "Amazon", "Presents", DateTime.Now), 
         };
         public ObservableCollection<MonthBudget> MonthlyBudgets = new ObservableCollection<MonthBudget>() {
             
         };      
-        public double DefaultMonthlyBudget { get; set; }       
-        double Balance { get; set; }
+        public decimal DefaultMonthlyBudget { get; set; }
+        decimal Balance { get; set; }
       
 
         public Budget()
@@ -67,10 +67,10 @@ namespace Budggy
             CalcBinBalance();
         }
         // Adds a bin to the Bins collection.  
-        public int AddBin(string name, string description, double percentage, double goalBalance = 2500, double minimumBalance = 0, double multiplier = 1)
+        public int AddBin(string name, string description, decimal percentage, decimal goalBalance = 2500, decimal minimumBalance = 0, decimal multiplier = 1)
         {
-            double currentSplit = 0;
-            double diff;
+            decimal currentSplit = 0;
+            decimal diff;
 
             //return something difficult for each case? Also returns -1 if the percentage is too large.
             if (percentage > 100) return -1;            
@@ -140,9 +140,9 @@ namespace Budggy
         }
 
         // Method to calculate the balance based on the Balance within the bins 
-        public double TotalBalance()
+        public decimal TotalBalance()
         {
-            double balance = 0;
+            decimal balance = 0;
 
             foreach(Income inc in Incs)
             {
@@ -164,7 +164,7 @@ namespace Budggy
 
             // Cannot delete the Savings Bin
             if (index == 0) return;
-            double balance = Bins[index].GetBalance();
+            decimal balance = Bins[index].GetBalance();
 
             //Changes the bin property of each income and expense associated with the bin to Savings
             foreach(Income inc in Incs) 
@@ -185,7 +185,7 @@ namespace Budggy
         }
 
         //transfer funds from one bin to another (from bin2 to bin1)  
-        public int TransferFunds(string bin1, string bin2, double amount, DateTime date)
+        public int TransferFunds(string bin1, string bin2, decimal amount, DateTime date)
         {
             //finds the indexes of the bins.
             int index1 = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, bin1) == 0).FirstOrDefault());
@@ -205,13 +205,13 @@ namespace Budggy
         }
 
         //Adds an income to the incs list either splitting it into the bins or into one list.
-        public int AddIncome(double value, string destr, DateTime date, string mode)
+        public int AddIncome(decimal value, string destr, DateTime date, string mode)
         {
             int index;
             if(mode == "Split")
             {
                 //checks the percentage. if it is greater than 100 then it returns.
-                double percentage = 0;
+                decimal percentage = 0;
                 foreach (Bin bin in Bins)
                 {
                     percentage += bin.Percentage;
@@ -261,7 +261,7 @@ namespace Budggy
         }
         
         //Deletes an income from incs list.
-        public void DeleteIncome(double value, string destr, myDateTime date, string bin)
+        public void DeleteIncome(decimal value, string destr, myDateTime date, string bin)
         {
             //finds the income object that needs to be deleted.
             int index = Incs.IndexOf(Incs.Where(x => string.Compare(x.Description, destr) == 0 && value == x.Value
@@ -284,7 +284,7 @@ namespace Budggy
         }
         //maybe add a split functionality later on as well
 
-        public void AddExpense(double value, string destr, DateTime date, string bin)
+        public void AddExpense(decimal value, string destr, DateTime date, string bin)
         {
             int index = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, bin) == 0).FirstOrDefault());
             if (index != -1)
@@ -300,7 +300,7 @@ namespace Budggy
             CalcMonthBudgetExp();
         }
 
-        public void DeleteExpense(double value, string destr, myDateTime date, string bin)
+        public void DeleteExpense(decimal value, string destr, myDateTime date, string bin)
         {
             int index = Exps.IndexOf(Exps.Where(x => string.Compare(x.Description, destr) == 0 && value == x.Value
             && myDateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0).FirstOrDefault());
@@ -394,7 +394,7 @@ namespace Budggy
 
         }
 
-        int DCompare(double x, double y)
+        int DCompare(decimal x, decimal y)
         {
             if (x - y > 0) return 1;
             else if (x - y < 0) return -1;
@@ -471,7 +471,7 @@ namespace Budggy
             }
         }
 
-        public void AddMonthBudgetExpense(double value, string destr, string bin, DateTime date)
+        public void AddMonthBudgetExpense(decimal value, string destr, string bin, DateTime date)
         {
             int index = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, bin) == 0).FirstOrDefault());
            if (index != -1)
