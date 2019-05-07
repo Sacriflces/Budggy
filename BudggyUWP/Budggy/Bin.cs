@@ -7,6 +7,7 @@ using System.ComponentModel;
 
 namespace Budggy
 {
+
    public class Bin : INotifyPropertyChanged 
     {
         #region INotifyPropertyChanged Members
@@ -14,6 +15,8 @@ namespace Budggy
         public event PropertyChangedEventHandler PropertyChanged;
 
         #endregion
+
+       
 
         void OnPropertyChange(string propertyName)
         {
@@ -23,6 +26,21 @@ namespace Budggy
 
         // internal List<Expense> Expenses = new List<Expense>();
         //internal List<Income> Incomes = new List<Income>();
+
+        public class Drawer : INotifyPropertyChanged
+        {
+            #region INotifyPropertyChanged Members
+
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            #endregion
+
+            void OnPropertyChange(string propertyName)
+            {
+                if (PropertyChanged != null)
+                    PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
 
         private string _description;
         public string Description

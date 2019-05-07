@@ -129,8 +129,8 @@ namespace Budggy
         }
 
         internal void AddIncome(Income inc)
-        {           
-                IncAmount += inc.Value;
+        {
+            IncAmount += inc.Value;
            
         }
 

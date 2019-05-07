@@ -276,10 +276,11 @@ namespace Budggy
                     break;
                 }
             }
-
+            
             Incs.RemoveAt(index);
             OrganizeIncomesByDate();
             CalcBinBalance();
+            CalcMonthBudgetAll();
         }
         //maybe add a split functionality later on as well
 
@@ -296,6 +297,7 @@ namespace Budggy
             CalcBinBalance();
             AddMonthBudgetExpense(value, destr, bin, date);
             OrganizeExpensesByDate();
+            CalcMonthBudgetExp();
         }
 
         public void DeleteExpense(double value, string destr, myDateTime date, string bin)
@@ -316,6 +318,8 @@ namespace Budggy
             Exps.RemoveAt(index);
             OrganizeExpensesByDate();
             CalcBinBalance();
+            CalcMonthBudgetAll();
+
         }
 
         //Sorting Methods date and value
@@ -422,9 +426,19 @@ namespace Budggy
         // checks all the expenses in bins and the budget controller. It also checks if a transfer occurred, so there won't be extra substractions
         public void CalcMonthBudgetAll()
         {
-            foreach (MonthBudget bud in MonthlyBudgets)
+            foreach(MonthBudget bud in MonthlyBudgets)
             {
                 bud.Value = bud.BudgetVal;
+            }
+            CalcMonthBudgetExp();
+            CalcMonthBudgetInc();
+        }
+
+        public void CalcMonthBudgetExp()
+        {
+            foreach (MonthBudget bud in MonthlyBudgets)
+            {
+                bud.ExpAmount = 0;
                 foreach(Expense exp in Exps)
                 {
                     if(exp.Date.Month == bud.Date.Month && exp.Date.Year == bud.Date.Year)
