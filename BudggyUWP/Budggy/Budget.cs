@@ -489,7 +489,17 @@ namespace Budggy
             }
             
         }
-        
+
+        public void CreateBinDrawer()
+        {
+
+        }
+
+        public void RemoveBinDrawer()
+        {
+
+        }
+
     }
 
    /* public class BudgetViewModel
