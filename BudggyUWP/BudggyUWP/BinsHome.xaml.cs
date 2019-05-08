@@ -167,5 +167,29 @@ namespace BudggyUWP
         {
             BinsEditLV.Visibility = (BinsEditLV.Visibility == Visibility.Collapsed) ? Visibility.Visible : Visibility.Collapsed;
         }
+
+        private void DrawerDelBT_Click(object sender, RoutedEventArgs e)
+        {
+            FrameworkElement ele = sender as FrameworkElement;
+            Drawer drawer = ele.DataContext as Drawer;
+            if (ele != null)
+            {
+                budget.RemoveBinDrawer(drawer.BinName, drawer.Name);
+            }
+        }
+
+        private void DrawerCreBT_Click(object sender, RoutedEventArgs e)
+        {
+            int index;
+            FrameworkElement ele = sender as FrameworkElement;
+            if (ele != null)
+            {
+                BinsLV.SelectedItem = ele.DataContext;
+                index = BinsLV.SelectedIndex;
+
+                budget.Bins[index].CreateDrawer();
+
+            }
+        }
     }
 }

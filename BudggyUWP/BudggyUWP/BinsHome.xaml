@@ -5,6 +5,7 @@
     xmlns:local="using:BudggyUWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Budggy="using:Budggy"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
@@ -13,7 +14,9 @@
                 <ResourceDictionary Source="Dictionary1.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
+        
     </Page.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -118,7 +121,7 @@
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
             <ListView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="Budggy:Bin">
                     <Border
                         BorderBrush="White"
                         BorderThickness="2"
@@ -156,6 +159,41 @@
                                            HorizontalAlignment="Center"
                                            FontSize="24"/>
                             </StackPanel>
+
+                            <Button Name="DrawerCreBT" FontSize="24"
+                                HorizontalAlignment="Center"
+                                FontFamily="Segoe MDL2 Assets"
+                                Content="&#xE738;"
+                                Click="DrawerCreBT_Click"
+                               />
+
+                            <ListView Name ="DrawerLV" ItemsSource="{x:Bind Drawers}"  >
+                                <ListView.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel
+                                VerticalAlignment="Top"
+                                Margin="10"/>
+                                    </ItemsPanelTemplate>
+                                </ListView.ItemsPanel>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="Budggy:Drawer">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                     Margin="0,0,10,0"/>
+                                            <TextBlock Text="{Binding CurrentSpent, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                       Margin="0,0,10,0"/>
+                                            <TextBox Text="{Binding Maximum, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                     Margin="0,0,10,0"/>
+                                            <Button Name="DrawerDelBT" FontFamily="Segoe MDL2 Assets"
+                                                    Content="&#xE738;"
+                                                    Click="DrawerDelBT_Click"
+                                                     />
+                                        </StackPanel>
+                                        
+                                    </DataTemplate>
+                                </ListView.ItemTemplate> 
+                            </ListView>
+                            
                         <Button FontSize="36"
                                 HorizontalAlignment="Center"
                                 FontFamily="Segoe MDL2 Assets"

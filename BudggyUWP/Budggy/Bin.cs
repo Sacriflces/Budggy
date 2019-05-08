@@ -149,12 +149,12 @@ namespace Budggy
             else return 0;
         }
 
-        public void CreateDrawer(string name, decimal maximum)
+        public void CreateDrawer(string name = null, decimal maximum = 100m)
         {
-            if(Drawers.IndexOf(Drawers.Where(x => string.Compare(x.Name, name) == 0).FirstOrDefault()) == -1)
+            if(Drawers.IndexOf(Drawers.Where(x => string.Compare(x.Name, name) == 0).FirstOrDefault()) != -1)
                 return;
 
-            Drawer item = new Drawer(name, maximum, DateTime.Now);
+            Drawer item = new Drawer(name, maximum, DateTime.Now, Name);
             Drawers.Add(item);
         }
 
@@ -235,6 +235,8 @@ namespace Budggy
             }
         }
 
+        public string BinName;
+
         private int _month;
         public int Month
         {
@@ -266,8 +268,10 @@ namespace Budggy
 
         }
         
-        public Drawer(string name, decimal maximum, DateTime date)
+        public Drawer(string name, decimal maximum, DateTime date, string binName = null)
         {
+            //Need to create strings to bind too... eventually
+            BinName = binName;
             Name = name;
             Maximum = maximum;
             Max = maximum;

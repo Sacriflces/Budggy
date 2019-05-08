@@ -110,7 +110,12 @@ namespace BudggyUWP
             string datestr = HomeCDP.Date.ToString().Remove(index);
             string[] datearr = datestr.Split('/');
             string binName;
-            if(IncExpCB.SelectedIndex == 0)
+            Drawer drawer = DrawersCB.SelectedItem as Drawer;
+            string drawerName = drawer?.Name;
+
+
+
+            if (IncExpCB.SelectedIndex == 0)
             {
                 if (SplitTSW.IsOn == true)
                 {
@@ -129,7 +134,7 @@ namespace BudggyUWP
                 binName = budget.Bins[BinsCB.SelectedIndex].Name;
                 budget.AddExpense(Convert.ToDecimal(ValueTB.Text), DescriptionTB.Text,
                       new DateTime(Convert.ToInt16(datearr[2]), Convert.ToInt16(datearr[0]), Convert.ToInt16(datearr[1])),
-                      budget.Bins[BinsCB.SelectedIndex].Name);
+                      budget.Bins[BinsCB.SelectedIndex].Name, drawerName);
             }
 
             // clear values
@@ -161,9 +166,12 @@ namespace BudggyUWP
             if (IncExpCB.SelectedIndex == 0)
             {
                 SplitTSW.IsEnabled = true;
-            } else
+                DrawersCB.Visibility = Visibility.Collapsed;
+            }
+            else
             { 
                 SplitTSW.IsEnabled = false;
+                DrawersCB.Visibility = Visibility.Visible;
             }
         }
 
@@ -199,7 +207,10 @@ namespace BudggyUWP
                 budget.Exps[index].Date, budget.Exps[index].Bin);
         }
 
-       
+        private void BinsCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DrawersCB.ItemsSource = budget.Bins[BinsCB.SelectedIndex].Drawers;
+        }
     }
 
 

@@ -19,14 +19,14 @@ namespace Budggy
     {
 
         public ObservableCollection<Bin> Bins = new ObservableCollection<Bin>()  {
-            new Bin("Savings", "", .3m),
+        /*    new Bin("Savings", "", .3m),
             new Bin("Entertainment", "Going out money and gaming money, and whatever else I need to make this description longer", .5m),
             new Bin("Gas", "", .1m),
             new Bin("Food", "", .05m),
-            new Bin("Presents", "Money for Presents lol", .05m), 
+            new Bin("Presents", "Money for Presents lol", .05m), */
     };
         public ObservableCollection<Income> Incs = new ObservableCollection<Income>() {
-            new Income(2500.00m, "Money.. I wonder what happens if this description... isn't actually short and takes up A TON of space. You know what I mean?", "Savings", DateTime.Now),
+        /*    new Income(2500.00m, "Money.. I wonder what happens if this description... isn't actually short and takes up A TON of space. You know what I mean?", "Savings", DateTime.Now),
             new Income(143.72m, "Money", "Savings", DateTime.Now),
             new Income(28.00m, "Money", "Savings", DateTime.Now),
             new Income(55.53m, "Money", "Savings", DateTime.Now),
@@ -36,10 +36,10 @@ namespace Budggy
             new Income(192m, "Money", "Savings", DateTime.Now),
             new Income(10.10m, "Money", "Savings", DateTime.Now),
             new Income(172.46m, "Money", "Savings", DateTime.Now),
-            new Income(60.18m, "Money", "Savings", DateTime.Now), 
+            new Income(60.18m, "Money", "Savings", DateTime.Now),  */
         };
         public ObservableCollection<Expense> Exps = new ObservableCollection<Expense>()  {
-            new Expense(3m, "Money", "Entertainment", DateTime.Now),
+          /*  new Expense(3m, "Money", "Entertainment", DateTime.Now),
             new Expense(14.18m, "Money", "Entertainment", DateTime.Now),
             new Expense(29.37m, "Money", "Gas", DateTime.Now),
             new Expense(8.47m, "Money", "Food", DateTime.Now),
@@ -49,7 +49,7 @@ namespace Budggy
             new Expense(2.25m, "Money", "Food", DateTime.Now),
             new Expense(28.40m, "Money", "Gas", DateTime.Now),
             new Expense(13.99m, "Amazon", "Entertainment", DateTime.Now),
-            new Expense(49.43m, "Amazon", "Presents", DateTime.Now), 
+            new Expense(49.43m, "Amazon", "Presents", DateTime.Now), */
         };
         public ObservableCollection<MonthBudget> MonthlyBudgets = new ObservableCollection<MonthBudget>() {
             
@@ -495,7 +495,7 @@ namespace Budggy
             }
             
         }
-
+        //Don't need this. I'll already know what the index is
         public void CreateBinDrawer(string bin, string name, decimal maximum)
         {
             int index = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, bin) == 0).FirstOrDefault());
