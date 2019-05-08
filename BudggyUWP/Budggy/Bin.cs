@@ -149,24 +149,40 @@ namespace Budggy
             else return 0;
         }
 
-        public void CreateDrawer()
+        public void CreateDrawer(string name, decimal maximum)
         {
+            if(Drawers.IndexOf(Drawers.Where(x => string.Compare(x.Name, name) == 0).FirstOrDefault()) == -1)
+                return;
 
+            Drawer item = new Drawer(name, maximum, DateTime.Now);
+            Drawers.Add(item);
         }
 
-        public void RemoveDrawer()
+        public void RemoveDrawer(string name)
         {
-
+            int index = Drawers.IndexOf(Drawers.Where(x => string.Compare(x.Name, name) == 0).FirstOrDefault());
+            if(index != -1)
+            {
+                Drawers.RemoveAt(index);
+            }
         }
 
         public void AddDrawerExpense(Expense exp)
         {
-
+            int index = Drawers.IndexOf(Drawers.Where(x => string.Compare(x.Name, exp.Drawer) == 0).FirstOrDefault());
+            if (index != -1)
+            {
+                Drawers[index].AddExpense(exp);
+            }
         }
 
         public void RemoveDrawerExpense(Expense exp)
         {
-
+            int index = Drawers.IndexOf(Drawers.Where(x => string.Compare(x.Name, exp.Drawer) == 0).FirstOrDefault());
+            if (index != -1)
+            {
+                Drawers[index].RemoveExpense(exp);
+            }
         }
     }
 
@@ -277,9 +293,14 @@ namespace Budggy
             Year = DateTime.Now.Year;
         }
 
-        public void AddExpense()
+        public void AddExpense(Expense exp)
         {
+            CurrentSpent += exp.Value;
+        }
 
+        public void RemoveExpense(Expense exp)
+        {
+            CurrentSpent -= exp.Value;
         }
 
     }

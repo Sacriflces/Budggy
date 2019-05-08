@@ -284,15 +284,20 @@ namespace Budggy
         }
         //maybe add a split functionality later on as well
 
-        public void AddExpense(decimal value, string destr, DateTime date, string bin)
+        public void AddExpense(decimal value, string destr, DateTime date, string bin, string drawer = null)
         {
+            Expense exp; 
             int index = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, bin) == 0).FirstOrDefault());
             if (index != -1)
             {
-                Exps.Add(new Expense(value, destr, Bins[index].Name, date));
+                exp = new Expense(value, destr, Bins[index].Name, date);
             }
             else
-                Exps.Add(new Expense(value, destr, null, date));
+                exp = new Expense(value, destr, null, date);
+
+            exp.Drawer = drawer;
+            Exps.Add(exp);
+            Bins[index].AddDrawerExpense(exp);
 
             CalcBinBalance();
             AddMonthBudgetExpense(value, destr, bin, date);
@@ -304,7 +309,7 @@ namespace Budggy
         {
             int index = Exps.IndexOf(Exps.Where(x => string.Compare(x.Description, destr) == 0 && value == x.Value
             && myDateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0).FirstOrDefault());
-
+            int Binindex = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, bin) == 0).FirstOrDefault());
             foreach (MonthBudget bud in MonthlyBudgets)
             {
                 if (Exps[index].Date.Month == bud.Date.Month && Exps[index].Date.Year == bud.Date.Year)
@@ -314,8 +319,9 @@ namespace Budggy
                 }
             }
 
-
+            Bins[Binindex].RemoveDrawerExpense(Exps[index]);
             Exps.RemoveAt(index);
+
             OrganizeExpensesByDate();
             CalcBinBalance();
             CalcMonthBudgetAll();
@@ -490,14 +496,23 @@ namespace Budggy
             
         }
 
-        public void CreateBinDrawer()
+        public void CreateBinDrawer(string bin, string name, decimal maximum)
         {
+            int index = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, bin) == 0).FirstOrDefault());
+            if (index != -1)
+            {
+                Bins[index].CreateDrawer(name, maximum);
+            }
 
         }
 
-        public void RemoveBinDrawer()
+        public void RemoveBinDrawer(string bin, string name)
         {
-
+             int index = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, bin) == 0).FirstOrDefault());
+            if (index != -1)
+            {
+                Bins[index].RemoveDrawer(name);
+            }
         }
 
     }
