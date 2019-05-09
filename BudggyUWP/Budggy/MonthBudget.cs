@@ -79,7 +79,7 @@ namespace Budggy
                 val = value;
                 OnPropertyChanged("Value");
                 if (value > 0.00m)
-                    valString = val.ToString("C");
+                    ValString = val.ToString("C");
                 else
                 {
                     ValString = $"-${(-1 * value).ToString("G")}";
@@ -128,8 +128,9 @@ namespace Budggy
             set
             {
                 expAmount = value;
-                OnPropertyChanged("ExpAmount");
                 ExpString = expAmount.ToString("C");
+                OnPropertyChanged("ExpAmount");
+                
             }
         }
 

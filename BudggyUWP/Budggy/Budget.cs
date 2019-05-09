@@ -300,7 +300,7 @@ namespace Budggy
             Bins[index].AddDrawerExpense(exp);
 
             CalcBinBalance();
-            AddMonthBudgetExpense(value, destr, bin, date);
+           // AddMonthBudgetExpense(value, destr, bin, date);
             OrganizeExpensesByDate();
             CalcMonthBudgetExp();
         }
@@ -445,6 +445,7 @@ namespace Budggy
             foreach (MonthBudget bud in MonthlyBudgets)
             {
                 bud.ExpAmount = 0;
+                bud.Value = bud.BudgetVal;
                 foreach(Expense exp in Exps)
                 {
                     if(exp.Date.Month == bud.Date.Month && exp.Date.Year == bud.Date.Year)
@@ -476,7 +477,7 @@ namespace Budggy
                 }
             }
         }
-
+        /*
         public void AddMonthBudgetExpense(decimal value, string destr, string bin, DateTime date)
         {
             int index = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, bin) == 0).FirstOrDefault());
@@ -494,7 +495,7 @@ namespace Budggy
                 }
             }
             
-        }
+        } */
         //Don't need this. I'll already know what the index is
         public void CreateBinDrawer(string bin, string name, decimal maximum)
         {
