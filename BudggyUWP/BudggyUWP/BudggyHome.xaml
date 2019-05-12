@@ -20,56 +20,64 @@
             </Style>
         </ResourceDictionary>
     </Page.Resources>
-    <Grid Background="#FF071E6A">
+    <Grid Background="{StaticResource DarkColor}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="1*"/>
             <RowDefinition Height="5*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="6*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
             <!--<ColumnDefinition Width="2*"/> -->
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
-        <RelativePanel Grid.Row="1" Grid.ColumnSpan="3">
-            <StackPanel Grid.Row="1" Grid.ColumnSpan="3"                        
+        <RelativePanel Grid.Row="1" Grid.ColumnSpan="3" Margin="10">
+            <Border RelativePanel.AlignHorizontalCenterWithPanel="True"
+                    RelativePanel.AlignVerticalCenterWithPanel="True"
+                    RelativePanel.AlignLeftWithPanel="True"
+                    RelativePanel.AlignRightWithPanel="True"
+                    RelativePanel.AlignTopWithPanel="True"
+                    RelativePanel.AlignBottomWithPanel="True"
+                    BorderBrush="{StaticResource LightColor}"
+                    Background="{StaticResource LightColor}"    
+                    Margin="0,0,0,0"
+                    BorderThickness="6"
+                    Padding="0,0,0,0"
+                    CornerRadius="3"
+                    VariableSizedWrapGrid.ColumnSpan="3"/>
+            <StackPanel Name="TransactionSP" Grid.Row="1" Grid.ColumnSpan="3"                        
                         RelativePanel.AlignHorizontalCenterWithPanel="True"
                         RelativePanel.AlignVerticalCenterWithPanel="True"
             
                         Orientation="Horizontal"
-                        Background="#FF0AA085"
+                        Background="{StaticResource LightColor}"
                         >
                 <ToggleSwitch Name="SplitTSW" Header="Split Income" IsOn="True"
-                              Foreground="#FF071E6A"/>
+                              Foreground="{StaticResource DarkColor}"/>
                 <StackPanel>
-                    <ComboBox x:Name="BinsCB" Width="200"
-                          VerticalAlignment="Center"
-                          Margin="0,14,20,0" 
+                    <ComboBox x:Name="BinsCB" 
+                              Style="{StaticResource BinsDrawerCBStyle}"
                           SelectionChanged="BinsCB_SelectionChanged"                          
                           >
                         <ComboBox.ItemTemplate>
                             <DataTemplate  >
                                 <TextBlock Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
-
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
-                    <ComboBox x:Name="DrawersCB" Width="200"
-                          VerticalAlignment="Center"
-                          Margin="0,0,20,0" 
-                          Visibility="Collapsed"                             
+                    <ComboBox x:Name="DrawersCB" 
+                              Style="{StaticResource BinsDrawerCBStyle}"
+                              Visibility="Collapsed"                             
                           >
                         <ComboBox.ItemTemplate>
                             <DataTemplate  >
                                 <TextBlock Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
-
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
                 </StackPanel>
-                <ComboBox x:Name="IncExpCB" Width="100"
-                          SelectedIndex="0" 
-                          VerticalAlignment="Center"
+                <ComboBox x:Name="IncExpCB" 
+                          Style="{StaticResource IncExpCBStyle}"
                           SelectionChanged="IncExpCB_SelectionChanged">
                     <ComboBoxItem Content="Income"/>
                     <ComboBoxItem Content="Expense"/>
@@ -94,17 +102,19 @@
             </StackPanel>
         </RelativePanel>
         <Border Grid.Row="2"
-                BorderBrush="#FF071E6A"
+                BorderBrush="{StaticResource LightColor}"
+                Margin="10"
                 BorderThickness="6"
-                Padding="20,15,20,15"
-                CornerRadius="3">
+                Padding="0,0,0,0"
+                CornerRadius="3"
+                >
 
 
             <ListBox Name="IncLB" Grid.Row="2" 
                  ScrollViewer.HorizontalScrollMode="Enabled"
                  ScrollViewer.HorizontalScrollBarVisibility="Visible"
                  ScrollViewer.IsHorizontalRailEnabled="True" 
-                     Background="#FF0AA085"
+                     Background="{StaticResource LightColor}"
                   >
                 <ListBox.ItemTemplate>
                     <DataTemplate>
@@ -153,15 +163,16 @@
 
         <Border Grid.Row="2"
                 Grid.Column="1"
-                BorderBrush="#FF071E6A"
+                BorderBrush="{StaticResource LightColor}"
                 BorderThickness="6"
-                Padding="20,15,20,15"
+                Margin="10"
+                Padding="0,0,0,0"
                 CornerRadius="3">
 
             <ListBox Name="ExpLB" Grid.Row="2" Grid.Column="1"
                  ScrollViewer.HorizontalScrollMode="Enabled"
                  ScrollViewer.HorizontalScrollBarVisibility="Visible"
-                 ScrollViewer.IsHorizontalRailEnabled="True" Background="#FF0AA085">
+                 ScrollViewer.IsHorizontalRailEnabled="True" Background="{StaticResource LightColor}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <RelativePanel Width="450" >
@@ -235,22 +246,21 @@
                         RadiusX="20"
                        RadiusY="20"
                    
-                     Fill="#FF0AA085"
+                     Fill="{StaticResource LightColor}"
                   />
             <StackPanel Name="BalanceSP" Background="{x:Null}"  RelativePanel.AlignHorizontalCenterWithPanel="True"
                         RelativePanel.AlignVerticalCenterWithPanel="True">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Budget Balance for" FontSize="36"/>
-                    <TextBlock Name="BudgetMonthTB"  FontSize="36"
-                               Margin="10,0,10,0"
+                    <TextBlock Text="Budget Balance for" Style="{StaticResource BudgetContainerTBl}" />
+                    <TextBlock Name="BudgetMonthTB"  Style="{StaticResource BudgetContainerTBl}"
                                Text="{Binding MonthStr,  UpdateSourceTrigger=PropertyChanged}"/>
-                    <TextBlock Name="BudgetYearTB" FontSize="36"
+                    <TextBlock Name="BudgetYearTB" Style="{StaticResource BudgetContainerTBl}"
                                Text="{Binding YearInt, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock Name="BudgetsignTB" FontSize="48" Text="+"/>
-                    <TextBlock Name="BudgetTB" FontSize="48" 
+                    <TextBlock Name="BudgetsignTB" Style="{StaticResource BudgetContainerTBl}" Text="+"/>
+                    <TextBlock Name="BudgetTB" Style="{StaticResource BudgetContainerTBl}" 
                            Text="{Binding ValString, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
 
@@ -262,16 +272,18 @@
                         RelativePanel.AlignLeftWith="BalanceSP"
                         RelativePanel.AlignRightWith="BalanceSP"
 
-                        Background="#FF0FB294"
+                        Background="{StaticResource IncomeColor}"
                         >
                 <RelativePanel>
                     <RelativePanel RelativePanel.AlignHorizontalCenterWithPanel="True">
-                    <TextBlock Name="IncomeTB" FontSize="36" Text="Income" 
+                        <TextBlock Name="IncomeTB" Style="{StaticResource BudgetContainerTBl}" Text="Income" 
                                RelativePanel.AlignLeftWithPanel="True" 
-                               Margin="0,0,10,0"/>
-                    <TextBlock Name="IncomeSignTB" FontSize="36" Text="+" RelativePanel.LeftOf="IncValueTB"
+                               />
+                        <TextBlock Name="IncomeSignTB" Style="{StaticResource BudgetContainerTBl}" 
+                                   Text="+" RelativePanel.LeftOf="IncValueTB"
                                RelativePanel.RightOf="IncomeTB"/>
-                    <TextBlock Name="IncValueTB" FontSize="36" Text="{Binding IncString, UpdateSourceTrigger=PropertyChanged}"
+                        <TextBlock Name="IncValueTB" Style="{StaticResource BudgetContainerTBl}"
+                                   Text="{Binding IncString, UpdateSourceTrigger=PropertyChanged}"
                                RelativePanel.AlignRightWithPanel="True"/>
                     </RelativePanel>
                 </RelativePanel>
@@ -285,13 +297,16 @@
                         RelativePanel.AlignLeftWith="IncSP" Background="{x:Null}">
                 <RelativePanel>
                     <RelativePanel RelativePanel.AlignHorizontalCenterWithPanel="True">
-                    <TextBlock Name="ExpenseTB" FontSize="36" Text="Expense"
+                        <TextBlock Name="ExpenseTB" Style="{StaticResource BudgetContainerTBl}"
+                                   Text="Expense"
                                RelativePanel.AlignLeftWithPanel="True"
-                               Margin="0,0,10,0"/>
-                    <TextBlock FontSize="36" Text="-"
+                               />
+                        <TextBlock Style="{StaticResource BudgetContainerTBl}"
+                                   Text="-"
                                RelativePanel.LeftOf="ExpValueTB"
                                RelativePanel.RightOf="ExpenseTB"/>
-                    <TextBlock Name="ExpValueTB" FontSize="36" Text="{Binding ExpString, UpdateSourceTrigger=PropertyChanged}"
+                        <TextBlock Name="ExpValueTB" Style="{StaticResource BudgetContainerTBl}"
+                                   Text="{Binding ExpString, UpdateSourceTrigger=PropertyChanged}"
                                 RelativePanel.AlignRightWithPanel="True"/>
                     </RelativePanel>
                 </RelativePanel>

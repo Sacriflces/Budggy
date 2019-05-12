@@ -30,4 +30,41 @@
         <Setter Property="FontSize" Value="24"/>
         <Setter Property="Margin" Value="20,0,0,20"/>
     </Style>
+
+    <Style TargetType="ComboBox" x:Key="BinsDrawerCBStyle">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,14,20,10"/>
+        <Setter Property="Width" Value="200"/>
+    </Style>
+
+    <Style TargetType="ComboBox" x:Key="IncExpCBStyle">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="SelectedIndex" Value="0"/>
+        <Setter Property="Width" Value="100"/>
+    </Style>
+
+    <Style TargetType="TextBlock" x:Key="BudgetContainerTBl">
+        <Setter Property="FontSize" Value="36"/>
+        <Setter Property="FontFamily" Value="Segoe UI"/> <!-- Segoe UI original-->
+        <Setter Property="Margin" Value="0,0,10,0"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <Setter Property="Foreground" Value="Black"/>
+
+    </Style>
+    
+    <SolidColorBrush x:Name="IncomeColor" Color="#FF0FB294"/>
+    
+    <!-- End of BudggyHome Styles-->
+
+    
+    <SolidColorBrush x:Name="LightColor" Color="#FF0AA085"/>
+
+    <SolidColorBrush x:Name="DarkColor" Color="#FF071E6A"/>
+
+    
+    
+
+
+
 </ResourceDictionary>
