@@ -18,9 +18,9 @@
             <Style x:Name="BudggyHomeTBox" TargetType="TextBox">
                 <Setter Property="VerticalAlignment" Value="Center"/>
             </Style>
-        </ResourceDictionary>        
+        </ResourceDictionary>
     </Page.Resources>
-    <Grid>
+    <Grid Background="#FF071E6A">
         <Grid.RowDefinitions>
             <RowDefinition Height="3*"/>
             <RowDefinition Height="1*"/>
@@ -35,21 +35,25 @@
             <StackPanel Grid.Row="1" Grid.ColumnSpan="3"                        
                         RelativePanel.AlignHorizontalCenterWithPanel="True"
                         RelativePanel.AlignVerticalCenterWithPanel="True"
-                        Orientation="Horizontal">
-                <ToggleSwitch Name="SplitTSW" Header="Split Income" IsOn="True"/>
+            
+                        Orientation="Horizontal"
+                        Background="#FF0AA085"
+                        >
+                <ToggleSwitch Name="SplitTSW" Header="Split Income" IsOn="True"
+                              Foreground="#FF071E6A"/>
                 <StackPanel>
-                <ComboBox x:Name="BinsCB" Width="200"
+                    <ComboBox x:Name="BinsCB" Width="200"
                           VerticalAlignment="Center"
                           Margin="0,14,20,0" 
-                          SelectionChanged="BinsCB_SelectionChanged"
-                          >                    
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate  >
-                            <TextBlock Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
-                          
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                          SelectionChanged="BinsCB_SelectionChanged"                          
+                          >
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate  >
+                                <TextBlock Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                     <ComboBox x:Name="DrawersCB" Width="200"
                           VerticalAlignment="Center"
                           Margin="0,0,20,0" 
@@ -72,7 +76,7 @@
                 </ComboBox>
                 <TextBox PlaceholderText="Description"
                          Style="{StaticResource BudggyHomeTBox}"
-                         Name="DescriptionTB" Width="300"
+                         Name="DescriptionTB" Width="300"                        
                          />
                 <TextBox Name="ValueTB" PlaceholderText="Value"   
                          Style="{StaticResource BudggyHomeTBox}"
@@ -87,48 +91,48 @@
                         Margin="20,0,0,0"                       
                         Click="AddButton_Click"/>
 
-            </StackPanel>            
+            </StackPanel>
         </RelativePanel>
         <Border Grid.Row="2"
-                BorderBrush="White"
-                BorderThickness="2"
+                BorderBrush="#FF071E6A"
+                BorderThickness="6"
                 Padding="20,15,20,15"
-                Background="AliceBlue"
-                CornerRadius="5">
-            
-        
-        <ListBox Name="IncLB" Grid.Row="2" 
+                CornerRadius="3">
+
+
+            <ListBox Name="IncLB" Grid.Row="2" 
                  ScrollViewer.HorizontalScrollMode="Enabled"
                  ScrollViewer.HorizontalScrollBarVisibility="Visible"
-                 ScrollViewer.IsHorizontalRailEnabled="True"
+                 ScrollViewer.IsHorizontalRailEnabled="True" 
+                     Background="#FF0AA085"
                   >
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+
                         <RelativePanel Width="450" >
-                        <!-- use a relative panel to have the delete button always on the right!-->
-                        <Ellipse Name="IncEllipse" Fill="Green" Width="25" Height="25"
+                            <!-- use a relative panel to have the delete button always on the right!-->
+                            <Ellipse Name="IncEllipse" Fill="Green" Width="25" Height="25"
                                  Margin="0,10,0,0"
                                  RelativePanel.AlignLeftWithPanel="True"
                                     
-                                 />                       
-                        <TextBlock Name="LBIncValTB" Margin="20,10,0,0" Text="{Binding ValueStr, UpdateSourceTrigger=PropertyChanged}"
+                                 />
+                            <TextBlock Name="LBIncValTB" Margin="20,10,0,0" Text="{Binding ValueStr, UpdateSourceTrigger=PropertyChanged}"
                                    Style="{StaticResource BudggyHomeTBlock}"
                                    RelativePanel.RightOf="IncEllipse"            
                                    
                                    />
-                        <StackPanel Name="IncBinSP" Margin="20,0,20,0" RelativePanel.RightOf="LBIncValTB"
+                            <StackPanel Name="IncBinSP" Margin="20,0,20,0" RelativePanel.RightOf="LBIncValTB"
                                     
                                     >
-                            <TextBlock Text="Bin:"/>
-                            <TextBlock Text="{Binding Bin, UpdateSourceTrigger=PropertyChanged}"/>
-                        </StackPanel>
-                        <TextBlock Name="IncDateTB" Style="{StaticResource BudggyHomeTBlock}"
+                                <TextBlock Text="Bin:"/>
+                                <TextBlock Text="{Binding Bin, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+                            <TextBlock Name="IncDateTB" Style="{StaticResource BudggyHomeTBlock}"
                                    Margin="0,10,0,0"
                                    Text="{Binding DateStr, UpdateSourceTrigger=PropertyChanged}"
                                    RelativePanel.RightOf="IncBinSP"
                                    />
-                        <TextBlock Margin="20,20,20,0" Style="{StaticResource BudggyHomeTBlock}" 
+                            <TextBlock Margin="20,20,20,0" Style="{StaticResource BudggyHomeTBlock}" 
                             Text="{Binding Description,UpdateSourceTrigger=PropertyChanged}"
                                    TextWrapping="WrapWholeWords"
                                    MaxWidth="400"
@@ -140,29 +144,28 @@
                                     RelativePanel.AlignVerticalCenterWithPanel="True"/>
 
                         </RelativePanel>
-                   
+
                     </DataTemplate>
-            </ListBox.ItemTemplate>
+                </ListBox.ItemTemplate>
                 <Grid/>
             </ListBox>
         </Border>
 
         <Border Grid.Row="2"
                 Grid.Column="1"
-                BorderBrush="White"
-                BorderThickness="2"
+                BorderBrush="#FF071E6A"
+                BorderThickness="6"
                 Padding="20,15,20,15"
-                Background="AliceBlue"
-                CornerRadius="5">
+                CornerRadius="3">
 
             <ListBox Name="ExpLB" Grid.Row="2" Grid.Column="1"
                  ScrollViewer.HorizontalScrollMode="Enabled"
                  ScrollViewer.HorizontalScrollBarVisibility="Visible"
-                 ScrollViewer.IsHorizontalRailEnabled="True">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
+                 ScrollViewer.IsHorizontalRailEnabled="True" Background="#FF0AA085">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
                         <RelativePanel Width="450" >
-                                                       
+
                             <!-- use a relative panel to have the delete button always on the right!-->
                             <Ellipse Name="ExpEllipse" Fill="Red" Width="25" Height="25"
                                  Margin="0,10,0,0"
@@ -185,7 +188,7 @@
                                    Text="{Binding DateStr, UpdateSourceTrigger=PropertyChanged}"
                                    RelativePanel.RightOf="ExpBinSP"
                                    />
-                            
+
                             <TextBlock Margin="20,20,20,0" Style="{StaticResource BudggyHomeTBlock}" 
                             Text="{Binding Description,UpdateSourceTrigger=PropertyChanged}"
                                    TextWrapping="WrapWholeWords"
@@ -212,17 +215,29 @@
                             Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" 
                                    TextWrapping="WrapWholeWords"                                   
                                    MaxWidth="400"/> -->
-                        
-                    
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+
+
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </Border>
 
-    
+
 
         <RelativePanel Name="BudgetBalRP" Grid.ColumnSpan="2">
-            <StackPanel Name="BalanceSP" Background="Purple"  RelativePanel.AlignHorizontalCenterWithPanel="True"
+            
+            <Rectangle RelativePanel.AlignHorizontalCenterWithPanel="True"
+                        RelativePanel.AlignVerticalCenterWithPanel="True"
+                        RelativePanel.AlignRightWith="BalanceSP"
+                        RelativePanel.AlignLeftWith="BalanceSP"
+                        RelativePanel.AlignBottomWith="ExpSP"
+                        RelativePanel.AlignTopWith="BalanceSP"
+                        RadiusX="20"
+                       RadiusY="20"
+                   
+                     Fill="#FF0AA085"
+                  />
+            <StackPanel Name="BalanceSP" Background="{x:Null}"  RelativePanel.AlignHorizontalCenterWithPanel="True"
                         RelativePanel.AlignVerticalCenterWithPanel="True">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Budget Balance for" FontSize="36"/>
@@ -232,46 +247,57 @@
                     <TextBlock Name="BudgetYearTB" FontSize="36"
                                Text="{Binding YearInt, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
-                
+
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <TextBlock Name="BudgetsignTB" FontSize="48" Text="+"/>
                     <TextBlock Name="BudgetTB" FontSize="48" 
                            Text="{Binding ValString, UpdateSourceTrigger=PropertyChanged}"/>
-                </StackPanel>             
+                </StackPanel>
 
             </StackPanel>
             <!-- Monthly income elements -->
             <StackPanel Name="IncSP"
+                        
                         RelativePanel.Below="BalanceSP"
-                        RelativePanel.AlignRightWith="BalanceSP"
                         RelativePanel.AlignLeftWith="BalanceSP"
-                        Background="Green">
+                        RelativePanel.AlignRightWith="BalanceSP"
+
+                        Background="#FF0FB294"
+                        >
                 <RelativePanel>
+                    <RelativePanel RelativePanel.AlignHorizontalCenterWithPanel="True">
                     <TextBlock Name="IncomeTB" FontSize="36" Text="Income" 
-                               RelativePanel.AlignLeftWithPanel="True" />
-                    <TextBlock Name="IncomeSignTB" FontSize="36" Text="+" RelativePanel.LeftOf="IncValueTB"/>
+                               RelativePanel.AlignLeftWithPanel="True" 
+                               Margin="0,0,10,0"/>
+                    <TextBlock Name="IncomeSignTB" FontSize="36" Text="+" RelativePanel.LeftOf="IncValueTB"
+                               RelativePanel.RightOf="IncomeTB"/>
                     <TextBlock Name="IncValueTB" FontSize="36" Text="{Binding IncString, UpdateSourceTrigger=PropertyChanged}"
                                RelativePanel.AlignRightWithPanel="True"/>
+                    </RelativePanel>
                 </RelativePanel>
             </StackPanel>
+           
 
-            <!-- Monthly expense elements-->
+                <!-- Monthly expense elements-->
             <StackPanel Name="ExpSP"
                         RelativePanel.Below="IncSP"
                         RelativePanel.AlignRightWith="IncSP"
-                        RelativePanel.AlignLeftWith="IncSP"
-                        Background="Red">
+                        RelativePanel.AlignLeftWith="IncSP" Background="{x:Null}">
                 <RelativePanel>
-                    <TextBlock FontSize="36" Text="Expense"
-                               RelativePanel.AlignLeftWithPanel="True"/>
+                    <RelativePanel RelativePanel.AlignHorizontalCenterWithPanel="True">
+                    <TextBlock Name="ExpenseTB" FontSize="36" Text="Expense"
+                               RelativePanel.AlignLeftWithPanel="True"
+                               Margin="0,0,10,0"/>
                     <TextBlock FontSize="36" Text="-"
-                               RelativePanel.LeftOf="ExpValueTB"/>
+                               RelativePanel.LeftOf="ExpValueTB"
+                               RelativePanel.RightOf="ExpenseTB"/>
                     <TextBlock Name="ExpValueTB" FontSize="36" Text="{Binding ExpString, UpdateSourceTrigger=PropertyChanged}"
                                 RelativePanel.AlignRightWithPanel="True"/>
+                    </RelativePanel>
                 </RelativePanel>
             </StackPanel>
         </RelativePanel>
-        
+
         <!--
         <!<Rectangle Grid.Row="1" Grid.ColumnSpan="3" Fill="Green"/> 
         <Rectangle Grid.Row="0" Grid.ColumnSpan="3" Fill="Blue"/>
