@@ -21,250 +21,44 @@
         </ResourceDictionary>
     </Page.Resources>
     <Grid Background="{StaticResource DarkColor}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="5*"/>
+        <!--    <Grid.RowDefinitions>
+            <RowDefinition Height="5*"/> 
             <RowDefinition Height="2*"/>
             <RowDefinition Height="6*"/>
-        </Grid.RowDefinitions>
+        </Grid.RowDefinitions> -->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
             <!--<ColumnDefinition Width="2*"/> -->
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
-        <RelativePanel Grid.Row="1" Grid.ColumnSpan="3" Margin="10">
-            <Border RelativePanel.AlignHorizontalCenterWithPanel="True"
-                    RelativePanel.AlignVerticalCenterWithPanel="True"
-                    RelativePanel.AlignLeftWithPanel="True"
-                    RelativePanel.AlignRightWithPanel="True"
-                    RelativePanel.AlignTopWithPanel="True"
-                    RelativePanel.AlignBottomWithPanel="True"
-                    BorderBrush="{StaticResource LightColor}"
-                    Background="{StaticResource LightColor}"    
-                    Margin="0,0,0,0"
-                    BorderThickness="6"
-                    Padding="0,0,0,0"
-                    CornerRadius="3"
-                    VariableSizedWrapGrid.ColumnSpan="3"/>
-            <StackPanel Name="TransactionSP" Grid.Row="1" Grid.ColumnSpan="3"                        
-                        RelativePanel.AlignHorizontalCenterWithPanel="True"
-                        RelativePanel.AlignVerticalCenterWithPanel="True"
-            
-                        Orientation="Horizontal"
-                        Background="{StaticResource LightColor}"
-                        >
-                <ToggleSwitch Name="SplitTSW" Header="Split Income" IsOn="True"
-                              Foreground="{StaticResource DarkColor}"/>
-                <StackPanel>
-                    <ComboBox x:Name="BinsCB" 
-                              Style="{StaticResource BinsDrawerCBStyle}"
-                          SelectionChanged="BinsCB_SelectionChanged"                          
-                          >
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate  >
-                                <TextBlock Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-                    <ComboBox x:Name="DrawersCB" 
-                              Style="{StaticResource BinsDrawerCBStyle}"
-                              Visibility="Collapsed"                             
-                          >
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate  >
-                                <TextBlock Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-                </StackPanel>
-                <ComboBox x:Name="IncExpCB" 
-                          Style="{StaticResource IncExpCBStyle}"
-                          SelectionChanged="IncExpCB_SelectionChanged">
-                    <ComboBoxItem Content="Income"/>
-                    <ComboBoxItem Content="Expense"/>
-                </ComboBox>
-                <TextBox PlaceholderText="Description"
-                         Style="{StaticResource BudggyHomeTBox}"
-                         Name="DescriptionTB" Width="300"                        
-                         />
-                <TextBox Name="ValueTB" PlaceholderText="Value"   
-                         Style="{StaticResource BudggyHomeTBox}"
-                         KeyDown="ValueTB_KeyDown"
-                         KeyUp="ValueTB_KeyUp"       
-                         
-                         Width="100" Margin="20,0,0,0"/>
-                <CalendarDatePicker Name="HomeCDP"
-                                    IsTodayHighlighted="True"                                    
-                                    Margin="20,0,0,0"/>
-                <Button Name="AddButton" Content="Add" 
-                        Margin="20,0,0,0"                       
-                        Click="AddButton_Click"/>
 
-            </StackPanel>
-        </RelativePanel>
-        <Border Grid.Row="2"
-                BorderBrush="{StaticResource LightColor}"
-                Margin="10"
-                BorderThickness="6"
-                Padding="0,0,0,0"
-                CornerRadius="3"
-                >
+        <RelativePanel Name="BudgetBalRP" Grid.ColumnSpan="2" MaxWidth="450">
 
-
-            <ListBox Name="IncLB" Grid.Row="2" 
-                 ScrollViewer.HorizontalScrollMode="Enabled"
-                 ScrollViewer.HorizontalScrollBarVisibility="Visible"
-                 ScrollViewer.IsHorizontalRailEnabled="True" 
-                     Background="{StaticResource LightColor}"
-                  >
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-
-                        <RelativePanel Width="450" >
-                            <!-- use a relative panel to have the delete button always on the right!-->
-                            <Ellipse Name="IncEllipse" Fill="Green" Width="25" Height="25"
-                                 Margin="0,10,0,0"
-                                 RelativePanel.AlignLeftWithPanel="True"
-                                    
-                                 />
-                            <TextBlock Name="LBIncValTB" Margin="20,10,0,0" Text="{Binding ValueStr, UpdateSourceTrigger=PropertyChanged}"
-                                   Style="{StaticResource BudggyHomeTBlock}"
-                                   RelativePanel.RightOf="IncEllipse"            
-                                   
-                                   />
-                            <StackPanel Name="IncBinSP" Margin="20,0,20,0" RelativePanel.RightOf="LBIncValTB"
-                                    
-                                    >
-                                <TextBlock Text="Bin:"/>
-                                <TextBlock Text="{Binding Bin, UpdateSourceTrigger=PropertyChanged}"/>
-                            </StackPanel>
-                            <TextBlock Name="IncDateTB" Style="{StaticResource BudggyHomeTBlock}"
-                                   Margin="0,10,0,0"
-                                   Text="{Binding DateStr, UpdateSourceTrigger=PropertyChanged}"
-                                   RelativePanel.RightOf="IncBinSP"
-                                   />
-                            <TextBlock Margin="20,20,20,0" Style="{StaticResource BudggyHomeTBlock}" 
-                            Text="{Binding Description,UpdateSourceTrigger=PropertyChanged}"
-                                   TextWrapping="WrapWholeWords"
-                                   MaxWidth="400"
-                                   RelativePanel.Below="IncBinSP"
-                                   RelativePanel.AlignHorizontalCenterWith="IncBinSP"/>
-                            <Button Name="IncDeleteBt" Click="IncDeleteBt_Click"
-                                    FontFamily="Segoe MDL2 Assets" Content="&#xE738;"
-                                    RelativePanel.AlignRightWithPanel="True"
-                                    RelativePanel.AlignVerticalCenterWithPanel="True"/>
-
-                        </RelativePanel>
-
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-                <Grid/>
-            </ListBox>
-        </Border>
-
-        <Border Grid.Row="2"
-                Grid.Column="1"
-                BorderBrush="{StaticResource LightColor}"
-                BorderThickness="6"
-                Margin="10"
-                Padding="0,0,0,0"
-                CornerRadius="3">
-
-            <ListBox Name="ExpLB" Grid.Row="2" Grid.Column="1"
-                 ScrollViewer.HorizontalScrollMode="Enabled"
-                 ScrollViewer.HorizontalScrollBarVisibility="Visible"
-                 ScrollViewer.IsHorizontalRailEnabled="True" Background="{StaticResource LightColor}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <RelativePanel Width="450" >
-
-                            <!-- use a relative panel to have the delete button always on the right!-->
-                            <Ellipse Name="ExpEllipse" Fill="Red" Width="25" Height="25"
-                                 Margin="0,10,0,0"
-                                 RelativePanel.AlignLeftWithPanel="True"
-                                    
-                                 />
-                            <TextBlock Name="LBExpValTB" Margin="20,10,0,0" Text="{Binding ValueStr, UpdateSourceTrigger=PropertyChanged}"
-                                   Style="{StaticResource BudggyHomeTBlock}"
-                                   RelativePanel.RightOf="ExpEllipse"            
-                                   
-                                   />
-                            <StackPanel Name="ExpBinSP" Margin="20,0,20,0" RelativePanel.RightOf="LBExpValTB"
-                                    
-                                    >
-                                <TextBlock Text="Bin:"/>
-                                <TextBlock Text="{Binding Bin, UpdateSourceTrigger=PropertyChanged}"/>
-                            </StackPanel>
-                            <TextBlock Name="ExpDateTB" Style="{StaticResource BudggyHomeTBlock}"
-                                   Margin="0,10,0,0"
-                                   Text="{Binding DateStr, UpdateSourceTrigger=PropertyChanged}"
-                                   RelativePanel.RightOf="ExpBinSP"
-                                   />
-
-                            <TextBlock Margin="20,20,20,0" Style="{StaticResource BudggyHomeTBlock}" 
-                            Text="{Binding Description,UpdateSourceTrigger=PropertyChanged}"
-                                   TextWrapping="WrapWholeWords"
-                                   MaxWidth="400"
-                                   RelativePanel.Below="ExpBinSP"
-                                   RelativePanel.AlignHorizontalCenterWith="ExpBinSP"/>
-                            <Button Name="ExpDeleteBt" Click="ExpDeleteBt_Click"
-                                    FontFamily="Segoe MDL2 Assets" Content="&#xE738;"
-                                    RelativePanel.AlignRightWithPanel="True"
-                                    RelativePanel.AlignVerticalCenterWithPanel="True"/>
-
-                        </RelativePanel>
-
-                        <!--<Ellipse Fill="Red" Width="25" Height="25"/>                        
-                        <TextBlock Margin="20,0,0,0" Text="{Binding ValueStr, UpdateSourceTrigger=PropertyChanged}"
-                                   Style="{StaticResource BudggyHomeTBlock}"/>
-                        <StackPanel Margin="20,0,20,0">
-                            <TextBlock Text="Bin:"/>
-                            <TextBlock Text="{Binding Bin, UpdateSourceTrigger=PropertyChanged}"/>
-                        </StackPanel>
-                        <TextBlock Name="ExpDateTB" Style="{StaticResource BudggyHomeTBlock}"
-                                   Text="{Binding DateStr, UpdateSourceTrigger=PropertyChanged}"/>                        
-                        <TextBlock Margin="20,0,0,0" Style="{StaticResource BudggyHomeTBlock}" 
-                            Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" 
-                                   TextWrapping="WrapWholeWords"                                   
-                                   MaxWidth="400"/> -->
-
-
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </Border>
-
-
-
-        <RelativePanel Name="BudgetBalRP" Grid.ColumnSpan="2">
-            
             <Rectangle Name="BudgetRec"
                        Margin="0,10,0,0"
                 RelativePanel.AlignHorizontalCenterWithPanel="True"                   
-                        RelativePanel.AlignRightWith="BalanceSP"
-                        RelativePanel.AlignLeftWith="BalanceSP"
+                        RelativePanel.AlignRightWithPanel="True"
+                        RelativePanel.AlignLeftWithPanel="True"
                         RelativePanel.AlignBottomWith="ExpSP"
-                        RelativePanel.AlignTopWith="BalanceSP"
+                        RelativePanel.AlignTopWithPanel="True"
                         RadiusX="20"
                        RadiusY="20"
                    
                      Fill="{StaticResource LightColor}"
                   />
-            <Button Name="ToggleIncBT" RelativePanel.Below="BudgetRec"
-                    RelativePanel.AlignHorizontalCenterWith="BudgetRec"
-                    Margin="0,10,0,0"
-                    FontSize="24"
-                    Content="Add Income"                    
-                    
-                    />
+
             <StackPanel Name="BalanceSP" Background="{x:Null}"  RelativePanel.AlignHorizontalCenterWithPanel="True"
                         RelativePanel.AlignTopWithPanel="True"
+                        RelativePanel.AlignLeftWithPanel="True"
+                        RelativePanel.AlignRightWithPanel="True"
                         Margin="0,10,0,0">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Budget Balance for" Style="{StaticResource BudgetContainerTBl}" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+
                     <TextBlock Name="BudgetMonthTB"  Style="{StaticResource BudgetContainerTBl}"
                                Text="{Binding MonthStr,  UpdateSourceTrigger=PropertyChanged}"/>
                     <TextBlock Name="BudgetYearTB" Style="{StaticResource BudgetContainerTBl}"
                                Text="{Binding YearInt, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="Budget Balance" Style="{StaticResource BudgetContainerTBl}" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -280,7 +74,6 @@
                         RelativePanel.Below="BalanceSP"
                         RelativePanel.AlignLeftWith="BalanceSP"
                         RelativePanel.AlignRightWith="BalanceSP"
-
                         Background="{StaticResource IncomeColor}"
                         >
                 <RelativePanel>
@@ -297,9 +90,9 @@
                     </RelativePanel>
                 </RelativePanel>
             </StackPanel>
-           
 
-                <!-- Monthly expense elements-->
+
+            <!-- Monthly expense elements-->
             <StackPanel Name="ExpSP"
                         RelativePanel.Below="IncSP"
                         RelativePanel.AlignRightWith="IncSP"
@@ -320,6 +113,303 @@
                     </RelativePanel>
                 </RelativePanel>
             </StackPanel>
+
+            <RelativePanel Name="AddBTRP"                                                     
+                           RelativePanel.Below="BudgetRec"
+                           RelativePanel.AlignHorizontalCenterWithPanel="True"
+                           RelativePanel.AlignLeftWithPanel="True"
+                           RelativePanel.AlignRightWithPanel="True"
+                           >
+            <Border              
+                Name="ToggleIncBTBD"    
+                RelativePanel.AlignLeftWithPanel="True"
+                    BorderBrush="{StaticResource LightColor}"
+                    Background="{StaticResource LightColor}"    
+                    Margin= "0,10"
+                    BorderThickness="3"
+                    Padding="0,0,0,0"
+                    CornerRadius="3"
+                    >
+
+                <Button Name="ToggleIncBT"
+                    Margin="0,0,0,0"
+                    FontSize="16"
+                    Content="Add Income"    
+                    Background="{StaticResource LightColor}"
+                        Click="ToggleIncBT_Click"
+                    
+                    />
+            </Border>
+
+            <Border              
+                Name="BackBTBD"
+                RelativePanel.AlignHorizontalCenterWithPanel="True"
+                    Visibility="Collapsed"
+                    BorderBrush="{StaticResource LightColor}"
+                    Background="{StaticResource LightColor}"    
+                    Margin= "0,10"
+                    BorderThickness="3"
+                    Padding="0,0,0,0"
+                    CornerRadius="3"
+                    >
+                <Button Name="BackBT" 
+                    Margin="0,0,0,0"
+                    FontSize="16"
+                    Content="Back" 
+                    Background="{StaticResource LightColor}"
+                        Click="BackBT_Click"
+                    
+                    />
+            </Border>
+
+            <Border            
+                
+                Name="ToggleExpBTBD"
+                RelativePanel.AlignRightWithPanel="True"
+                    BorderBrush="{StaticResource LightColor}"
+                    Background="{StaticResource LightColor}"    
+                    Margin= "0,10"
+                    BorderThickness="3"
+                    Padding="0,0,0,0"
+                    CornerRadius="3"
+                    >
+                <Button Name="ToggleExpBT" 
+                    Margin="0,0,0,0"
+                    FontSize="16"
+                    Content="Add Expense" 
+                    Background="{StaticResource LightColor}"
+                        Click="ToggleExpBT_Click"
+                    
+                    />
+            </Border>
+            </RelativePanel>
+
+            <Border    
+                    Visibility="Collapsed"
+                    Name="IncExpGridBD"
+                    RelativePanel.Below="AddBTRP"
+                    RelativePanel.AlignRightWithPanel="True"
+                    RelativePanel.AlignLeftWithPanel="True"
+                    BorderBrush="{StaticResource LightColor}"
+                    Background="{StaticResource LightColor}"    
+                    Margin= "0,10"
+                    BorderThickness="6"
+                    Padding="0,0,0,0"
+                    CornerRadius="3"
+                    >
+            <Grid Name="IncExpGrid"
+                  >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                
+                <TextBox PlaceholderText="Description" Grid.ColumnSpan="2"
+                         Style="{StaticResource BudggyHomeTBox}"
+                         Name="DescriptionTB"                       
+                         />
+                
+                <TextBox Name="ValueTB" PlaceholderText="Value"
+                         Grid.Column="2"
+                         Style="{StaticResource BudggyHomeTBox}"
+                         KeyDown="ValueTB_KeyDown"
+                         KeyUp="ValueTB_KeyUp"       
+                         
+                          Margin="20,0,0,0"/>
+                
+                <ComboBox x:Name="BinsCB" Grid.Row="1" Grid.ColumnSpan="2"
+                              Style="{StaticResource BinsDrawerCBStyle}"
+                          SelectionChanged="BinsCB_SelectionChanged"                          
+                          >
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate  >
+                            <TextBlock Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <CalendarDatePicker Name="HomeCDP"
+                                    Grid.Column="2"
+                                    Grid.Row="1"
+                                    IsTodayHighlighted="True"                                    
+                                    Margin="20,0,0,0"
+                />                
+                
+                <ToggleSwitch Name="SplitTSW" Grid.Row="2"
+                              Header="Split Income" IsOn="True"
+                              Foreground="{StaticResource LightColor}"
+                />
+
+                <ComboBox x:Name="DrawersCB" 
+                          Grid.Row="2"
+                          Grid.ColumnSpan="2"
+                              Style="{StaticResource BinsDrawerCBStyle}"
+                              Visibility="Collapsed"                             
+                          >
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate  >
+                            <TextBlock Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <Button Name="AddButton" Content="Add" 
+                        Grid.Row="2" Grid.Column="2"
+                        Margin="20,0,0,0"                       
+                        Click="AddButton_Click"
+                />
+               
+            </Grid>
+            </Border>
+
+            <Grid Name="IncExpListGrid" RelativePanel.Below="IncExpGridBD"
+                  
+                  RelativePanel.AlignLeftWithPanel="True"
+                  RelativePanel.AlignRightWithPanel="True">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                   
+                </Grid.RowDefinitions>
+
+                <Border                   
+                    Name="IncBD"
+                BorderBrush="{StaticResource LightColor}"
+                Margin="0,10"
+                BorderThickness="6"
+                Padding="0,0,0,0"
+                CornerRadius="3" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                >
+                    <ListBox Name="IncLB" 
+                 ScrollViewer.HorizontalScrollMode="Enabled"
+                 ScrollViewer.HorizontalScrollBarVisibility="Visible"
+                 ScrollViewer.IsHorizontalRailEnabled="True" 
+                     Background="{StaticResource LightColor}" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Stretch" Width="556"
+                  >
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+
+                                <RelativePanel Width="450" >
+                                    <!-- use a relative panel to have the delete button always on the right!-->
+                                    <Ellipse Name="IncEllipse" Fill="Green" Width="25" Height="25"
+                                 Margin="0,10,0,0"
+                                 RelativePanel.AlignLeftWithPanel="True"
+                                    
+                                 />
+                                    <TextBlock Name="LBIncValTB" Margin="20,10,0,0" Text="{Binding ValueStr, UpdateSourceTrigger=PropertyChanged}"
+                                   Style="{StaticResource BudggyHomeTBlock}"
+                                   RelativePanel.RightOf="IncEllipse"            
+                                   
+                                   />
+                                    <StackPanel Name="IncBinSP" Margin="20,0,20,0" RelativePanel.RightOf="LBIncValTB"
+                                    
+                                    >
+                                        <TextBlock Text="Bin:"/>
+                                        <TextBlock Text="{Binding Bin, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </StackPanel>
+                                    <TextBlock Name="IncDateTB" Style="{StaticResource BudggyHomeTBlock}"
+                                   Margin="0,10,0,0"
+                                   Text="{Binding DateStr, UpdateSourceTrigger=PropertyChanged}"
+                                   RelativePanel.RightOf="IncBinSP"
+                                   />
+                                    <TextBlock Margin="20,20,20,0" Style="{StaticResource BudggyHomeTBlock}" 
+                            Text="{Binding Description,UpdateSourceTrigger=PropertyChanged}"
+                                   TextWrapping="WrapWholeWords"
+                                   MaxWidth="400"
+                                   RelativePanel.Below="IncBinSP"
+                                   RelativePanel.AlignHorizontalCenterWith="IncBinSP"/>
+                                    <Button Name="IncDeleteBt" Click="IncDeleteBt_Click"
+                                    FontFamily="Segoe MDL2 Assets" Content="&#xE738;"
+                                    RelativePanel.AlignRightWithPanel="True"
+                                    RelativePanel.AlignVerticalCenterWithPanel="True"/>
+
+                                </RelativePanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Border>
+
+                <Border Name="ExpBD"
+                    Grid.Row="1"
+                BorderBrush="{StaticResource LightColor}"
+                BorderThickness="6"
+                Margin="0,10"
+                Padding="0,0,0,0"
+                CornerRadius="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+                    <ListBox Name="ExpLB" Grid.Row="2" Grid.Column="1"
+                 ScrollViewer.HorizontalScrollMode="Enabled"
+                 ScrollViewer.HorizontalScrollBarVisibility="Visible"
+                 ScrollViewer.IsHorizontalRailEnabled="True" Background="{StaticResource LightColor}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <RelativePanel Width="450" >
+
+                                    <!-- use a relative panel to have the delete button always on the right!-->
+                                    <Ellipse Name="ExpEllipse" Fill="Red" Width="25" Height="25"
+                                 Margin="0,10,0,0"
+                                 RelativePanel.AlignLeftWithPanel="True"
+                                    
+                                 />
+                                    <TextBlock Name="LBExpValTB" Margin="20,10,0,0" Text="{Binding ValueStr, UpdateSourceTrigger=PropertyChanged}"
+                                   Style="{StaticResource BudggyHomeTBlock}"
+                                   RelativePanel.RightOf="ExpEllipse"            
+                                   
+                                   />
+                                    <StackPanel Name="ExpBinSP" Margin="20,0,20,0" RelativePanel.RightOf="LBExpValTB"
+                                    
+                                    >
+                                        <TextBlock Text="Bin:"/>
+                                        <TextBlock Text="{Binding Bin, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </StackPanel>
+                                    <TextBlock Name="ExpDateTB" Style="{StaticResource BudggyHomeTBlock}"
+                                   Margin="0,10,0,0"
+                                   Text="{Binding DateStr, UpdateSourceTrigger=PropertyChanged}"
+                                   RelativePanel.RightOf="ExpBinSP"
+                                   />
+
+                                    <TextBlock Margin="20,20,20,0" Style="{StaticResource BudggyHomeTBlock}" 
+                            Text="{Binding Description,UpdateSourceTrigger=PropertyChanged}"
+                                   TextWrapping="WrapWholeWords"
+                                   MaxWidth="400"
+                                   RelativePanel.Below="ExpBinSP"
+                                   RelativePanel.AlignHorizontalCenterWith="ExpBinSP"/>
+                                    <Button Name="ExpDeleteBt" Click="ExpDeleteBt_Click"
+                                    FontFamily="Segoe MDL2 Assets" Content="&#xE738;"
+                                    RelativePanel.AlignRightWithPanel="True"
+                                    RelativePanel.AlignVerticalCenterWithPanel="True"/>
+
+                                </RelativePanel>
+
+                                <!--<Ellipse Fill="Red" Width="25" Height="25"/>                        
+                        <TextBlock Margin="20,0,0,0" Text="{Binding ValueStr, UpdateSourceTrigger=PropertyChanged}"
+                                   Style="{StaticResource BudggyHomeTBlock}"/>
+                        <StackPanel Margin="20,0,20,0">
+                            <TextBlock Text="Bin:"/>
+                            <TextBlock Text="{Binding Bin, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+                        <TextBlock Name="ExpDateTB" Style="{StaticResource BudggyHomeTBlock}"
+                                   Text="{Binding DateStr, UpdateSourceTrigger=PropertyChanged}"/>                        
+                        <TextBlock Margin="20,0,0,0" Style="{StaticResource BudggyHomeTBlock}" 
+                            Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" 
+                                   TextWrapping="WrapWholeWords"                                   
+                                   MaxWidth="400"/> -->
+
+
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Border>
+
+            </Grid>
+
+
         </RelativePanel>
 
         <!--

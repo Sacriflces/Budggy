@@ -29,6 +29,7 @@ namespace BudggyUWP
         {
             this.InitializeComponent();                       
             HomeCDP.Date = DateTime.Now;
+            
            
            
 
@@ -115,7 +116,7 @@ namespace BudggyUWP
 
 
 
-            if (IncExpCB.SelectedIndex == 0)
+            if (SplitTSW.Visibility == Visibility.Visible)
             {
                 if (SplitTSW.IsOn == true)
                 {
@@ -161,19 +162,19 @@ namespace BudggyUWP
             return newStr;
         }
 
-        private void IncExpCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+     /*   private void IncExpCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (IncExpCB.SelectedIndex == 0)
             {
-                SplitTSW.IsEnabled = true;
-                DrawersCB.Visibility = Visibility.Collapsed;
+                //SplitTSW.IsEnabled = true;              
+              //  DrawersCB.Visibility = Visibility.Collapsed;
             }
             else
             { 
-                SplitTSW.IsEnabled = false;
-                DrawersCB.Visibility = Visibility.Visible;
+              //  SplitTSW.IsEnabled = false;
+             //   DrawersCB.Visibility = Visibility.Visible;
             }
-        }
+        } */
 
         private void IncDeleteBt_Click(object sender, RoutedEventArgs e)
         {
@@ -210,6 +211,35 @@ namespace BudggyUWP
         private void BinsCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             DrawersCB.ItemsSource = budget.Bins[BinsCB.SelectedIndex].Drawers;
+        }
+
+        private void ToggleIncBT_Click(object sender, RoutedEventArgs e)
+        {
+            BackBTBD.Visibility = Visibility.Visible;
+            IncExpGridBD.Visibility = Visibility.Visible;
+            SplitTSW.Visibility = Visibility.Visible;
+            DrawersCB.Visibility = Visibility.Collapsed;
+            ToggleIncBTBD.Visibility = Visibility.Collapsed;
+            ToggleExpBTBD.Visibility = Visibility.Collapsed;
+        }
+
+        private void ToggleExpBT_Click(object sender, RoutedEventArgs e)
+        {
+            BackBTBD.Visibility = Visibility.Visible;
+            IncExpGridBD.Visibility = Visibility.Visible;
+            SplitTSW.Visibility = Visibility.Collapsed; 
+            DrawersCB.Visibility = Visibility.Visible;
+            ToggleIncBTBD.Visibility = Visibility.Collapsed;
+            ToggleExpBTBD.Visibility = Visibility.Collapsed;
+        }
+
+        private void BackBT_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleIncBTBD.Visibility = Visibility.Visible;
+            ToggleExpBTBD.Visibility = Visibility.Visible;
+            IncExpGridBD.Visibility = Visibility.Collapsed;
+            BackBTBD.Visibility = Visibility.Collapsed;
+
         }
     }
 
