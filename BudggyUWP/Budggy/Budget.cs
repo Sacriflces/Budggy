@@ -65,6 +65,7 @@ namespace Budggy
             CalcMonthBudgetAll();
             CalcMonthBudgetInc();
             CalcBinBalance();
+            
         }
         // Adds a bin to the Bins collection.  
         public int AddBin(string name, string description, decimal percentage, decimal goalBalance = 2500, decimal minimumBalance = 0, decimal multiplier = 1)
