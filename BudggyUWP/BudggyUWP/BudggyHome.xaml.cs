@@ -47,6 +47,7 @@ namespace BudggyUWP
             BinsCB.ItemsSource = budget.Bins;
             IncLB.ItemsSource = budget.Incs;
             ExpLB.ItemsSource = budget.Exps;
+            BinLB.ItemsSource = budget.Bins;
             BudgetBalRP.DataContext = budget.MonthlyBudgets[budget.MonthlyBudgets.Count - 1];
 
 

@@ -208,7 +208,7 @@ namespace Budggy
         //Adds an income to the incs list either splitting it into the bins or into one list.
         public int AddIncome(decimal value, string destr, DateTime date, string mode)
         {
-            int index;
+            int index;        
             if(mode == "Split")
             {
                 //checks the percentage. if it is greater than 100 then it returns.
@@ -228,11 +228,13 @@ namespace Budggy
                     //splits the income across the bins based on their percentage.
                     foreach (Bin bin in Bins)
                     {
-                        Incs.Add(new Income(value * bin.Percentage / 100, destr, bin.Name, date));
+                        bin.AddIncome(new Income(value * bin.Percentage / 100, destr, bin.Name, date));
+                        
                     }
-                    CalcBinBalance();
-                    CalcMonthBudgetInc();
+                   // CalcBinBalance();
+                   // CalcMonthBudgetInc();
                     OrganizeIncomesByDate();
+                    Incs.Add(new Income(value, destr, "Split", date));
                     return 1;
                 }
 
@@ -240,21 +242,22 @@ namespace Budggy
             else //income goes into a specific bin
             {
                 index = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, mode) == 0).FirstOrDefault());
-
+                Income newInc = new Income(value, destr, mode, date);
                 if (index != -1)
                 {
-                    Incs.Add(new Income(value, destr, mode, date));
-                    CalcBinBalance();
+                    Incs.Add(newInc);
+                    Bins[index].AddIncome(newInc);
+                   // CalcBinBalance();
                     OrganizeIncomesByDate();
-                    CalcMonthBudgetInc();
+                   // CalcMonthBudgetInc();
                     return 1;
                 }
                 else
                     Incs.Add(new Income(value, destr, null, date));
 
-                CalcBinBalance();
+               // CalcBinBalance();
                 OrganizeIncomesByDate();
-                CalcMonthBudgetInc();
+               // CalcMonthBudgetInc();
                 return index;
             }
           
@@ -267,6 +270,34 @@ namespace Budggy
             //finds the income object that needs to be deleted.
             int index = Incs.IndexOf(Incs.Where(x => string.Compare(x.Description, destr) == 0 && value == x.Value
             && myDateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0).FirstOrDefault());
+
+            int binIndex;
+
+            if(bin == "Split")
+            {
+                //remove the income from each bin
+                int incIndex;
+                foreach  (Bin BIN in Bins)
+                {
+                    incIndex = BIN.Incomes.IndexOf(BIN.Incomes.Where(x => string.Compare(x.Description, destr) == 0 && value == x.Value
+                     && myDateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, BIN.Name) == 0).FirstOrDefault());
+
+                    if(incIndex != -1)
+                    {
+                        BIN.RemoveIncome(incIndex);
+
+                    }
+                }
+
+            } else
+            {
+                //find and remove the income from the bin
+                binIndex = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, bin) == 0).FirstOrDefault());
+                int incIndex = Bins[binIndex].Incomes.IndexOf(Bins[binIndex].Incomes.Where(x => string.Compare(x.Description, destr) == 0 && value == x.Value
+            && myDateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0).FirstOrDefault());
+
+                Bins[binIndex].RemoveIncome(incIndex);   
+            }
 
             //finds the MonthBudget that is associated with the income object and removes it from its list.
             foreach (MonthBudget bud in MonthlyBudgets)

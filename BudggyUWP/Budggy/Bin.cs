@@ -26,6 +26,7 @@ namespace Budggy
         }
 
         public ObservableCollection<Drawer> Drawers = new ObservableCollection<Drawer>();
+        public ObservableCollection<Income> Incomes = new ObservableCollection<Income>();
 
 
 
@@ -183,6 +184,18 @@ namespace Budggy
             {
                 Drawers[index].RemoveExpense(exp);
             }
+        }
+
+        public void AddIncome(Income inc)
+        {
+            Balance += inc.Value;
+            Incomes.Add(inc);
+        }
+
+        public void RemoveIncome(int index)
+        {
+            Balance -= Incomes[index].Value;
+            Incomes.RemoveAt(index);
         }
     }
 
