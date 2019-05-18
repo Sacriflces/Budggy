@@ -208,7 +208,8 @@ namespace Budggy
         //Adds an income to the incs list either splitting it into the bins or into one list.
         public int AddIncome(decimal value, string destr, DateTime date, string mode)
         {
-            int index;        
+            int index = 1;
+            string location = mode;
             if(mode == "Split")
             {
                 //checks the percentage. if it is greater than 100 then it returns.
@@ -232,10 +233,7 @@ namespace Budggy
                         
                     }
                    // CalcBinBalance();
-                   // CalcMonthBudgetInc();
-                    OrganizeIncomesByDate();
-                    Incs.Add(new Income(value, destr, "Split", date));
-                    return 1;
+                   // CalcMonthBudgetInc();                                  
                 }
 
             }
@@ -245,23 +243,21 @@ namespace Budggy
                 Income newInc = new Income(value, destr, mode, date);
                 if (index != -1)
                 {
-                    Incs.Add(newInc);
                     Bins[index].AddIncome(newInc);
-                   // CalcBinBalance();
-                    OrganizeIncomesByDate();
-                   // CalcMonthBudgetInc();
-                    return 1;
                 }
                 else
+                {
                     Incs.Add(new Income(value, destr, null, date));
-
-               // CalcBinBalance();
-                OrganizeIncomesByDate();
-               // CalcMonthBudgetInc();
-                return index;
+                    OrganizeIncomesByDate();
+                    return index;
+                }
+                    
             }
-          
 
+            Incs.Add(new Income(value, destr, location, date));
+            OrganizeIncomesByDate();
+            return index;
+            
         }
         
         //Deletes an income from incs list.
@@ -399,6 +395,7 @@ namespace Budggy
         {
             
             IEnumerable<Expense> expenses = Exps.OrderByDescending(x => x.Date);
+            
             int count = Exps.Count;
 
             foreach (Expense exp in expenses)
@@ -509,6 +506,9 @@ namespace Budggy
                 }
             }
         }
+        //need to add another budget that finds the monthbudget associated with an inc / exp and adds or subtracts that value.
+
+
         /*
         public void AddMonthBudgetExpense(decimal value, string destr, string bin, DateTime date)
         {
