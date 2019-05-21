@@ -60,11 +60,9 @@ namespace Budggy
 
         public Budget()
         {
-            DefaultMonthlyBudget = 2500;
-            CreateMonthlyBudget();
-            CalcMonthBudgetAll();
-            CalcMonthBudgetInc();
-            CalcBinBalance();
+            DefaultMonthlyBudget = 0;
+         //   CreateMonthlyBudget();
+          //  CalcBinBalance();
             
         }
         // Adds a bin to the Bins collection.  
@@ -111,7 +109,7 @@ namespace Budggy
         }     
 
         //Sets all Bins' balances to zero.
-        internal void BinBalanceToZero()
+     /*   internal void BinBalanceToZero()
         {            
             foreach (Bin bin in Bins)
             {
@@ -138,7 +136,7 @@ namespace Budggy
                     if (index != -1) Bins[index].Balance -= exp.Value;
                 
             }
-        }
+        } */
 
         // Method to calculate the balance based on the Balance within the bins 
         public decimal TotalBalance()
@@ -200,7 +198,7 @@ namespace Budggy
             Incs.Add(new Income(amount, "[Transfer from] " + Bins[index2].Name, Bins[index1].Name, date));
             Exps.Add(new Expense(amount, "[Transfer to] " + Bins[index1].Name, Bins[index2].Name, date));
 
-            CalcBinBalance();
+          //  CalcBinBalance();
             return 1;
 
         }
@@ -209,6 +207,7 @@ namespace Budggy
         public int AddIncome(decimal value, string destr, DateTime date, string mode)
         {
             int index = 1;
+            Income newInc = new Income(value, destr, mode, date);
             string location = mode;
             if(mode == "Split")
             {
@@ -235,29 +234,24 @@ namespace Budggy
                    // CalcBinBalance();
                    // CalcMonthBudgetInc();                                  
                 }
+                Incs.Add(newInc);
+                AddMonthBudgetInc(newInc);
+                OrganizeIncomesByDate();
+                return 1;
 
             }
             else //income goes into a specific bin
             {
-                index = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, mode) == 0).FirstOrDefault());
-                Income newInc = new Income(value, destr, mode, date);
+                index = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, mode) == 0).FirstOrDefault());               
                 if (index != -1)
                 {
                     Bins[index].AddIncome(newInc);
-                }
-                else
-                {
-                    Incs.Add(new Income(value, destr, null, date));
+                    Incs.Add(newInc);
+                    AddMonthBudgetInc(newInc);
                     OrganizeIncomesByDate();
-                    return index;
-                }
-                    
-            }
-
-            Incs.Add(new Income(value, destr, location, date));
-            OrganizeIncomesByDate();
-            return index;
-            
+                }              
+                return index;
+            }           
         }
         
         //Deletes an income from incs list.
@@ -292,23 +286,25 @@ namespace Budggy
                 int incIndex = Bins[binIndex].Incomes.IndexOf(Bins[binIndex].Incomes.Where(x => string.Compare(x.Description, destr) == 0 && value == x.Value
             && myDateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0).FirstOrDefault());
 
-                Bins[binIndex].RemoveIncome(incIndex);   
+                if (incIndex != -1)
+                {
+                    Bins[binIndex].RemoveIncome(incIndex);
+                }
             }
 
             //finds the MonthBudget that is associated with the income object and removes it from its list.
-            foreach (MonthBudget bud in MonthlyBudgets)
+        /*    foreach (MonthBudget bud in MonthlyBudgets)
             {
                 if(Incs[index].Date.Month == bud.Date.Month && Incs[index].Date.Year == bud.Date.Year)
                 {
                     bud.RemoveIncome(Incs[index]);
                     break;
                 }
-            }
-            
+            } */
+            DeleteMonthBudgetInc(Incs[index]);
             Incs.RemoveAt(index);
             OrganizeIncomesByDate();
-            CalcBinBalance();
-            CalcMonthBudgetAll();
+       //     CalcBinBalance();     
         }
         //maybe add a split functionality later on as well
 
@@ -326,11 +322,10 @@ namespace Budggy
             exp.Drawer = drawer;
             Exps.Add(exp);
             Bins[index].AddDrawerExpense(exp);
+            AddMonthBudgetExp(exp);
 
-            CalcBinBalance();
-           // AddMonthBudgetExpense(value, destr, bin, date);
+         //   CalcBinBalance(); 
             OrganizeExpensesByDate();
-            CalcMonthBudgetExp();
         }
 
         public void DeleteExpense(decimal value, string destr, myDateTime date, string bin)
@@ -338,22 +333,21 @@ namespace Budggy
             int index = Exps.IndexOf(Exps.Where(x => string.Compare(x.Description, destr) == 0 && value == x.Value
             && myDateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0).FirstOrDefault());
             int Binindex = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, bin) == 0).FirstOrDefault());
-            foreach (MonthBudget bud in MonthlyBudgets)
+          /*  foreach (MonthBudget bud in MonthlyBudgets)
             {
                 if (Exps[index].Date.Month == bud.Date.Month && Exps[index].Date.Year == bud.Date.Year)
                 {
                     bud.RemoveExpense(Exps[index]);
                     break;
                 }
-            }
+            } */
 
             Bins[Binindex].RemoveDrawerExpense(Exps[index]);
+            DeleteMonthBudgetExp(Exps[index]);
             Exps.RemoveAt(index);
 
             OrganizeExpensesByDate();
-            CalcBinBalance();
-            CalcMonthBudgetAll();
-
+       //     CalcBinBalance();       
         }
 
         //Sorting Methods date and value
@@ -459,7 +453,7 @@ namespace Budggy
         }
         // calculates all of the monthly budgets wheww.... 
         // checks all the expenses in bins and the budget controller. It also checks if a transfer occurred, so there won't be extra substractions
-        public void CalcMonthBudgetAll()
+     /*   public void CalcMonthBudgetAll()
         {
             foreach(MonthBudget bud in MonthlyBudgets)
             {
@@ -505,8 +499,100 @@ namespace Budggy
                     }
                 }
             }
-        }
+        } */
         //need to add another budget that finds the monthbudget associated with an inc / exp and adds or subtracts that value.
+
+        public void CalcBudgetAmount()
+        {
+            DefaultMonthlyBudget = 0;
+            foreach (Bin bin in Bins)
+            {
+                foreach(Drawer drawer in bin.Drawers)
+                {
+                    DefaultMonthlyBudget += drawer.Maximum;
+                }
+            }
+
+            return;
+
+        }
+
+        public void CreateMonthlyBudget(int month, int year)
+        {
+            CalcBudgetAmount();
+            MonthlyBudgets.Add(new MonthBudget(DefaultMonthlyBudget, month, year));
+            return;
+        }
+
+        public void AddMonthBudgetExp(Expense exp)
+        {
+            //find the associated month budget and subtract it from its budget
+            foreach (MonthBudget bud in MonthlyBudgets)
+            {
+                if(exp.Date.Month == bud.Date.Month && exp.Date.Year == bud.Date.Year)
+                {
+                    if(!(exp.Description.Contains("[Transfer to]")))
+                    {
+                        bud.SubtractExpense(exp);
+                        return;
+                    }
+                }
+            }
+            //if you can't find it.. create a new monthly budget and then call the function again
+            CreateMonthlyBudget(exp.Date.Month, exp.Date.Year);
+            AddMonthBudgetExp(exp);
+        }
+
+        public void DeleteMonthBudgetExp(Expense exp)
+        {
+            //find the associated month budget and remove it from its budget
+            foreach (MonthBudget bud in MonthlyBudgets)
+            {
+                if (exp.Date.Month == bud.Date.Month && exp.Date.Year == bud.Date.Year)
+                {
+                    if (!(exp.Description.Contains("[Transfer to]")))
+                    {
+                        bud.RemoveExpense(exp);
+                        return;
+                    }
+                }
+            }
+        }
+
+        public void AddMonthBudgetInc(Income inc)
+        {
+            //find the associated month budget and add it to its budget
+            foreach (MonthBudget bud in MonthlyBudgets)
+            {
+                if (inc.Date.Month == bud.Date.Month && inc.Date.Year == bud.Date.Year)
+                {
+                    if (!(inc.Description.Contains("[Transfer from]")))
+                    {
+                        bud.AddIncome(inc);
+                        return;
+                    }
+                }
+            }
+            //if you can't find it.. create a new monthly budget and then call the function again
+            CreateMonthlyBudget(inc.Date.Month, inc.Date.Year);
+            AddMonthBudgetInc(inc);
+        }
+
+        public void DeleteMonthBudgetInc(Income inc)
+        {
+            //find the associated month budget and remove it from its budget
+            foreach (MonthBudget bud in MonthlyBudgets)
+            {
+                if (inc.Date.Month == bud.Date.Month && inc.Date.Year == bud.Date.Year)
+                {
+                    if (!(inc.Description.Contains("[Transfer from]")))
+                    {
+                        bud.RemoveIncome(inc);
+                        return;
+                    }
+                }
+            }
+        }
 
 
         /*
