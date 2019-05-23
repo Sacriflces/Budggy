@@ -32,8 +32,8 @@ namespace BudggyUWP
         
         public MainPage()
         {
-          Load();
-           // budget = new Budget();
+         // Load();
+            budget = new Budget();
             this.InitializeComponent();            
             budggyLB.SelectedIndex = 0;
             

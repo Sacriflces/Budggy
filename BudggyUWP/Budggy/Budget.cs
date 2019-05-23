@@ -51,6 +51,18 @@ namespace Budggy
             new Expense(13.99m, "Amazon", "Entertainment", DateTime.Now),
             new Expense(49.43m, "Amazon", "Presents", DateTime.Now), */
         };
+
+        /*list of repeated transactions with another list that contains their frequency in days. Check on startup and when a refresh button is pressed (just put it into 
+         * a method). if the current date is greater than the repeated transaction date + its frequency, add a copy to either Incs or Exps based on what it is lol. Also 
+         check for if multiple frequencies have occurred, so recursive call itself until the difference between the current transaction date and the current date is less than
+         its frequency (in days).
+         
+             also the refresh will check if the budget has changed as well.
+             
+             geez so much stuff to do. Transaction class for the repeated transactions and maybe even combine Incs and Exps into one 
+             also need to add goals to the bin where a certain % of the money entering a bin will put allocated to it. It'll also STOP receiving part of the income when its full.
+             The goals will also have priorities associated with them, so the amount stored will be used up if the bin amount goes to 0.
+             -Need to figure out how to use the money in the goals... for example I wanted x amount saved for presents. I use some, and then it begins to fill up again since it is not maxed*/
         public ObservableCollection<MonthBudget> MonthlyBudgets = new ObservableCollection<MonthBudget>() {
             
         };      
@@ -61,6 +73,10 @@ namespace Budggy
         public Budget()
         {
             DefaultMonthlyBudget = 0;
+            if(MonthlyBudgets.Count == 0)
+            {
+                CreateMonthlyBudget();
+            }
          //   CreateMonthlyBudget();
           //  CalcBinBalance();
             
@@ -521,7 +537,32 @@ namespace Budggy
         {
             CalcBudgetAmount();
             MonthlyBudgets.Add(new MonthBudget(DefaultMonthlyBudget, month, year));
+            CalcMonthBudget();
             return;
+        }
+
+        public void CalcMonthBudget()
+        {
+            //finds the month budget for this month 
+            decimal newDefault = 0;
+
+            foreach (Bin bin in Bins)
+            {
+                foreach(Drawer drawer in bin.Drawers)
+                {
+                    newDefault += drawer.Maximum;
+                }
+            }
+
+
+            for(int i = MonthlyBudgets.Count - 1; i >= 0; --i)
+            {
+                if(MonthlyBudgets[i].Date.Month == DateTime.Now.Month && MonthlyBudgets[i].Date.Year == DateTime.Now.Year)
+                {
+                    MonthlyBudgets[i].NewBudget(newDefault);
+                    break;
+                }
+            }
         }
 
         public void AddMonthBudgetExp(Expense exp)
@@ -623,6 +664,9 @@ namespace Budggy
                 Bins[index].CreateDrawer(name, maximum);
             }
 
+            //recalculate the current MonthBudget.. budget
+            CalcMonthBudget();
+
         }
 
         public void RemoveBinDrawer(string bin, string name)
@@ -632,6 +676,9 @@ namespace Budggy
             {
                 Bins[index].RemoveDrawer(name);
             }
+
+            //recalculate the current MonthBudget.. budget
+            CalcMonthBudget();
         }
 
     }
