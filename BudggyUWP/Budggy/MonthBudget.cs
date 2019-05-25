@@ -52,9 +52,11 @@ namespace Budggy
         {
             Month = date.Month;
             Year = date.Year;
+            Day = date.Day;
         }
         public int Month;
         public int Year;
+        public int Day;
     }
 
     public class MonthBudget : INotifyPropertyChanged

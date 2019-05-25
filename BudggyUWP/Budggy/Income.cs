@@ -6,36 +6,42 @@ using System.Threading.Tasks;
 
 namespace Budggy
 {
-     public class Income
+     public class Income : Transaction
     {
-        public string ValueStr { get; set; }
-        public decimal Value { get; set; }
-       
-        public string Description { get; set; }
-        public string Bin { get; set; }
-        public myDateTime Date { get; set; }
-        public string DateStr { get; set; }
+        private decimal _percentage;
+        public decimal Percentage
+        {
+            get { return _percentage; }
+            set
+            {
+                if (value <= 1)
+                   _percentage = value;
+                else if (value > 1 && value <= 100)
+                   _percentage = value / 100;
+                else
+                   _percentage = 0;
+            }
+        }
 
         public Income()
         {
 
         }
 
-        public Income(decimal value, string destr, string bin, DateTime date)
+        public Income(decimal value, string destr, string bin, DateTime date) : base(value, destr, bin, date)
         {
-            Value = value;
-            ValueStr = String.Format("{0:C}", value);
-            Description = destr;
-            Bin = bin;
-            Date = new myDateTime(date);
-            DateStr = date.ToString("d");
-               
+            Percentage = 0;
         }
 
         public override string ToString() 
         {
             return $"Income: {Value} {Bin} {DateStr}";
             
+        }
+
+        public override bool IsIncome() 
+        {
+            return true;
         }
     }
 }

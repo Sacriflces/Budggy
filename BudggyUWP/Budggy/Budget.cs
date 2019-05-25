@@ -19,11 +19,11 @@ namespace Budggy
     {
 
         public ObservableCollection<Bin> Bins = new ObservableCollection<Bin>()  {
-        /*    new Bin("Savings", "", .3m),
+           new Bin("Savings", "", .3m),
             new Bin("Entertainment", "Going out money and gaming money, and whatever else I need to make this description longer", .5m),
             new Bin("Gas", "", .1m),
             new Bin("Food", "", .05m),
-            new Bin("Presents", "Money for Presents lol", .05m), */
+            new Bin("Presents", "Money for Presents lol", .05m), 
     };
         public ObservableCollection<Income> Incs = new ObservableCollection<Income>() {
         /*    new Income(2500.00m, "Money.. I wonder what happens if this description... isn't actually short and takes up A TON of space. You know what I mean?", "Savings", DateTime.Now),
@@ -39,7 +39,7 @@ namespace Budggy
             new Income(60.18m, "Money", "Savings", DateTime.Now),  */
         };
         public ObservableCollection<Expense> Exps = new ObservableCollection<Expense>()  {
-          /*  new Expense(3m, "Money", "Entertainment", DateTime.Now),
+        /*  new Expense(3m, "Money", "Entertainment", DateTime.Now),
             new Expense(14.18m, "Money", "Entertainment", DateTime.Now),
             new Expense(29.37m, "Money", "Gas", DateTime.Now),
             new Expense(8.47m, "Money", "Food", DateTime.Now),
@@ -52,6 +52,11 @@ namespace Budggy
             new Expense(49.43m, "Amazon", "Presents", DateTime.Now), */
         };
 
+        public ObservableCollection<RepeatTransaction> repeatedTrans = new ObservableCollection<RepeatTransaction>()
+        {
+
+        };
+
         /*list of repeated transactions with another list that contains their frequency in days. Check on startup and when a refresh button is pressed (just put it into 
          * a method). if the current date is greater than the repeated transaction date + its frequency, add a copy to either Incs or Exps based on what it is lol. Also 
          check for if multiple frequencies have occurred, so recursive call itself until the difference between the current transaction date and the current date is less than
@@ -62,7 +67,8 @@ namespace Budggy
              geez so much stuff to do. Transaction class for the repeated transactions and maybe even combine Incs and Exps into one 
              also need to add goals to the bin where a certain % of the money entering a bin will put allocated to it. It'll also STOP receiving part of the income when its full.
              The goals will also have priorities associated with them, so the amount stored will be used up if the bin amount goes to 0.
-             -Need to figure out how to use the money in the goals... for example I wanted x amount saved for presents. I use some, and then it begins to fill up again since it is not maxed*/
+             -Need to figure out how to use the money in the goals... for example I wanted x amount saved for presents. I use some, and then it begins to fill up again since it is not maxed
+             - add a function to add an expense to the goal? (add the goal to the description)*/
         public ObservableCollection<MonthBudget> MonthlyBudgets = new ObservableCollection<MonthBudget>() {
             
         };      
@@ -285,7 +291,7 @@ namespace Budggy
                 int incIndex;
                 foreach  (Bin BIN in Bins)
                 {
-                    incIndex = BIN.Incomes.IndexOf(BIN.Incomes.Where(x => string.Compare(x.Description, destr) == 0 && value == x.Value
+                    incIndex = BIN.Incomes.IndexOf(BIN.Incomes.Where(x => string.Compare(x.Description, destr) == 0 && value == x.Value / x.Percentage
                      && myDateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, BIN.Name) == 0).FirstOrDefault());
 
                     if(incIndex != -1)
@@ -681,7 +687,73 @@ namespace Budggy
             CalcMonthBudget();
         }
 
+        public void Refresh()
+        {
+            CheckAllRepeatTransac();
+            CalcMonthBudget();
+        }
+
+        public void CheckAllRepeatTransac()
+        {
+            int index = 0;
+            foreach  (RepeatTransaction transaction in repeatedTrans)
+            {
+                CheckRepeatTransac(transaction, index);
+                ++index;
+            }
+        }
+
+        //need to test this 
+        public void CheckRepeatTransac(RepeatTransaction trans, int index)
+        {
+            DateTime transactionDate = new DateTime(trans.Transaction.Date.Year, trans.Transaction.Date.Month, trans.Transaction.Date.Day);
+            if (trans.Monthly)
+            {
+                transactionDate.AddMonths(trans.frequency);
+            } else
+            {
+                transactionDate.AddDays(trans.frequency);
+            }
+            
+            
+          
+            if(DateTime.Compare(DateTime.Today, transactionDate) > -1)
+            {
+                if (repeatedTrans[index].Transaction.IsIncome())
+                {
+                    AddIncome(trans.Transaction.Value, trans.Transaction.Description, transactionDate, trans.Transaction.Bin);
+                } else
+                {
+                    Expense exp = (Expense)trans.Transaction;
+                    AddExpense(exp.Value, exp.Description, transactionDate, exp.Drawer);
+                }
+
+                repeatedTrans[index].Transaction.Date = new myDateTime(transactionDate);
+                CheckRepeatTransac(trans, index);
+            }          
+        }
+
+        public void AddRepeatTransaction(Transaction trans, int frequency = 1, bool monthly = true)
+        {
+            int index = repeatedTrans.IndexOf(repeatedTrans.Where(x => (string.Compare(x.Transaction.Bin, trans.Bin) == 0) 
+            && (string.Compare(x.Transaction.Description, trans.Description) == 0) && 
+            (x.Transaction.Value == trans.Value)).FirstOrDefault());
+
+            if(index == -1)
+            {
+                RepeatTransaction repeat = new RepeatTransaction
+                {
+                    Transaction = trans,
+                    frequency = frequency,
+                    Monthly = monthly
+                };
+
+                repeatedTrans.Add(repeat);
+            }
+        }
     }
+
+  
 
    /* public class BudgetViewModel
     {

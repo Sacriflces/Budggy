@@ -27,6 +27,7 @@ namespace Budggy
 
         public ObservableCollection<Drawer> Drawers = new ObservableCollection<Drawer>();
         public ObservableCollection<Income> Incomes = new ObservableCollection<Income>();
+        public ObservableCollection<Goal> Goals = new ObservableCollection<Goal>();
 
 
 
@@ -170,15 +171,21 @@ namespace Budggy
 
         public void AddDrawerExpense(Expense exp)
         {
+            Balance -= exp.Value;
             int index = Drawers.IndexOf(Drawers.Where(x => string.Compare(x.Name, exp.Drawer) == 0).FirstOrDefault());
             if (index != -1)
             {
                 Drawers[index].AddExpense(exp);
             }
+            if(Balance < 0)
+            {
+                PullfromGoals();
+            }
         }
 
         public void RemoveDrawerExpense(Expense exp)
         {
+            Balance += exp.Value;
             int index = Drawers.IndexOf(Drawers.Where(x => string.Compare(x.Name, exp.Drawer) == 0).FirstOrDefault());
             if (index != -1)
             {
@@ -188,8 +195,11 @@ namespace Budggy
 
         public void AddIncome(Income inc)
         {
-            Balance += inc.Value;
+            decimal adjustedValue = AddtoGoals(inc.Value);
+            Balance += adjustedValue;
+            inc.Percentage = Percentage;
             Incomes.Add(inc);
+            
         }
 
         public void RemoveIncome(int index)
@@ -197,128 +207,37 @@ namespace Budggy
             Balance -= Incomes[index].Value;
             Incomes.RemoveAt(index);
         }
+
+        //going to need to test all goal stuff when I begin implementing the ui
+        private void PullfromGoals()
+        {
+            //1. find the goal with the least priority
+
+            //2. take as much as needed from the goal to set the balance to zero
+
+            //3. check if the balance is still below zero, and if it is go to the goal with the next lowest priority and repeat.
+        }
+
+        private decimal AddtoGoals(decimal val)
+        {
+            decimal adjVal = val;
+            
+            //1. check if the percentages add up to 100%
+
+            //2. then remove part of the adjVal and insert into the goals
+
+            return val;
+        }
+
+        private void AddGoal()
+        {
+
+        }
+
+        private void RemoveGoal()
+        {
+
+        }
     }
 
-    public class Drawer : INotifyPropertyChanged
-    {
-        #region INotifyPropertyChanged Members
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        #endregion
-
-        void OnPropertyChange(string propertyName)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private decimal _maximum;
-        public decimal Maximum
-        {
-            get { return _maximum; }
-            set
-            {
-                _maximum = value;
-                OnPropertyChange("Maximum");
-            }
-        }
-
-        private decimal Max;
-
-        private decimal _currentSpent;
-        public decimal CurrentSpent
-        {
-            get { return _currentSpent; }
-            set
-            {
-                _currentSpent = value;
-                OnPropertyChange("CurrentSpent");
-            }
-        }
-
-        private string _name;
-        public string Name
-        {
-            get { return _name; }
-            set
-            {
-                _name = value;
-                OnPropertyChange("Name");
-            }
-        }
-
-        public string BinName;
-
-        private int _month;
-        public int Month
-        {
-            get { return _month; }
-            set
-            {
-                _month = value;
-                OnPropertyChange("Month");
-            }
-        }
-
-        private int _year;
-        public int Year
-        {
-            get { return _year; }
-            set
-            {
-                _year = value;
-                OnPropertyChange("Month");
-            }
-        }
-
-        decimal[] prevSpent = new decimal[12];
-        private int index;
-        public bool rollOver;
-
-        public Drawer()
-        {
-
-        }
-        
-        public Drawer(string name, decimal maximum, DateTime date, string binName = null)
-        {
-            //Need to create strings to bind too... eventually
-            BinName = binName;
-            Name = name;
-            Maximum = maximum;
-            Max = maximum;
-            CurrentSpent = 0;
-            Month = date.Month;
-            Year = date.Year;
-            rollOver = false;
-            index = 0;
-        }
-
-        public void Refresh()
-        {
-            if (rollOver)
-            {
-                Maximum = Max + (Maximum - CurrentSpent);
-            }
-            else
-                Maximum = Max;
-
-            prevSpent[index++] = CurrentSpent;
-            index %= prevSpent.Length;
-            Month = DateTime.Now.Month;
-            Year = DateTime.Now.Year;
-        }
-
-        public void AddExpense(Expense exp)
-        {
-            CurrentSpent += exp.Value;
-        }
-
-        public void RemoveExpense(Expense exp)
-        {
-            CurrentSpent -= exp.Value;
-        }
-
-    }
 }

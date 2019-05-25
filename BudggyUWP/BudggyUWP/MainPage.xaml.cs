@@ -34,11 +34,7 @@ namespace BudggyUWP
         {
          // Load();
             budget = new Budget();
-            this.InitializeComponent();            
-            budggyLB.SelectedIndex = 0;
-            
-            
-
+            this.InitializeComponent();  
         }
 
         private void MenuButton_Click(object sender, RoutedEventArgs e)
