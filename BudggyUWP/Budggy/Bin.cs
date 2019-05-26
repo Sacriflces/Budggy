@@ -206,38 +206,113 @@ namespace Budggy
         {
             Balance -= Incomes[index].Value;
             Incomes.RemoveAt(index);
+
+            if(Balance < 0)
+            {
+                PullfromGoals();
+            }
         }
 
         //going to need to test all goal stuff when I begin implementing the ui
         private void PullfromGoals()
         {
-            //1. find the goal with the least priority
+            //1. find the goal with the least priority should be organized that way
 
             //2. take as much as needed from the goal to set the balance to zero
+            RecurPull(0);
+            //3. check if the balance is still below zero, and if it is go to the goal with the next lowest priority and repeat. probably recursive,
+            //so need another function.
+        }
 
-            //3. check if the balance is still below zero, and if it is go to the goal with the next lowest priority and repeat.
+        private void RecurPull(int index)
+        {
+            //stop cases
+            if (Balance == 0 || index == Goals.Count) return;
+            decimal diff = Goals[index].Value + Balance;
+
+            if(diff >= 0)
+            {
+                Goals[index].Value += Balance;
+                Balance = 0;                
+            } else
+            {
+                Balance += Goals[index].Value;
+                Goals[index].Value = 0;
+            }
+
+            //I believe the lowest priority will be first
+            RecurPull(++index);
+            
         }
 
         private decimal AddtoGoals(decimal val)
         {
             decimal adjVal = val;
-            
-            //1. check if the percentages add up to 100%
+            decimal percentage = 0;
+            decimal splitAmount = 0;
 
+            //1. check if the percentages add up to less than or equal to 100%
+            foreach (Goal goal in Goals)
+            {
+                percentage += goal.Percentage;
+            }
+
+            if (percentage > 1) return adjVal;
             //2. then remove part of the adjVal and insert into the goals
+            //need to test this to see if adjVal -= splitAmount works outside of the if and else.
+            foreach (Goal goal in Goals)
+            {
+                splitAmount = adjVal * (goal.Percentage);
+                if(goal.Value + splitAmount >= goal.GoalVal)
+                {
+                    splitAmount = (goal.GoalVal - goal.Value);
+                    goal.Value = goal.GoalVal;
+                //    adjVal -= splitAmount;
+                } else
+                {
+                    goal.Value += splitAmount;
+               //     adjVal -= splitAmount;
+                }
+                adjVal -= splitAmount;
+            }
 
-            return val;
+            return adjVal;
         }
 
         private void AddGoal()
         {
+            Goal goal = new Goal()
+            {
+                Priority = Goals.Count,
+            };
 
+            Goals.Add(goal);
+            GoalsByPriority();
+            //organize based on priority
         }
 
-        private void RemoveGoal()
+        private void GoalsByPriority()
         {
-
+            Goals.OrderByDescending(x => x.Priority);
         }
+
+        private void RemoveGoal(Goal goal)
+        {
+            int index = Goals.IndexOf(Goals.Where(x => String.Compare(x.Name, goal.Name) == 0
+            && String.Compare(x.Description, goal.Description) == 0).FirstOrDefault());
+            int priority = Goals.Count;
+
+            Balance += goal.Value;
+            Goals.RemoveAt(index);
+
+            //redo the priorities... assuming lowest priority (higher number) is first
+            foreach (Goal gol in Goals)
+            {
+                gol.Priority = priority--;
+            }
+        }
+
+        //need a function to change the priority of goals correctly
     }
 
 }
