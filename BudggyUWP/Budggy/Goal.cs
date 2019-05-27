@@ -7,12 +7,52 @@ using System.ComponentModel;
 
 namespace Budggy
 {
-    public class Goal
+    public class Goal : INotifyPropertyChanged
     {
-        public string Name;
-        public string Description;
+        #region INotifyPropertyChanged Members
 
-        public decimal Value;
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion
+
+        void OnPropertyChange(string propertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private string _name;
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                _name = value;
+                OnPropertyChange("Name");
+            }
+        }
+
+        private string _description;
+        public string Description
+        {
+            get { return _description; }
+            set
+            {
+                _description = value;
+                OnPropertyChange("Description");
+            }
+        }
+
+        private decimal _value;
+        public decimal Value
+        {
+            get { return _value; }
+            set
+            {
+                _value = value;
+                OnPropertyChange("Value");
+            }
+        }
 
         private decimal _percentage;
         public decimal Percentage
@@ -26,10 +66,32 @@ namespace Budggy
                     _percentage = value / 100;
                 else
                     _percentage = 0;
+
+                OnPropertyChange("Percentage");
             }
         }
-        public decimal GoalVal;
-        public int Priority;
+
+        private decimal _goalVal;
+        public decimal GoalVal
+        {
+            get { return _goalVal; }
+            set
+            {
+                _goalVal = value;
+                OnPropertyChange("GoalVal");
+            }
+        }
+
+        private int _priority;
+        public int Priority
+        {
+            get { return _priority; }
+            set
+            {
+                _priority = value;
+                OnPropertyChange("Priority");
+            }
+        }
 
         public Goal()
         {
@@ -39,6 +101,15 @@ namespace Budggy
             Priority = 0;
         }
 
+        public void AddExpense(Expense exp)
+        {
+            Value -= exp.Value;
+        }
+
+        public void RemoveExpense(Expense exp)
+        {
+            Value += exp.Value;
+        }
         
     }
 }

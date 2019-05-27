@@ -15,6 +15,13 @@
         <Setter Property="FontFamily" Value="Segoe Ui"/>
     </Style>
 
+    <Style TargetType="TextBox" x:Key="MyTextBoxStyle">
+        <Setter Property="FontSize" Value="36"/>
+        <Setter Property="Margin" Value="20,0,0,0"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontFamily" Value="Segoe Ui"/>
+    </Style>
+
     <Style TargetType="TextBlock" x:Key="MyMenuTextBlockStyle">
         <Setter Property="FontSize" Value="36"/>
         <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
@@ -52,8 +59,27 @@
         <Setter Property="Foreground" Value="Black"/>
 
     </Style>
+
+    <Style TargetType="TextBox" x:Key="BudgetContainerTB" >
+        <Setter Property="FontSize" Value="36"/>
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <!-- Segoe UI original-->
+        <Setter Property="Margin" Value="0,0,10,0"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <Setter Property="Foreground" Value="Black"/>
+    </Style>
     
     <SolidColorBrush x:Name="IncomeColor" Color="#FF0FB294"/>
+
+    <Style TargetType="Border" x:Key="BorderStyle">
+        <Setter Property="BorderBrush" Value="{StaticResource LightColor}"/>
+        <Setter Property="Background" Value="{StaticResource LightColor}"/>
+        <Setter Property="Margin" Value="0,10"/>
+        <Setter Property="BorderThickness" Value="3"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="CornerRadius" Value="3"/>        
+    </Style>
     
     <!-- End of BudggyHome Styles-->
 

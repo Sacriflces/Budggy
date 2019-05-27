@@ -16,8 +16,288 @@
         </ResourceDictionary>
         
     </Page.Resources>
-
     <Grid>
+        <Grid x:Name="newView" Background="{StaticResource DarkColor}"              
+              >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+
+            <Border Name="BinNameTBLNWB" Style="{StaticResource BorderStyle}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Grid.Column="1"
+                    DoubleTapped="BinNameTBLNWB_DoubleTapped">
+                <TextBlock Name="BinNameTBLNW" 
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Style="{StaticResource MyTextBlockStyle}"
+                       Text="{Binding Name}"
+                       DoubleTapped="BinNameTBLNW_DoubleTapped"/>                
+            </Border>
+
+            <Border Name="BinNameTBNWB" Style="{StaticResource BorderStyle}"
+                    Visibility="Collapsed"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Grid.Column="1">
+                <TextBox Name="BinNameTBNW"                        
+                       HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                       Style="{StaticResource MyTextBoxStyle}"
+                       Text="{Binding Name,Mode=TwoWay}" FocusDisengaged="BinNameTBNW_FocusDisengaged" KeyDown="BinNameTBNW_KeyDown"
+                     />
+            </Border>
+
+            <Border Name="BinDescTBLNWB" Style="{StaticResource BorderStyle}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Grid.Column="1"
+                    Grid.Row="1"
+                    DoubleTapped="BinDescTBLNW_DoubleTapped">
+                <TextBlock Name="BinDescTBLNW" 
+                           TextWrapping="Wrap"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Style="{StaticResource MyTextBlockStyle}"
+                       Text="{Binding Description}" DoubleTapped="BinDescTBLNW_DoubleTapped"/>
+            </Border>
+
+            <Border Name="BinDescTBNWB" Style="{StaticResource BorderStyle}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Visibility="Collapsed"
+                    Grid.Column="1"
+                    Grid.Row="1">
+                <TextBox Name="BinDescTBNW"                        
+                       HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                       Style="{StaticResource MyTextBoxStyle}"
+                       Text="{Binding Description,Mode=TwoWay}" FocusDisengaged="BinNameTBNW_FocusDisengaged" KeyDown="BinDescTBNW_KeyDown"
+                     />
+            </Border>
+
+            <Border Style="{StaticResource BorderStyle}"
+                HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Grid.Row="2" Grid.Column="1" 
+                >
+            <Grid Name="TestGrid" Grid.Row="2" Grid.Column="1" 
+                  Background="{StaticResource LightColor}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource BudgetContainerTBl}"
+                           Text="Balance:"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Right"/>
+
+                    <TextBlock Style="{StaticResource BudgetContainerTBl}"
+                               Grid.Column="2"
+                           Text="{Binding Balance}"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Left"/>
+
+                    <TextBlock Style="{StaticResource BudgetContainerTBl}"
+                           Grid.Row="1"
+                           Text="Percentage:"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Right"/>
+
+                    <TextBlock Name="BinPerTBLNW" Style="{StaticResource BudgetContainerTBl}"
+                               Grid.Column="2"
+                               Grid.Row="1"
+                           Text="{Binding Percentage}"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Left"
+                               DoubleTapped="BinPerTBLNW_DoubleTapped"/>
+
+                    <TextBox Name="BinPerTBNW"  Style="{StaticResource BudgetContainerTB}"
+                               Grid.Column="2"
+                               Grid.Row="1"
+                           Text="{Binding Percentage}"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Left"
+                             Visibility="Collapsed"
+                             KeyDown="BinPerTBNW_KeyDown"/>
+
+                </Grid>               
+            </Border>
+
+            <Border Name="BinBackBTB"  Style="{StaticResource BorderStyle}"
+                HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Grid.Row="2" Grid.Column="0" 
+                >
+                <Button Name="BinBackBT" Content="Previous"
+                        Background="{StaticResource LightColor}"
+                        Click="BinBackBT_Click"/>
+            </Border>
+
+            <Border Name="BinNextBTB"  Style="{StaticResource BorderStyle}"
+                HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Grid.Row="2" Grid.Column="2" 
+                >
+                <Button Name="BinNextBT" Content="Next"
+                        Background="{StaticResource LightColor}"
+                        Click="BinNextBT_Click"/>
+            </Border>
+
+            <Border  Style="{StaticResource BorderStyle}"
+                HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Grid.Row="3" Grid.Column="1" 
+                >
+                <Button Name="AddDrawerBTNV" Content="Add Drawer"
+                        Click="AddDrawerBTNV_Click"/>
+            </Border>
+
+            <Border  Style="{StaticResource BorderStyle}"
+                HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Grid.Row="3" Grid.Column="1" 
+                >
+                <Button Name="AddGoalBTNV" Content="Add Goal"
+                        Click="AddGoalBTNV_Click"/>
+            </Border>
+
+            <Grid Grid.Row="4" Grid.Column="1"
+                  Grid.RowSpan="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Border Style="{StaticResource BorderStyle}">
+                    
+               
+                <ListView Name ="DrawerLVNV"
+                          ScrollViewer.HorizontalScrollMode="Enabled"
+                 ScrollViewer.HorizontalScrollBarVisibility="Visible"
+                 ScrollViewer.IsHorizontalRailEnabled="True" >
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel
+                                VerticalAlignment="Top"
+                                Margin="10"/>
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="Budggy:Drawer">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                     Margin="0,0,10,0"/>
+                                <TextBlock Text="{Binding CurrentSpent, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                       Margin="0,0,10,0"/>
+                                <TextBox Text="{Binding Maximum, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                     Margin="0,0,10,0"/>
+                                <Button Name="DrawerDelBT" FontFamily="Segoe MDL2 Assets"
+                                                    Content="&#xE738;"
+                                                    Click="DrawerDelBT_Click"
+                                                     />
+                            </StackPanel>
+
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                </Border>
+
+                <Border Grid.Column="2" Style="{StaticResource BorderStyle}">
+
+
+                    <ListView Name ="GoalLVNV"
+                          ScrollViewer.HorizontalScrollMode="Enabled"
+                 ScrollViewer.HorizontalScrollBarVisibility="Visible"
+                 ScrollViewer.IsHorizontalRailEnabled="True" >
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel
+                                VerticalAlignment="Top"
+                                Margin="10"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="Budggy:Goal">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="10"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                     Margin="0,0,10,0"
+                                             HorizontalAlignment="Left"/>
+                                    <TextBlock Grid.Column="1" Text="Percentage:"/>
+                                    <TextBox Grid.Column="3" Text="{Binding Percentage, Mode=TwoWay}"
+                                             KeyDown="TextBox_KeyDown"/>
+                                    <TextBox Grid.ColumnSpan="4" Grid.Row="1"
+                                             Text="{Binding Description}"
+                                             HorizontalAlignment="Center"/>
+                                    
+                                    <StackPanel Grid.Row="2" Orientation="Horizontal">
+                                        <TextBlock Text="Balance:" Margin="0,0,10,0" />
+                                        <TextBlock Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                       Margin="0,0,10,0"/>
+                                        <TextBlock Text="out of" Margin="0,0,10,0"/>
+                                        <TextBox Text="{Binding GoalVal, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                     Margin="0,0,20,0"/>
+                                        <TextBox Text="{Binding Priority, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                    </StackPanel>
+
+                                    <Button Grid.Row="2" Grid.Column="4" Name="GoalDelBT" FontFamily="Segoe MDL2 Assets"
+                                                    Content="&#xE738;"
+                                                    Click="GoalDelBT_Click"
+                                                     />
+                                </Grid>
+                                
+
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Border>
+
+
+            </Grid>
+
+            <Border Name="CreateBinBTB"  Style="{StaticResource BorderStyle}"
+                HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Grid.Row="3" Grid.Column="2" 
+                >
+                <Button Name="BinCreateBT" Content="Create Bin"
+                        Background="{StaticResource LightColor}"
+                        Click="BinCreateBT_Click"/>
+            </Border>
+
+
+        </Grid>
+   
+    <Grid x:Name="oldView" Visibility="Collapsed">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="2*"/>
@@ -213,5 +493,6 @@
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
         </ListBox> -->
+    </Grid>
     </Grid>
 </Page>

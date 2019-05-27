@@ -42,13 +42,17 @@ namespace BudggyUWP
             base.OnNavigatedTo(e);
 
             var parameters = (Budget)e.Parameter;
-            budget = parameters;
+            budget = parameters;         
+            budget.CreateMonthlyBudget();        
+            BudgetBalRP.DataContext = budget.MonthlyBudgets[budget.MonthlyBudgets.Count - 1];
+
             this.DataContext = budget;            
             BinsCB.ItemsSource = budget.Bins;
             IncLB.ItemsSource = budget.Incs;
             ExpLB.ItemsSource = budget.Exps;
             BinLB.ItemsSource = budget.Bins;
-            BudgetBalRP.DataContext = budget.MonthlyBudgets[budget.MonthlyBudgets.Count - 1];
+            repeatedTransLB.ItemsSource = budget.repeatedTrans;
+            
 
 
 
@@ -136,7 +140,7 @@ namespace BudggyUWP
                 binName = budget.Bins[BinsCB.SelectedIndex].Name;
                 budget.AddExpense(Convert.ToDecimal(ValueTB.Text), DescriptionTB.Text,
                       new DateTime(Convert.ToInt16(datearr[2]), Convert.ToInt16(datearr[0]), Convert.ToInt16(datearr[1])),
-                      budget.Bins[BinsCB.SelectedIndex].Name, drawerName);
+                      budget.Bins[BinsCB.SelectedIndex].Name, DrawGoalTSW.IsOn, drawerName);
             }
 
             // clear values
@@ -211,7 +215,14 @@ namespace BudggyUWP
 
         private void BinsCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            DrawersCB.ItemsSource = budget.Bins[BinsCB.SelectedIndex].Drawers;
+            if (DrawGoalTSW.IsOn)
+            {
+                DrawersCB.ItemsSource = budget.Bins[BinsCB.SelectedIndex].Drawers;
+            } else
+            {
+                DrawersCB.ItemsSource = budget.Bins[BinsCB.SelectedIndex].Goals;
+            }
+           
         }
 
         private void ToggleIncBT_Click(object sender, RoutedEventArgs e)
@@ -222,6 +233,7 @@ namespace BudggyUWP
             DrawersCB.Visibility = Visibility.Collapsed;
             ToggleIncBTBD.Visibility = Visibility.Collapsed;
             ToggleExpBTBD.Visibility = Visibility.Collapsed;
+            DrawGoalTSW.Visibility = Visibility.Collapsed;
         }
 
         private void ToggleExpBT_Click(object sender, RoutedEventArgs e)
@@ -230,6 +242,7 @@ namespace BudggyUWP
             IncExpGridBD.Visibility = Visibility.Visible;
             SplitTSW.Visibility = Visibility.Collapsed; 
             DrawersCB.Visibility = Visibility.Visible;
+            DrawGoalTSW.Visibility = Visibility.Visible;
             ToggleIncBTBD.Visibility = Visibility.Collapsed;
             ToggleExpBTBD.Visibility = Visibility.Collapsed;
         }
@@ -241,6 +254,27 @@ namespace BudggyUWP
             IncExpGridBD.Visibility = Visibility.Collapsed;
             BackBTBD.Visibility = Visibility.Collapsed;
 
+        }
+
+        private void RelativePanel_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            RelativePanel relative = sender as RelativePanel;
+            Transaction trans = (Transaction)relative.DataContext;
+            budget.AddRepeatTransaction(trans);
+        }
+
+        private void IncfreqBt_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            Transaction trans = (Transaction)button.DataContext;
+            budget.AddRepeatTransaction(trans);
+        }  
+
+        private void RepeatDeleteBt_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            RepeatTransaction repTrans = (RepeatTransaction)button.DataContext;
+            budget.RemoveRepeatTransaction(repTrans);
         }
     }
 

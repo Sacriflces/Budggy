@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    xmlns:Budggy="using:Budggy"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
         <ResourceDictionary>
@@ -32,7 +33,7 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
-        <RelativePanel Name="BudgetBalRP" Grid.ColumnSpan="2" MaxWidth="450">
+        <RelativePanel Name="BudgetBalRP" Grid.ColumnSpan="2" MaxWidth="450" >
 
             <Rectangle Name="BudgetRec"
                        Margin="0,10,0,0"
@@ -205,9 +206,9 @@
                     <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="6*"/>
+                    <ColumnDefinition Width="4*"/>
                 </Grid.ColumnDefinitions>
                 
                 <TextBox PlaceholderText="Description" Grid.ColumnSpan="2"
@@ -248,9 +249,11 @@
 
                 <ComboBox x:Name="DrawersCB" 
                           Grid.Row="2"
-                          Grid.ColumnSpan="2"
+                          Grid.Column="1"
                               Style="{StaticResource BinsDrawerCBStyle}"
-                              Visibility="Collapsed"                             
+                          Margin="0"
+                          HorizontalAlignment="Right"
+                              Visibility="Visible"                             
                           >
                     <ComboBox.ItemTemplate>
                         <DataTemplate  >
@@ -259,7 +262,11 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
-                <Button Name="AddButton" Content="Add" 
+                    <ToggleSwitch Name="DrawGoalTSW" Grid.Row="2"
+                                  Header="Drawer or Goal" IsOn="True"
+                                  Visibility="Collapsed"/>
+
+                    <Button Name="AddButton" Content="Add" 
                         Grid.Row="2" Grid.Column="2"
                         Margin="20,0,0,0"                       
                         Click="AddButton_Click"
@@ -273,6 +280,7 @@
                   RelativePanel.AlignLeftWithPanel="True"
                   RelativePanel.AlignRightWithPanel="True">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
                     <RowDefinition Height="1*"/>
                     <RowDefinition Height="1*"/>
                     <RowDefinition Height="1*"/>
@@ -297,7 +305,7 @@
                         <ListBox.ItemTemplate>
                             <DataTemplate>
 
-                                <RelativePanel >
+                                <RelativePanel>
                                     <!-- use a relative panel to have the delete button always on the right!-->
                                     
                                     <TextBlock Name="LBBinNameTB" Margin="10,0,0,0" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
@@ -332,7 +340,7 @@
                         <ListBox.ItemTemplate>
                             <DataTemplate>
 
-                                <RelativePanel>
+                                <RelativePanel >
                                     <!-- use a relative panel to have the delete button always on the right!-->
                                     <Ellipse Name="IncEllipse" Fill="Green" Width="25" Height="25"
                                  Margin="0,10,0,0"
@@ -365,6 +373,10 @@
                                     FontFamily="Segoe MDL2 Assets" Content="&#xE738;"
                                     RelativePanel.AlignRightWithPanel="True"
                                     RelativePanel.AlignVerticalCenterWithPanel="True"/>
+                                    <Button Name="IncfreqBt" Click="IncfreqBt_Click"
+                                    FontFamily="Segoe Ui" Content="Add"
+                                    RelativePanel.AlignRightWithPanel="True"
+                                    RelativePanel.AlignBottomWithPanel="True"/>
 
                                 </RelativePanel>
                             </DataTemplate>
@@ -421,6 +433,91 @@
                                     FontFamily="Segoe MDL2 Assets" Content="&#xE738;"
                                     RelativePanel.AlignRightWithPanel="True"
                                     RelativePanel.AlignVerticalCenterWithPanel="True"/>
+                                    <Button Name="ExpfreqBt" Click="IncfreqBt_Click"
+                                    FontFamily="Segoe Ui" Content="Add"
+                                    RelativePanel.AlignRightWithPanel="True"
+                                    RelativePanel.AlignBottomWithPanel="True"/>
+
+                                </RelativePanel>
+
+                                <!--<Ellipse Fill="Red" Width="25" Height="25"/>                        
+                        <TextBlock Margin="20,0,0,0" Text="{Binding ValueStr, UpdateSourceTrigger=PropertyChanged}"
+                                   Style="{StaticResource BudggyHomeTBlock}"/>
+                        <StackPanel Margin="20,0,20,0">
+                            <TextBlock Text="Bin:"/>
+                            <TextBlock Text="{Binding Bin, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+                        <TextBlock Name="ExpDateTB" Style="{StaticResource BudggyHomeTBlock}"
+                                   Text="{Binding DateStr, UpdateSourceTrigger=PropertyChanged}"/>                        
+                        <TextBlock Margin="20,0,0,0" Style="{StaticResource BudggyHomeTBlock}" 
+                            Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" 
+                                   TextWrapping="WrapWholeWords"                                   
+                                   MaxWidth="400"/> -->
+
+
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Border>
+
+                <Border Name="repeatedTransBD"
+                    Grid.Row="3"
+                BorderBrush="{StaticResource LightColor}"
+                BorderThickness="6"
+                Margin="0,10"
+                Padding="0,0,0,0"
+                CornerRadius="3" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                    <ListBox Name="repeatedTransLB"
+                 ScrollViewer.HorizontalScrollMode="Enabled"
+                 ScrollViewer.HorizontalScrollBarVisibility="Visible"
+                 ScrollViewer.IsHorizontalRailEnabled="True" Background="{StaticResource LightColor}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="Budggy:RepeatTransaction">
+                                <RelativePanel>
+
+                                    <!-- use a relative panel to have the delete button always on the right!-->
+                                    <Ellipse Name="TransEllipse" Fill="Purple" Width="25" Height="25"
+                                 Margin="0,10,0,0"
+                                 RelativePanel.AlignLeftWithPanel="True"
+                                    
+                                 />
+                                    <TextBlock Name="LBTransValTB" Margin="20,10,0,0" Text="{x:Bind ValueStr}"
+                                   Style="{StaticResource BudggyHomeTBlock}"
+                                   RelativePanel.RightOf="TransEllipse"            
+                                   
+                                   />
+                                      <StackPanel Name="TransBinSP" Margin="20,0,20,0" RelativePanel.RightOf="LBTransValTB"
+                                    
+                                    >
+                                        <TextBlock Text="Bin:"/>
+                                        <TextBlock Text="{x:Bind Bin}"/>
+                                    </StackPanel>
+
+                                    <TextBox Name="FrequencyTB" Text="{x:Bind Frequency, Mode=TwoWay}"
+                                             Margin="0,10,10,0"
+                                             RelativePanel.RightOf="TransBinSP"/>
+
+
+                                    <TextBlock Name="MonthlyTBL"
+                                               Margin="0,10,10,0"
+                                               RelativePanel.RightOf="FrequencyTB"
+                                               />
+                                    <TextBox Name="MonthlyTB"
+                                   Margin="0,10,0,0" 
+                                             Text="{x:Bind Monthly, Mode=TwoWay}"
+                                             RelativePanel.RightOf="MonthlyTBL"/> 
+
+                                    <TextBlock Margin="20,20,20,0" Style="{StaticResource BudggyHomeTBlock}" 
+                            Text="{Binding Description,UpdateSourceTrigger=PropertyChanged}"
+                                   TextWrapping="WrapWholeWords"
+                                   MaxWidth="400"
+                                   RelativePanel.Below="TransBinSP"
+                                   RelativePanel.AlignHorizontalCenterWith="TransBinSP"/>
+                                    <Button Name="RepeatDeleteBt" Click="RepeatDeleteBt_Click"
+                                    FontFamily="Segoe MDL2 Assets" Content="&#xE738;"
+                                    RelativePanel.AlignRightWithPanel="True"
+                                    RelativePanel.AlignBottomWithPanel="True"/> 
 
                                 </RelativePanel>
 

@@ -19,11 +19,11 @@ namespace Budggy
     {
 
         public ObservableCollection<Bin> Bins = new ObservableCollection<Bin>()  {
-           new Bin("Savings", "", .3m),
+         /*  new Bin("Savings", "", .3m),
             new Bin("Entertainment", "Going out money and gaming money, and whatever else I need to make this description longer", .5m),
             new Bin("Gas", "", .1m),
             new Bin("Food", "", .05m),
-            new Bin("Presents", "Money for Presents lol", .05m), 
+            new Bin("Presents", "Money for Presents lol", .05m), */
     };
         public ObservableCollection<Income> Incs = new ObservableCollection<Income>() {
         /*    new Income(2500.00m, "Money.. I wonder what happens if this description... isn't actually short and takes up A TON of space. You know what I mean?", "Savings", DateTime.Now),
@@ -79,10 +79,10 @@ namespace Budggy
         public Budget()
         {
             DefaultMonthlyBudget = 0;
-            if(MonthlyBudgets.Count == 0)
+         /*   if(MonthlyBudgets.Count == 0)
             {
                 CreateMonthlyBudget();
-            }
+            } */
          //   CreateMonthlyBudget();
           //  CalcBinBalance();
             
@@ -330,7 +330,7 @@ namespace Budggy
         }
         //maybe add a split functionality later on as well
 
-        public void AddExpense(decimal value, string destr, DateTime date, string bin, string drawer = null)
+        public void AddExpense(decimal value, string destr, DateTime date, string bin, bool drawerOrGoal, string drawer = null)
         {
             Expense exp; 
             int index = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, bin) == 0).FirstOrDefault());
@@ -339,11 +339,20 @@ namespace Budggy
                 exp = new Expense(value, destr, Bins[index].Name, date);
             }
             else
-                exp = new Expense(value, destr, null, date);
+                return;
+                //exp = new Expense(value, destr, null, date);
 
             exp.Drawer = drawer;
+            exp.DrawerExp = drawerOrGoal;
             Exps.Add(exp);
-            Bins[index].AddDrawerExpense(exp);
+            if (drawerOrGoal)
+            {
+                Bins[index].AddDrawerExpense(exp);
+            } else
+            {
+                Bins[index].AddGoalExpense(exp);
+            }
+            
             AddMonthBudgetExp(exp);
 
          //   CalcBinBalance(); 
@@ -355,16 +364,22 @@ namespace Budggy
             int index = Exps.IndexOf(Exps.Where(x => string.Compare(x.Description, destr) == 0 && value == x.Value
             && myDateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0).FirstOrDefault());
             int Binindex = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, bin) == 0).FirstOrDefault());
-          /*  foreach (MonthBudget bud in MonthlyBudgets)
+            /*  foreach (MonthBudget bud in MonthlyBudgets)
+              {
+                  if (Exps[index].Date.Month == bud.Date.Month && Exps[index].Date.Year == bud.Date.Year)
+                  {
+                      bud.RemoveExpense(Exps[index]);
+                      break;
+                  }
+              } */
+            if (Exps[index].DrawerExp)
             {
-                if (Exps[index].Date.Month == bud.Date.Month && Exps[index].Date.Year == bud.Date.Year)
-                {
-                    bud.RemoveExpense(Exps[index]);
-                    break;
-                }
-            } */
-
-            Bins[Binindex].RemoveDrawerExpense(Exps[index]);
+                Bins[Binindex].RemoveDrawerExpense(Exps[index]);
+            } else
+            {
+                Bins[Binindex].RemoveGoalExpense(Exps[index]);
+            }
+            
             DeleteMonthBudgetExp(Exps[index]);
             Exps.RemoveAt(index);
 
@@ -471,6 +486,10 @@ namespace Budggy
             {
                 MonthBudget budget = new MonthBudget(DefaultMonthlyBudget, DateTime.Now.Month, DateTime.Now.Year);
                 MonthlyBudgets.Add(budget);
+                foreach (Bin bin in Bins)
+                {
+                    bin.RefreshDrawers();
+                }
             }
         }
         // calculates all of the monthly budgets wheww.... 
@@ -709,10 +728,10 @@ namespace Budggy
             DateTime transactionDate = new DateTime(trans.Transaction.Date.Year, trans.Transaction.Date.Month, trans.Transaction.Date.Day);
             if (trans.Monthly)
             {
-                transactionDate.AddMonths(trans.frequency);
+                transactionDate.AddMonths(trans.Frequency);
             } else
             {
-                transactionDate.AddDays(trans.frequency);
+                transactionDate.AddDays(trans.Frequency);
             }
             
             
@@ -725,7 +744,7 @@ namespace Budggy
                 } else
                 {
                     Expense exp = (Expense)trans.Transaction;
-                    AddExpense(exp.Value, exp.Description, transactionDate, exp.Drawer);
+                    AddExpense(exp.Value, exp.Description, transactionDate, exp.Drawer, exp.DrawerExp);
                 }
 
                 repeatedTrans[index].Transaction.Date = new myDateTime(transactionDate);
@@ -744,16 +763,33 @@ namespace Budggy
                 RepeatTransaction repeat = new RepeatTransaction
                 {
                     Transaction = trans,
-                    frequency = frequency,
-                    Monthly = monthly
+                    Frequency = frequency,
+                    Monthly = monthly,
+                    ValueStr = trans.ValueStr,
+                    Bin = trans.Bin,
+                    Description = trans.Description,
                 };
 
                 repeatedTrans.Add(repeat);
             }
         }
+
+        public void RemoveRepeatTransaction(RepeatTransaction repeatTrans)
+        {
+            int index = repeatedTrans.IndexOf(repeatedTrans.Where(x => string.Compare(x.Bin, repeatTrans.Bin) == 0 &&
+            string.Compare(x.Description, repeatTrans.Description) == 0 &&
+            x.Frequency == repeatTrans.Frequency &&
+            x.Monthly == repeatTrans.Monthly).FirstOrDefault());
+            if(index != -1)
+            {
+                repeatedTrans.RemoveAt(index);
+            }
+            
+        }
     }
 
-  
+    
+
 
    /* public class BudgetViewModel
     {

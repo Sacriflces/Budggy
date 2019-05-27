@@ -169,6 +169,31 @@ namespace Budggy
             }
         }
 
+        public void CreateGoal(string name = null, decimal goalVal = 100m)
+        {
+            if (Goals.IndexOf(Goals.Where(x => string.Compare(x.Name, name) == 0).FirstOrDefault()) != -1)
+                return;
+
+            Goal item = new Goal()
+            {
+                Name = name,
+                GoalVal = goalVal,
+                Priority = Goals.Count,
+            };
+            
+            Goals.Add(item);
+        }
+
+        public void RemoveGoal(string name)
+        {
+            int index = Goals.IndexOf(Goals.Where(x => string.Compare(x.Name, name) == 0).FirstOrDefault());
+            if (index != -1)
+            {
+                Balance += Goals[index].Value;
+                Goals.RemoveAt(index);
+            }
+        }
+
         public void AddDrawerExpense(Expense exp)
         {
             Balance -= exp.Value;
@@ -183,6 +208,18 @@ namespace Budggy
             }
         }
 
+        public void AddGoalExpense(Expense exp)
+        {
+            int index = Goals.IndexOf(Goals.Where(x => string.Compare(x.Name, exp.Drawer) == 0).FirstOrDefault());
+            if (index != -1)
+            {
+                Goals[index].AddExpense(exp);
+            } else
+            {
+                Balance -= exp.Value;
+            }
+        }
+
         public void RemoveDrawerExpense(Expense exp)
         {
             Balance += exp.Value;
@@ -190,6 +227,19 @@ namespace Budggy
             if (index != -1)
             {
                 Drawers[index].RemoveExpense(exp);
+            }
+        }
+
+        public void RemoveGoalExpense(Expense exp)
+        {
+            
+            int index = Goals.IndexOf(Goals.Where(x => string.Compare(x.Name, exp.Drawer) == 0).FirstOrDefault());
+            if (index != -1)
+            {
+               Goals[index].RemoveExpense(exp);
+            } else
+            {
+                Balance += exp.Value;
             }
         }
 
@@ -312,6 +362,14 @@ namespace Budggy
             }
         }
 
+        public void RefreshDrawers()
+        {
+            foreach (Drawer drawer in Drawers)
+            {
+                drawer.Refresh();
+            }
+        }
+        
         //need a function to change the priority of goals correctly
     }
 

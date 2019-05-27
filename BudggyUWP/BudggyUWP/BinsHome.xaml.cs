@@ -25,6 +25,7 @@ namespace BudggyUWP
     public sealed partial class BinsHome : Page
     {
         Budget budget;
+        int index = 0;
 
         public BinsHome()
         {
@@ -38,11 +39,19 @@ namespace BudggyUWP
 
             var parameters = (Budget)e.Parameter;
             budget = parameters;
-            this.DataContext = budget;
-            BinsLV.ItemsSource = budget.Bins;
-            BinsEditLV.ItemsSource = budget.Bins;
+            BinBackBTB.Visibility = Visibility.Collapsed;
+            if(budget.Bins.Count != 0)
+            {
+                this.DataContext = budget.Bins[index];
+                BinsLV.ItemsSource = budget.Bins;
+                BinsEditLV.ItemsSource = budget.Bins;
 
-            
+                DrawerLVNV.ItemsSource = budget.Bins[index].Drawers;
+                GoalLVNV.ItemsSource = budget.Bins[index].Goals;
+            }
+           
+
+
 
 
 
@@ -191,5 +200,138 @@ namespace BudggyUWP
 
             }
         }
+
+        private void BinNameTBLNW_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            BinNameTBNWB.Visibility = Visibility.Visible;
+            BinNameTBLNWB.Visibility = Visibility.Collapsed;
+        }
+
+        private void BinNameTBLNWB_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            BinNameTBNWB.Visibility = Visibility.Visible;
+            BinNameTBLNWB.Visibility = Visibility.Collapsed;
+        }
+
+        private void BinNameTBNW_FocusDisengaged(Control sender, FocusDisengagedEventArgs args)
+        {
+            BinNameTBLNWB.Visibility = Visibility.Visible;
+            BinNameTBNWB.Visibility = Visibility.Collapsed;
+        }
+
+        private void BinNameTBNW_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if(e.Key == Windows.System.VirtualKey.Enter)
+            {
+                BinNameTBLNWB.Visibility = Visibility.Visible;
+                BinNameTBNWB.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void BinDescTBLNW_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            BinDescTBLNWB.Visibility = Visibility.Collapsed;
+            BinDescTBNWB.Visibility = Visibility.Visible;
+        }
+
+        private void BinDescTBNW_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                BinDescTBLNWB.Visibility = Visibility.Visible;
+                BinDescTBNWB.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void BinPerTBLNW_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            TestGrid.Children[4].Visibility = Visibility.Visible;
+            TestGrid.Children[3].Visibility = Visibility.Collapsed;
+        }
+
+       
+
+        private void BinPerTBNW_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                Bin currentBin = (Bin)DataContext;
+                TextBox text = (TextBox)TestGrid.Children[4];
+                currentBin.Percentage = Convert.ToDecimal(text.Text);
+                TestGrid.Children[3].Visibility = Visibility.Visible;
+                TestGrid.Children[4].Visibility = Visibility.Collapsed;
+
+            }
+        }
+
+        private void BinNextBT_Click(object sender, RoutedEventArgs e)
+        {
+            BinBackBTB.Visibility = Visibility.Visible;
+            DataContext = budget.Bins[++index];
+            DrawerLVNV.ItemsSource = budget.Bins[index].Drawers;
+            GoalLVNV.ItemsSource = budget.Bins[index].Goals;
+            if (index == budget.Bins.Count - 1) {
+                BinNextBTB.Visibility = Visibility.Collapsed;
+            }
+            
+        }
+
+        private void BinBackBT_Click(object sender, RoutedEventArgs e)
+        {
+            BinNextBTB.Visibility = Visibility.Visible;
+            DataContext = budget.Bins[--index];
+            DrawerLVNV.ItemsSource = budget.Bins[index].Drawers;
+            GoalLVNV.ItemsSource = budget.Bins[index].Goals;
+            if (index == 0)
+            {
+                BinBackBTB.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void BinCreateBT_Click(object sender, RoutedEventArgs e)
+        {
+            
+            budget.AddBin("New Bin", "Description", 0);
+            index = budget.Bins.Count - 1;
+            DataContext = budget.Bins[index];
+            DrawerLVNV.ItemsSource = budget.Bins[index].Drawers;
+            GoalLVNV.ItemsSource = budget.Bins[index].Goals;
+            BinNextBTB.Visibility = Visibility.Collapsed;
+
+        }
+
+        private void AddDrawerBTNV_Click(object sender, RoutedEventArgs e)
+        {
+            budget.Bins[index].CreateDrawer();
+        }
+
+        private void AddGoalBTNV_Click(object sender, RoutedEventArgs e)
+        {
+            budget.Bins[index].CreateGoal();
+        }
+
+        private void GoalDelBT_Click(object sender, RoutedEventArgs e)
+        {
+            FrameworkElement ele = sender as FrameworkElement;
+            Goal goal = ele.DataContext as Goal;
+            if (ele != null)
+            {
+                budget.Bins[index].RemoveGoal(goal.Name);                
+            }
+        }
+
+        private void TextBox_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                TextBox ele = sender as TextBox;
+                Goal goal = ele.DataContext as Goal;
+                goal.Percentage = Convert.ToDecimal(ele.Text);
+                //goal percentage
+            }
+        }
+
+       
     }
 }
