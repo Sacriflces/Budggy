@@ -332,6 +332,26 @@ namespace BudggyUWP
             }
         }
 
-       
+        private void TextBox_KeyDown_1(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                TextBox ele = sender as TextBox;
+                Goal goal = ele.DataContext as Goal;
+                goal.GoalVal = Convert.ToDecimal(ele.Text);
+                //goal percentage
+            }
+        }
+
+        private void TextBox_KeyDown_2(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                TextBox ele = sender as TextBox;
+                Drawer drawer = ele.DataContext as Drawer;
+                drawer.Maximum = Convert.ToDecimal(ele.Text);
+                //goal percentage
+            }
+        }
     }
 }

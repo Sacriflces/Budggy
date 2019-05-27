@@ -112,6 +112,11 @@ namespace BudggyUWP
                 budget = new Budget(); 
 
 
-        } 
+        }
+
+        private void SaveBT_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
     }
 }

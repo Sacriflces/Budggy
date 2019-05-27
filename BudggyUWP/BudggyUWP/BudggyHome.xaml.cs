@@ -45,18 +45,15 @@ namespace BudggyUWP
             budget = parameters;         
             budget.CreateMonthlyBudget();        
             BudgetBalRP.DataContext = budget.MonthlyBudgets[budget.MonthlyBudgets.Count - 1];
-
             this.DataContext = budget;            
             BinsCB.ItemsSource = budget.Bins;
+            BinsCB.SelectedIndex = 0;
             IncLB.ItemsSource = budget.Incs;
             ExpLB.ItemsSource = budget.Exps;
             BinLB.ItemsSource = budget.Bins;
             repeatedTransLB.ItemsSource = budget.repeatedTrans;
-            
-
-
-
-
+            IncExpGridBD.Visibility = Visibility.Collapsed;
+            budget.Refresh();
         }
 
         private void ValueTB_KeyUp(object sender, KeyRoutedEventArgs e)
@@ -275,6 +272,26 @@ namespace BudggyUWP
             Button button = sender as Button;
             RepeatTransaction repTrans = (RepeatTransaction)button.DataContext;
             budget.RemoveRepeatTransaction(repTrans);
+        }
+
+        private void DrawGoalTSW_Toggled(object sender, RoutedEventArgs e)
+        {
+            try
+            {           
+                if (DrawGoalTSW.IsOn)
+                 {
+                DrawersCB.ItemsSource = budget.Bins[BinsCB.SelectedIndex].Drawers;
+                 }
+                else
+                {
+                DrawersCB.ItemsSource = budget.Bins[BinsCB.SelectedIndex].Goals;
+                 }
+            }
+            catch
+            {
+
+            }
+
         }
     }
 

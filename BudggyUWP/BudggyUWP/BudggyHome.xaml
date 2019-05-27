@@ -186,7 +186,7 @@
             </RelativePanel>
 
             <Border    
-                    Visibility="Collapsed"
+                    Visibility="Visible"
                     Name="IncExpGridBD"
                     RelativePanel.Below="AddBTRP"
                     RelativePanel.AlignRightWithPanel="True"
@@ -263,8 +263,8 @@
                 </ComboBox>
 
                     <ToggleSwitch Name="DrawGoalTSW" Grid.Row="2"
-                                  Header="Drawer or Goal" IsOn="True"
-                                  Visibility="Collapsed"/>
+                                  Header="Drawer or Goal" IsOn="True"                                  
+                                  Visibility="Collapsed" Toggled="DrawGoalTSW_Toggled"/>
 
                     <Button Name="AddButton" Content="Add" 
                         Grid.Row="2" Grid.Column="2"

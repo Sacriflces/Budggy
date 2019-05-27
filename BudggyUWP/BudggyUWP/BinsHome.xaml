@@ -209,7 +209,8 @@
                                 <TextBlock Text="{Binding CurrentSpent, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                        Margin="0,0,10,0"/>
                                 <TextBox Text="{Binding Maximum, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                                     Margin="0,0,10,0"/>
+                                                     Margin="0,0,10,0"
+                                         KeyDown="TextBox_KeyDown_2"/>
                                 <Button Name="DrawerDelBT" FontFamily="Segoe MDL2 Assets"
                                                     Content="&#xE738;"
                                                     Click="DrawerDelBT_Click"
@@ -256,7 +257,7 @@
                                     <TextBox Grid.Column="3" Text="{Binding Percentage, Mode=TwoWay}"
                                              KeyDown="TextBox_KeyDown"/>
                                     <TextBox Grid.ColumnSpan="4" Grid.Row="1"
-                                             Text="{Binding Description}"
+                                             Text="{Binding Description, Mode=TwoWay}"
                                              HorizontalAlignment="Center"/>
                                     
                                     <StackPanel Grid.Row="2" Orientation="Horizontal">
@@ -265,6 +266,7 @@
                                                        Margin="0,0,10,0"/>
                                         <TextBlock Text="out of" Margin="0,0,10,0"/>
                                         <TextBox Text="{Binding GoalVal, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                 KeyDown="TextBox_KeyDown_1"
                                                      Margin="0,0,20,0"/>
                                         <TextBox Text="{Binding Priority, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                                     </StackPanel>
