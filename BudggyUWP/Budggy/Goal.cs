@@ -49,7 +49,7 @@ namespace Budggy
             get { return _value; }
             set
             {
-                _value = value;
+                _value = Math.Round(value, 2, MidpointRounding.AwayFromZero);
                 OnPropertyChange("Value");
             }
         }

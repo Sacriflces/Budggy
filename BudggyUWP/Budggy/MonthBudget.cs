@@ -78,13 +78,13 @@ namespace Budggy
         private decimal val;
         public decimal Value { get { return val; }
             set {
-                val = value;
+                val = Math.Round(value, 2, MidpointRounding.AwayFromZero);
                 OnPropertyChanged("Value");
                 if (value > 0.00m)
                     ValString = val.ToString("C");
                 else
                 {
-                    ValString = $"-${(-1 * value).ToString("G")}";
+                    ValString = $"-${(-1 * val).ToString("G")}";
                 }
             }
         }
@@ -105,7 +105,7 @@ namespace Budggy
         public decimal IncAmount { get { return incAmount; }
             set
             {
-                incAmount = value;
+                incAmount = Math.Round(value, 2, MidpointRounding.AwayFromZero);
                 OnPropertyChanged("IncAmount");
                 IncString = incAmount.ToString("C");
 
@@ -129,7 +129,7 @@ namespace Budggy
             get { return expAmount; }
             set
             {
-                expAmount = value;
+                expAmount = Math.Round(value, 2, MidpointRounding.AwayFromZero);
                 ExpString = expAmount.ToString("C");
                 OnPropertyChanged("ExpAmount");
                 

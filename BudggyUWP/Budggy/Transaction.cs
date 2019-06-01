@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Budggy
 {
-    public abstract class Transaction
+    public class Transaction //make this abstract
     {
         public string ValueStr { get; set; }
         public decimal Value { get; set; }
@@ -23,7 +23,7 @@ namespace Budggy
 
         public Transaction(decimal value, string destr, string bin, DateTime date)
         {
-            Value = value;
+            Value = Math.Round(value, 2, MidpointRounding.AwayFromZero);
             ValueStr = String.Format("{0:C}", value);
             Description = destr;
             Bin = bin;
@@ -31,6 +31,6 @@ namespace Budggy
             DateStr = date.ToString("d");
         }
 
-        public abstract bool IsIncome();
+        public virtual bool IsIncome() { return false;  } //make this abstract
     }
 }

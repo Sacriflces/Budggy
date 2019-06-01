@@ -228,16 +228,23 @@ namespace Budggy
         //Adds an income to the incs list either splitting it into the bins or into one list.
         public int AddIncome(decimal value, string destr, DateTime date, string mode)
         {
-            int index = 1;
+            int index = 1;       
             Income newInc = new Income(value, destr, mode, date);
             string location = mode;
+            
             if(mode == "Split")
             {
+                int binIndex = 0;
+                decimal splitVal = 0; 
+                decimal[] incValArr = new decimal[Bins.Count];
                 //checks the percentage. if it is greater than 100 then it returns.
                 decimal percentage = 0;
                 foreach (Bin bin in Bins)
                 {
                     percentage += bin.Percentage;
+                    //also determine the amount that goes into each bin
+                    incValArr[binIndex] = Math.Round((value * bin.Percentage / 100), 2);
+                    splitVal += incValArr[binIndex++];
                 }
                 
 
@@ -246,15 +253,19 @@ namespace Budggy
                     return -1;
                 }
                 else
-                {                    
+                {
+                    binIndex = 0;
+                    if(splitVal != value)
+                    {
+                        incValArr[0] += (value - splitVal);
+                    }
                     //splits the income across the bins based on their percentage.
                     foreach (Bin bin in Bins)
-                    {
-                        bin.AddIncome(new Income(value * bin.Percentage / 100, destr, bin.Name, date));
-                        
+                    {                      
+                        bin.AddIncome(new Income(incValArr[binIndex++], destr, bin.Name, date));    
                     }
-                   // CalcBinBalance();
-                   // CalcMonthBudgetInc();                                  
+ 
+                          
                 }
                 Incs.Add(newInc);
                 AddMonthBudgetInc(newInc);
@@ -291,7 +302,7 @@ namespace Budggy
                 int incIndex;
                 foreach  (Bin BIN in Bins)
                 {
-                    incIndex = BIN.Incomes.IndexOf(BIN.Incomes.Where(x => string.Compare(x.Description, destr) == 0 && value == x.Value / x.Percentage
+                    incIndex = BIN.Incomes.IndexOf(BIN.Incomes.Where(x => string.Compare(x.Description, destr) == 0 && (Math.Abs(value - x.Value / x.Percentage) < .5m)
                      && myDateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, BIN.Name) == 0).FirstOrDefault());
 
                     if(incIndex != -1)
@@ -484,83 +495,16 @@ namespace Budggy
 
             if(found == 0)
             {
-                MonthBudget budget = new MonthBudget(DefaultMonthlyBudget, DateTime.Now.Month, DateTime.Now.Year);
-                MonthlyBudgets.Add(budget);
+                CreateMonthlyBudget(DateTime.Now.Month, DateTime.Now.Year);                
                 foreach (Bin bin in Bins)
                 {
                     bin.RefreshDrawers();
                 }
             }
         }
-        // calculates all of the monthly budgets wheww.... 
-        // checks all the expenses in bins and the budget controller. It also checks if a transfer occurred, so there won't be extra substractions
-     /*   public void CalcMonthBudgetAll()
-        {
-            foreach(MonthBudget bud in MonthlyBudgets)
-            {
-                bud.Value = bud.BudgetVal;
-            }
-            CalcMonthBudgetExp();
-            CalcMonthBudgetInc();
-        }
-
-        public void CalcMonthBudgetExp()
-        {
-            foreach (MonthBudget bud in MonthlyBudgets)
-            {
-                bud.ExpAmount = 0;
-                bud.Value = bud.BudgetVal;
-                foreach(Expense exp in Exps)
-                {
-                    if(exp.Date.Month == bud.Date.Month && exp.Date.Year == bud.Date.Year)
-                    {
-                        if (!(exp.Description.Contains("[Transfer to]")))
-                        {
-                            bud.SubtractExpense(exp);
-                        }
-                    }
-                }      
-               
-            }
-        }
-
-        public void CalcMonthBudgetInc()
-        {
-            foreach (MonthBudget bud in MonthlyBudgets)
-            {
-                bud.IncAmount = 0;
-                foreach (Income inc in Incs)
-                {
-                    if (inc.Date.Month == bud.Date.Month && inc.Date.Year == bud.Date.Year)
-                    {
-                        if (!(inc.Description.Contains("[Transfer from]")))
-                        {
-                            bud.AddIncome(inc);
-                        }
-                    }
-                }
-            }
-        } */
-        //need to add another budget that finds the monthbudget associated with an inc / exp and adds or subtracts that value.
-
-        public void CalcBudgetAmount()
-        {
-            DefaultMonthlyBudget = 0;
-            foreach (Bin bin in Bins)
-            {
-                foreach(Drawer drawer in bin.Drawers)
-                {
-                    DefaultMonthlyBudget += drawer.Maximum;
-                }
-            }
-
-            return;
-
-        }
 
         public void CreateMonthlyBudget(int month, int year)
-        {
-            CalcBudgetAmount();
+        {          
             MonthlyBudgets.Add(new MonthBudget(DefaultMonthlyBudget, month, year));
             CalcMonthBudget();
             return;
@@ -588,6 +532,8 @@ namespace Budggy
                     break;
                 }
             }
+
+            DefaultMonthlyBudget = newDefault;
         }
 
         public void AddMonthBudgetExp(Expense exp)
@@ -725,13 +671,13 @@ namespace Budggy
         //need to test this 
         public void CheckRepeatTransac(RepeatTransaction trans, int index)
         {
-            DateTime transactionDate = new DateTime(trans.Transaction.Date.Year, trans.Transaction.Date.Month, trans.Transaction.Date.Day);
+            DateTime transactionDate = new DateTime(trans.Transaction.Date.Year, trans.Transaction.Date.Month, trans.Transaction.Date.Day);            
             if (trans.Monthly)
             {
-                transactionDate.AddMonths(trans.Frequency);
+                transactionDate = transactionDate.AddMonths(trans.Frequency);
             } else
             {
-                transactionDate.AddDays(trans.Frequency);
+                transactionDate = transactionDate.AddDays(trans.Frequency);
             }
             
             

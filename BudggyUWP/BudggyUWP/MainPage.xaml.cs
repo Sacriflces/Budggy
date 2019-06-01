@@ -116,7 +116,10 @@ namespace BudggyUWP
 
         private void SaveBT_Click(object sender, RoutedEventArgs e)
         {
-            
+            foreach (Bin  bin in budget.Bins)
+            {
+                bin.RefreshDrawers();
+            }
         }
     }
 }

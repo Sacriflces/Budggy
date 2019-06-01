@@ -41,7 +41,7 @@ namespace Budggy
             get { return _currentSpent; }
             set
             {
-                _currentSpent = value;
+                _currentSpent = Math.Round(value, 2, MidpointRounding.AwayFromZero);
                 OnPropertyChange("CurrentSpent");
             }
         }
@@ -96,7 +96,7 @@ namespace Budggy
             BinName = binName;
             Name = name;
             Maximum = maximum;
-            Max = maximum;
+            Max = maximum; //remove this later
             CurrentSpent = 0;
             Month = date.Month;
             Year = date.Year;
@@ -108,15 +108,16 @@ namespace Budggy
         {
             if (rollOver)
             {
-                Maximum = Max + (Maximum - CurrentSpent);
+                Maximum = Maximum + (Maximum - CurrentSpent);
             }
             else
-                Maximum = Max;
+                Maximum = Maximum;
 
             prevSpent[index++] = CurrentSpent;
             index %= prevSpent.Length;
             Month = DateTime.Now.Month;
             Year = DateTime.Now.Year;
+            CurrentSpent = 0;
         }
 
         public void AddExpense(Expense exp)

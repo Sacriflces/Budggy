@@ -59,7 +59,8 @@ namespace Budggy
             get { return _balance; }
             set
             {
-                _balance = value;
+                
+                _balance = Math.Round(value, 2, MidpointRounding.AwayFromZero);
                 OnPropertyChange("Balance");
                 if(value > 0.00m)
                 BalanceString = _balance.ToString("C");
@@ -299,31 +300,38 @@ namespace Budggy
         {
             decimal adjVal = val;
             decimal percentage = 0;
-            decimal splitAmount = 0;
+            decimal splitAmount = 0;     
+            decimal[] IncVal = new decimal[Goals.Count];
+            int goalIndex = 0;
 
             //1. check if the percentages add up to less than or equal to 100%
             foreach (Goal goal in Goals)
             {
                 percentage += goal.Percentage;
+                IncVal[goalIndex] = Math.Round(val * goal.Percentage, 2);
+                splitAmount += IncVal[goalIndex++];
             }
 
             if (percentage > 1) return adjVal;
+            goalIndex = 0;
             //2. then remove part of the adjVal and insert into the goals
             //need to test this to see if adjVal -= splitAmount works outside of the if and else.
+            if(splitAmount != val * percentage)
+            {
+                IncVal[goalIndex] += ((val * percentage) - splitAmount);
+            }
             foreach (Goal goal in Goals)
             {
-                splitAmount = adjVal * (goal.Percentage);
-                if(goal.Value + splitAmount >= goal.GoalVal)
+                
+                if(goal.Value + IncVal[goalIndex] >= goal.GoalVal)
                 {
-                    splitAmount = (goal.GoalVal - goal.Value);
-                    goal.Value = goal.GoalVal;
-                //    adjVal -= splitAmount;
+                    IncVal[goalIndex] = (goal.GoalVal - goal.Value);
+                    goal.Value = goal.GoalVal;               
                 } else
                 {
-                    goal.Value += splitAmount;
-               //     adjVal -= splitAmount;
+                    goal.Value += IncVal[goalIndex];        
                 }
-                adjVal -= splitAmount;
+                adjVal -= IncVal[goalIndex++];
             }
 
             return adjVal;
