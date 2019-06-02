@@ -33,8 +33,25 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
+        <Border  Grid.Column="1" HorizontalAlignment="Center" 
+                 VerticalAlignment="Top"
+                Name="BalanceB"                    
+                    BorderBrush="{StaticResource LightColor}"
+                    Background="{StaticResource LightColor}"    
+                    Margin= "0,10"
+                    BorderThickness="3"
+                    Padding="0,0,0,0"
+                    CornerRadius="3"
+                    >
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Total Balance: " Style="{StaticResource BudgetContainerTBl}"/>
+                <TextBlock Text="{Binding Balance}" Style="{StaticResource BudgetContainerTBl}"/>
+            </StackPanel>
+        </Border>
+
         <RelativePanel Name="BudgetBalRP" Grid.ColumnSpan="2" MaxWidth="450" >
 
+            
             <Rectangle Name="BudgetRec"
                        Margin="0,10,0,0"
                 RelativePanel.AlignHorizontalCenterWithPanel="True"                   

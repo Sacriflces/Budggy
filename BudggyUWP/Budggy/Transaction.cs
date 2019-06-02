@@ -13,7 +13,13 @@ namespace Budggy
 
         public string Description { get; set; }
         public string Bin { get; set; }
-        public myDateTime Date { get; set; }
+        private myDateTime _date;
+        public myDateTime Date { get { return _date; }
+            set {
+                _date = value;
+                DateStr = _date.ToString();
+            }
+        }
         public string DateStr { get; set; }
         
         public Transaction()
@@ -23,7 +29,7 @@ namespace Budggy
 
         public Transaction(decimal value, string destr, string bin, DateTime date)
         {
-            Value = Math.Round(value, 2, MidpointRounding.AwayFromZero);
+            Value = value; // Math.Round(value, 2, MidpointRounding.AwayFromZero);
             ValueStr = String.Format("{0:C}", value);
             Description = destr;
             Bin = bin;

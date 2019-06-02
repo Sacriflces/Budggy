@@ -35,7 +35,21 @@ namespace Budggy
                     return 1;
                 }
                 else
-                    return 0;
+                {
+                    if(lhs.Day < rhs.Day)
+                    {
+                        return -1;
+                    }
+                    else if(lhs.Day > rhs.Day)
+                    {
+                        return 1;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+                    
             }
         }
         public myDateTime()
@@ -54,6 +68,12 @@ namespace Budggy
             Year = date.Year;
             Day = date.Day;
         }
+
+        public override string ToString() 
+        {
+            return $"{Month}\\{Day}\\{Year}";
+        }
+
         public int Month;
         public int Year;
         public int Day;

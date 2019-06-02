@@ -4,21 +4,36 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
-namespace Budggy
+namespace Budggy 
 {
-    /* TAGS:
-     * FIX IT***
-     * 
-     * 
-     * 
-     * Need to change the implementations of the delete functions. I can pass the object instead of its description only for incomes though. I don't want to be able
-     * to delete the savings bin
-     */
-    public class Budget
+
+
+/* TAGS:
+ * FIX IT***
+ * 
+ * 
+ * 
+ * Need to change the implementations of the delete functions. I can pass the object instead of its description only for incomes though. I don't want to be able
+ * to delete the savings bin
+ */
+public class Budget : INotifyPropertyChanged
     {
 
-        public ObservableCollection<Bin> Bins = new ObservableCollection<Bin>()  {
+    #region INotifyPropertyChanged Members
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    #endregion
+
+    void OnPropertyChanged(string propertyName)
+    {
+        if (PropertyChanged != null)
+            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    public ObservableCollection<Bin> Bins = new ObservableCollection<Bin>()  {
          /*  new Bin("Savings", "", .3m),
             new Bin("Entertainment", "Going out money and gaming money, and whatever else I need to make this description longer", .5m),
             new Bin("Gas", "", .1m),
@@ -73,12 +88,19 @@ namespace Budggy
             
         };      
         public decimal DefaultMonthlyBudget { get; set; }
-        decimal Balance { get; set; }
+        private decimal _balance;
+        public decimal Balance { get { return _balance; }
+            set {
+                _balance = value;
+                OnPropertyChanged("Balance");
+            }
+        }
       
 
         public Budget()
         {
             DefaultMonthlyBudget = 0;
+            Balance = 0;
          /*   if(MonthlyBudgets.Count == 0)
             {
                 CreateMonthlyBudget();
@@ -231,8 +253,9 @@ namespace Budggy
             int index = 1;       
             Income newInc = new Income(value, destr, mode, date);
             string location = mode;
-            
-            if(mode == "Split")
+            Balance += value;
+
+            if (mode == "Split")
             {
                 int binIndex = 0;
                 decimal splitVal = 0; 
@@ -267,7 +290,7 @@ namespace Budggy
  
                           
                 }
-                Incs.Add(newInc);
+                Incs.Add(newInc);                
                 AddMonthBudgetInc(newInc);
                 OrganizeIncomesByDate();
                 return 1;
@@ -320,7 +343,7 @@ namespace Budggy
             && myDateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0).FirstOrDefault());
 
                 if (incIndex != -1)
-                {
+                {                    
                     Bins[binIndex].RemoveIncome(incIndex);
                 }
             }
@@ -335,6 +358,7 @@ namespace Budggy
                 }
             } */
             DeleteMonthBudgetInc(Incs[index]);
+            Balance -= Incs[index].Value;
             Incs.RemoveAt(index);
             OrganizeIncomesByDate();
        //     CalcBinBalance();     
@@ -356,6 +380,7 @@ namespace Budggy
             exp.Drawer = drawer;
             exp.DrawerExp = drawerOrGoal;
             Exps.Add(exp);
+            Balance -= exp.Value;
             if (drawerOrGoal)
             {
                 Bins[index].AddDrawerExpense(exp);
@@ -392,6 +417,7 @@ namespace Budggy
             }
             
             DeleteMonthBudgetExp(Exps[index]);
+            Balance += Exps[index].Value;
             Exps.RemoveAt(index);
 
             OrganizeExpensesByDate();
@@ -470,6 +496,23 @@ namespace Budggy
             //  Exps.Sort((x, y) => DCompare(x.Value, y.Value)); FIX IT***
 
         }
+        
+        public void OrganizeMonthBudgetsByDate()
+        {
+            IEnumerable<MonthBudget> monthBudgets = MonthlyBudgets.OrderByDescending(x => x.Date);
+
+            int count = MonthlyBudgets.Count;
+
+            foreach (MonthBudget monthBudget in monthBudgets)
+            {
+                MonthlyBudgets.Add(monthBudget);
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                MonthlyBudgets.RemoveAt(0);
+            }
+        }
 
         int DCompare(decimal x, decimal y)
         {
@@ -507,6 +550,7 @@ namespace Budggy
         {          
             MonthlyBudgets.Add(new MonthBudget(DefaultMonthlyBudget, month, year));
             CalcMonthBudget();
+            OrganizeMonthBudgetsByDate();
             return;
         }
 
@@ -687,13 +731,24 @@ namespace Budggy
                 if (repeatedTrans[index].Transaction.IsIncome())
                 {
                     AddIncome(trans.Transaction.Value, trans.Transaction.Description, transactionDate, trans.Transaction.Bin);
+                    repeatedTrans[index].Transaction = new Income(trans.Transaction.Value, trans.Transaction.Description, trans.Transaction.Bin,
+                        transactionDate);
                 } else
                 {
                     Expense exp = (Expense)trans.Transaction;
-                    AddExpense(exp.Value, exp.Description, transactionDate, exp.Drawer, exp.DrawerExp);
+                    AddExpense(exp.Value, exp.Description, transactionDate, exp.Bin, exp.DrawerExp, exp.Drawer);
+                    repeatedTrans[index].Transaction = new Expense
+                    {
+                        Value = exp.Value,
+                        Description = exp.Description,
+                        Date = new myDateTime(transactionDate),
+                        Bin = exp.Bin,
+                        DrawerExp = exp.DrawerExp,
+                        Drawer = exp.Drawer,
+                    };
                 }
-
-                repeatedTrans[index].Transaction.Date = new myDateTime(transactionDate);
+                
+                //repeatedTrans[index].Transaction.Date = new myDateTime(transactionDate);
                 CheckRepeatTransac(trans, index);
             }          
         }
