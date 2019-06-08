@@ -43,10 +43,9 @@ namespace BudggyUWP
 
             var parameters = (Budget)e.Parameter;
             budget = parameters;         
-            budget.CreateMonthlyBudget();        
+            budget.CreateMonthlyBudget();
             BudgetBalRP.DataContext = budget.MonthlyBudgets[0];
-            this.DataContext = budget;
-           // BalanceB.DataContext = budget;
+            this.DataContext = budget;            
             BinsCB.ItemsSource = budget.Bins;
             BinsCB.SelectedIndex = 0;
             IncLB.ItemsSource = budget.Incs;
