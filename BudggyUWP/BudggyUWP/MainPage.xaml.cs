@@ -91,7 +91,7 @@ namespace BudggyUWP
             StorageFile budggyFile = await storageFolder.CreateFileAsync("Budggy.txt", CreationCollisionOption.ReplaceExisting);
            // File.Create("Budggy.txt", CreationCollisionOption.OpenIfExists)
             var serializedBudggy = JsonConvert.SerializeObject(budget,Formatting.Indented);
-
+            
             await FileIO.WriteTextAsync(budggyFile, serializedBudggy); 
         } 
 
@@ -120,6 +120,13 @@ namespace BudggyUWP
             {
                 bin.RefreshDrawers();
             }
+        }
+
+        private void ContentFrame_Navigated(object sender, NavigationEventArgs e)
+        {
+               Page page = contentFrame.Content as Page;
+               
+          
         }
     }
 }

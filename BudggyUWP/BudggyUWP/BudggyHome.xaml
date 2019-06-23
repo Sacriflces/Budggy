@@ -243,7 +243,8 @@
                 
                 <ComboBox x:Name="BinsCB" Grid.Row="1" Grid.ColumnSpan="2"
                               Style="{StaticResource BinsDrawerCBStyle}"
-                          SelectionChanged="BinsCB_SelectionChanged"                          
+                          SelectionChanged="BinsCB_SelectionChanged"   
+                          RightTapped="DrawersCB_RightTapped"
                           >
                     <ComboBox.ItemTemplate>
                         <DataTemplate  >
@@ -262,6 +263,7 @@
                 <ToggleSwitch Name="SplitTSW" Grid.Row="2"
                               Header="Split Income" IsOn="True"
                               Foreground="{StaticResource LightColor}"
+                              Toggled="SplitTSW_Toggled"
                 />
 
                 <ComboBox x:Name="DrawersCB" 
@@ -270,7 +272,7 @@
                               Style="{StaticResource BinsDrawerCBStyle}"
                           Margin="0"
                           HorizontalAlignment="Right"
-                              Visibility="Visible"                             
+                              Visibility="Visible" RightTapped="DrawersCB_RightTapped"                              
                           >
                     <ComboBox.ItemTemplate>
                         <DataTemplate  >
@@ -317,7 +319,7 @@
                  ScrollViewer.HorizontalScrollMode="Enabled"
                  ScrollViewer.HorizontalScrollBarVisibility="Visible"
                  ScrollViewer.IsHorizontalRailEnabled="True" 
-                     Background="{StaticResource LightColor}" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Stretch" 
+                     Background="{StaticResource LightColor}" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Stretch" DoubleTapped="BinLB_DoubleTapped" 
                   >
                         <ListBox.ItemTemplate>
                             <DataTemplate>

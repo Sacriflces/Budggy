@@ -353,5 +353,10 @@ namespace BudggyUWP
                 //goal percentage
             }
         }
+
+        public static string GetPageStr()
+        {
+            return "BinsSTR!!";
+        }
     }
 }

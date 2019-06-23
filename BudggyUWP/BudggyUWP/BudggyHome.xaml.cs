@@ -112,9 +112,11 @@ namespace BudggyUWP
             int index = HomeCDP.Date.ToString().IndexOf(' ');
             string datestr = HomeCDP.Date.ToString().Remove(index);
             string[] datearr = datestr.Split('/');
-            string binName;
+            string binName;            
             Drawer drawer = DrawersCB.SelectedItem as Drawer;
-            string drawerName = drawer?.Name;
+            Goal goal = DrawersCB.SelectedItem as Goal;
+            string drawerName = (drawer != null) ? drawer?.Name : goal?.Name;
+            
 
 
 
@@ -230,7 +232,8 @@ namespace BudggyUWP
             DrawersCB.Visibility = Visibility.Collapsed;
             ToggleIncBTBD.Visibility = Visibility.Collapsed;
             ToggleExpBTBD.Visibility = Visibility.Collapsed;
-            DrawGoalTSW.Visibility = Visibility.Collapsed;
+            DrawGoalTSW.Visibility = Visibility.Collapsed;            
+            BinsCB.IsEnabled = (SplitTSW.IsOn) ? false : true;            
         }
 
         private void ToggleExpBT_Click(object sender, RoutedEventArgs e)
@@ -242,6 +245,7 @@ namespace BudggyUWP
             DrawGoalTSW.Visibility = Visibility.Visible;
             ToggleIncBTBD.Visibility = Visibility.Collapsed;
             ToggleExpBTBD.Visibility = Visibility.Collapsed;
+            BinsCB.IsEnabled = true;
         }
 
         private void BackBT_Click(object sender, RoutedEventArgs e)
@@ -292,6 +296,35 @@ namespace BudggyUWP
 
             }
 
+        }
+        
+
+        private void DrawersCB_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            comboBox.SelectedIndex = -1;
+        }
+
+        private void SplitTSW_Toggled(object sender, RoutedEventArgs e)
+        {
+            BinsCB.IsEnabled = (SplitTSW.IsOn) ? false: true; 
+        }
+
+        private void BinLB_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            try {
+                Frame contentFrame = this.Parent as Frame;
+                //TitleTB.Text = "Bins";
+                contentFrame.Navigate(typeof(BinsHome), budget);
+                Border border = contentFrame.Parent as Border;
+                Grid grid = border.Parent as Grid;
+                
+                //BinLB.SelectedIndex 
+            }
+            catch {
+
+            }
+              
         }
     }
 

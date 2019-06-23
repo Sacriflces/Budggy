@@ -105,19 +105,21 @@ namespace Budggy
         }
 
         public void Refresh()
-        {
-            if (rollOver)
-            {
-                Maximum = Maximum + (Maximum - CurrentSpent);
-            }
-            else
-                Maximum = Maximum;
+        { //make it so that the index maps based on the month 0 - January of that year, etc.
+            if (Month != DateTime.Now.Month && Year != DateTime.Now.Year) {
+                if (rollOver)
+                {
+                    Maximum = Maximum + (Maximum - CurrentSpent);
+                }
+                else
+                    Maximum = Maximum;
 
-            prevSpent[index++] = CurrentSpent;
-            index %= prevSpent.Length;
-            Month = DateTime.Now.Month;
-            Year = DateTime.Now.Year;
-            CurrentSpent = 0;
+                prevSpent[index++] = CurrentSpent;
+                index %= prevSpent.Length;
+                Month = DateTime.Now.Month;
+                Year = DateTime.Now.Year;
+                CurrentSpent = 0;
+            }            
         }
 
         public void AddExpense(Expense exp)
