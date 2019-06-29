@@ -77,20 +77,20 @@ namespace BudggyUWP
 
         private async void Save()
         {
-           /* Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            Windows.Storage.ApplicationDataContainer container =
-                localSettings.CreateContainer("BudggyContainer", Windows.Storage.ApplicationDataCreateDisposition.Always);
-            if(localSettings.Containers.ContainsKey("BudggyContainer"))
-            {
-                localSettings.Containers["BudggyContainer"].Values[]
-                    
-            } */
+            /* Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+             Windows.Storage.ApplicationDataContainer container =
+                 localSettings.CreateContainer("BudggyContainer", Windows.Storage.ApplicationDataCreateDisposition.Always);
+             if(localSettings.Containers.ContainsKey("BudggyContainer"))
+             {
+                 localSettings.Containers["BudggyContainer"].Values[]
 
-            StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
-
+             } */
+            
+            StorageFolder storageFolder = ApplicationData.Current.LocalFolder;           
             StorageFile budggyFile = await storageFolder.CreateFileAsync("Budggy.txt", CreationCollisionOption.ReplaceExisting);
            // File.Create("Budggy.txt", CreationCollisionOption.OpenIfExists)
             var serializedBudggy = JsonConvert.SerializeObject(budget,Formatting.Indented);
+
             
             await FileIO.WriteTextAsync(budggyFile, serializedBudggy); 
         } 
@@ -116,10 +116,10 @@ namespace BudggyUWP
 
         private void SaveBT_Click(object sender, RoutedEventArgs e)
         {
-            foreach (Bin  bin in budget.Bins)
-            {
-                bin.RefreshDrawers();
-            }
+         //   foreach (Bin  bin in budget.Bins)
+         //   {
+         //       bin.RefreshDrawers();
+         //   }
         }
 
         private void ContentFrame_Navigated(object sender, NavigationEventArgs e)

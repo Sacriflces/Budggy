@@ -25,6 +25,14 @@ namespace Budggy
             return false;
         }
 
+        public override string GetDrawer()
+        {
+            return Drawer;
+        }
 
+        public override bool GetDrawerExp()
+        {
+            return DrawerExp;
+        }
     }
 }

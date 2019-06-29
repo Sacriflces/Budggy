@@ -735,16 +735,16 @@ public class Budget : INotifyPropertyChanged
                         transactionDate);
                 } else
                 {
-                    Expense exp = (Expense)trans.Transaction;
-                    AddExpense(exp.Value, exp.Description, transactionDate, exp.Bin, exp.DrawerExp, exp.Drawer);
+                    Transaction exp = trans.Transaction;
+                    AddExpense(exp.Value, exp.Description, transactionDate, exp.Bin, exp.GetDrawerExp(), exp.GetDrawer());
                     repeatedTrans[index].Transaction = new Expense
                     {
                         Value = exp.Value,
                         Description = exp.Description,
                         Date = new myDateTime(transactionDate),
                         Bin = exp.Bin,
-                        DrawerExp = exp.DrawerExp,
-                        Drawer = exp.Drawer,
+                        DrawerExp = exp.GetDrawerExp(),
+                        Drawer = exp.GetDrawer(),
                     };
                 }
                 

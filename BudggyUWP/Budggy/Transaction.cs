@@ -38,5 +38,9 @@ namespace Budggy
         }
 
         public virtual bool IsIncome() { return false;  } //make this abstract
+
+        public virtual string GetDrawer() { return ""; }
+
+        public virtual bool GetDrawerExp() { return false; }
     }
 }
