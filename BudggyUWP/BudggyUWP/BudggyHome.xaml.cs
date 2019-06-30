@@ -326,6 +326,11 @@ namespace BudggyUWP
             }
               
         }
+
+        private void BinRemoveBT_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 
 
