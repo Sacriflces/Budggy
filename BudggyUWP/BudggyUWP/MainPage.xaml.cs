@@ -12,9 +12,11 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using System.Runtime.Serialization.Json;
 using Budggy;
 using Windows.Storage;
 using Newtonsoft.Json;
+using System.Text;
 
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -76,23 +78,26 @@ namespace BudggyUWP
         }
 
         private async void Save()
-        {
-            /* Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-             Windows.Storage.ApplicationDataContainer container =
-                 localSettings.CreateContainer("BudggyContainer", Windows.Storage.ApplicationDataCreateDisposition.Always);
-             if(localSettings.Containers.ContainsKey("BudggyContainer"))
-             {
-                 localSettings.Containers["BudggyContainer"].Values[]
-
-             } */
-            
+        {                     
             StorageFolder storageFolder = ApplicationData.Current.LocalFolder;           
             StorageFile budggyFile = await storageFolder.CreateFileAsync("Budggy.txt", CreationCollisionOption.ReplaceExisting);
-           // File.Create("Budggy.txt", CreationCollisionOption.OpenIfExists)
-            var serializedBudggy = JsonConvert.SerializeObject(budget,Formatting.Indented);
+            DataContractJsonSerializer js = new DataContractJsonSerializer(typeof(Budget));            
+            using (var msObj = new MemoryStream())
+            {
+                js.WriteObject(msObj, budget);
+                msObj.Position = 0;
+                using (var sr = new StreamReader(msObj))
+                {
+                    string serializedBudggy = sr.ReadToEnd();
+                    await FileIO.WriteTextAsync(budggyFile, serializedBudggy);
+                }
+            }                    
+            // File.Create("Budggy.txt", CreationCollisionOption.OpenIfExists)
+            //var serializedBudggy = JsonConvert.SerializeObject(budget,Formatting.Indented);
 
             
-            await FileIO.WriteTextAsync(budggyFile, serializedBudggy); 
+            
+            
         } 
 
         private async void Load()
@@ -102,11 +107,17 @@ namespace BudggyUWP
             StorageFile budggyFile = await storageFolder.CreateFileAsync("Budggy.txt", CreationCollisionOption.OpenIfExists);
 
             string serializedbudggy = await FileIO.ReadTextAsync(budggyFile);
-        
+
+            DataContractJsonSerializer js = new DataContractJsonSerializer(typeof(Budget));
+
             if (serializedbudggy != null && serializedbudggy != "null")
             {
-                budget = JsonConvert.DeserializeObject<Budget>(serializedbudggy);
-                //budget = new Budget();
+                using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(serializedbudggy)))
+                {
+                    budget = (Budget)js.ReadObject(ms);// JsonConvert.DeserializeObject<Budget>(serializedbudggy);
+                   
+                }
+
             }
             else
                 budget = new Budget(); 
@@ -116,10 +127,10 @@ namespace BudggyUWP
 
         private void SaveBT_Click(object sender, RoutedEventArgs e)
         {
-         //   foreach (Bin  bin in budget.Bins)
-         //   {
-         //       bin.RefreshDrawers();
-         //   }
+            foreach (Bin bin in budget.Bins)
+            {
+                bin.RefreshDrawers();
+            }
         }
 
         private void ContentFrame_Navigated(object sender, NavigationEventArgs e)

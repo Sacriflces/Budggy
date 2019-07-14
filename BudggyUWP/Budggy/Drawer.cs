@@ -81,7 +81,7 @@ namespace Budggy
             }
         }
 
-        decimal[] prevSpent = new decimal[12];
+        decimal[] prevSpent = new decimal[12]; //might change this to a list tbh...
         private int index;
         public bool rollOver;
 

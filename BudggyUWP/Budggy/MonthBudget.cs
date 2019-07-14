@@ -172,6 +172,16 @@ namespace Budggy
         public string MonthStr { get; set; }
         public int YearInt { get; set; }
 
+        public MonthBudget()
+        {
+            Value = 0;
+            BudgetVal = 0;
+            Date = new myDateTime();
+            MonthStr = MonthConvert(Date.Month);
+            YearInt = Date.Year;
+            IncAmount = 0;
+            ExpAmount = 0;
+        }
         public MonthBudget(decimal value, int month, int year)
         {
             Value = value;
