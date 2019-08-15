@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Budggy
 {
-    public class myDateTime : IComparable
+   /* public class myDateTime : IComparable
     {
         public int CompareTo(object obj)
         {
@@ -77,7 +77,7 @@ namespace Budggy
         public int Month;
         public int Year;
         public int Day;
-    }
+    } */
 
     public class MonthBudget : INotifyPropertyChanged
     {
@@ -168,7 +168,8 @@ namespace Budggy
 
         }
 
-        public myDateTime Date { get; set; }
+        public DateTime Date { get; set; }
+        //public myDateTime Date { get; set; }
         public string MonthStr { get; set; }
         public int YearInt { get; set; }
 
@@ -176,7 +177,7 @@ namespace Budggy
         {
             Value = 0;
             BudgetVal = 0;
-            Date = new myDateTime();
+            Date = DateTime.Now;//new myDateTime();
             MonthStr = MonthConvert(Date.Month);
             YearInt = Date.Year;
             IncAmount = 0;
@@ -186,14 +187,37 @@ namespace Budggy
         {
             Value = value;
             BudgetVal = value;
-            Date = new myDateTime(month, year);
+            Date = new DateTime(year, month, 1);//new myDateTime(month, year);
             MonthStr = MonthConvert(Date.Month);
             YearInt = Date.Year;
             IncAmount = 0;
             ExpAmount = 0;
         }
+        internal void AddTransaction(Transaction transaction)
+        {
+            if(transaction.Value > 0)
+            {
+                IncAmount += transaction.Value;
+            } else
+            {
+                Value += transaction.Value;
+                ExpAmount += transaction.Value;
+            }
+        }
 
-        internal void SubtractExpense(Expense exp)
+        internal void RemoveTransaction(Transaction transaction)
+        {
+            if (transaction.Value > 0)
+            {
+                IncAmount -= transaction.Value;
+            }
+            else
+            {
+                Value -= transaction.Value;
+                ExpAmount -= transaction.Value;
+            }
+        }
+       /* internal void SubtractExpense(Expense exp)
         {
                 Value -= exp.Value;
                 ExpAmount += exp.Value;
@@ -215,7 +239,7 @@ namespace Budggy
         internal void RemoveIncome(Income inc)
         {
             IncAmount -= inc.Value;
-        }
+        } */
 
         internal void NewBudget(decimal newVal)
         {

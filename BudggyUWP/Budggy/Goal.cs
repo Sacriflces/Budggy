@@ -93,6 +93,8 @@ namespace Budggy
             }
         }
 
+        internal int ID { get; set; }
+
         public Goal()
         {
             Value = 0;
@@ -101,14 +103,14 @@ namespace Budggy
             Priority = 0;
         }
 
-        public void AddExpense(Expense exp)
+        public void AddExpense(Transaction transaction)
         {
-            Value -= exp.Value;
+            Value += transaction.Value;
         }
 
-        public void RemoveExpense(Expense exp)
+        public void RemoveExpense(Transaction transaction)
         {
-            Value += exp.Value;
+            Value -= transaction.Value;
         }
         
     }

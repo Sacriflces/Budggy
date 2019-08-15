@@ -82,7 +82,7 @@ namespace BudggyUWP
             {
                 goalBalance = 2500m;
             }
-            budget.AddBin(BinNameTB.Text, BinDescrTB.Text, Convert.ToDecimal(BinPercentageTB.Text), goalBalance);
+            budget.AddBin(BinNameTB.Text, BinDescrTB.Text, Convert.ToDecimal(BinPercentageTB.Text));
         }
 
         private void BinPercentageTB_KeyUp(object sender, KeyRoutedEventArgs e)
@@ -349,7 +349,7 @@ namespace BudggyUWP
             {
                 TextBox ele = sender as TextBox;
                 Drawer drawer = ele.DataContext as Drawer;
-                drawer.Maximum = Convert.ToDecimal(ele.Text);
+                drawer.AvailAmount = Convert.ToDecimal(ele.Text);
                 //goal percentage
             }
         }

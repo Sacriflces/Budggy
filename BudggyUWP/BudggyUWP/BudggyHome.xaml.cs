@@ -48,8 +48,8 @@ namespace BudggyUWP
             this.DataContext = budget;            
             BinsCB.ItemsSource = budget.Bins;
             BinsCB.SelectedIndex = 0;
-            IncLB.ItemsSource = budget.Incs;
-            ExpLB.ItemsSource = budget.Exps;
+            IncLB.ItemsSource = budget.transactions;
+            ExpLB.ItemsSource = budget.transactions;
             BinLB.ItemsSource = budget.Bins;
             repeatedTransLB.ItemsSource = budget.repeatedTrans;
             IncExpGridBD.Visibility = Visibility.Collapsed;
@@ -125,14 +125,14 @@ namespace BudggyUWP
                 if (SplitTSW.IsOn == true)
                 {
                     budget.AddIncome(Convert.ToDecimal(ValueTB.Text), DescriptionTB.Text,
-                        new DateTime(Convert.ToInt16(datearr[2]), Convert.ToInt16(datearr[0]), Convert.ToInt16(datearr[1])), "Split");
+                        new DateTime(Convert.ToInt16(datearr[2]), Convert.ToInt16(datearr[0]), Convert.ToInt16(datearr[1])), "Split", true);
                 }
                 else
                 {
                     binName = budget.Bins[BinsCB.SelectedIndex].Name;
                     budget.AddIncome(Convert.ToDecimal(ValueTB.Text), DescriptionTB.Text,
                       new DateTime(Convert.ToInt16(datearr[2]), Convert.ToInt16(datearr[0]), Convert.ToInt16(datearr[1])), 
-                      budget.Bins[BinsCB.SelectedIndex].Name);
+                      budget.Bins[BinsCB.SelectedIndex].Name, false);
                 }
             } else
             {
@@ -192,8 +192,16 @@ namespace BudggyUWP
             }
            
             int index = IncLB.SelectedIndex;
-            budget.DeleteIncome(budget.Incs[index].Value, budget.Incs[index].Description,
-                budget.Incs[index].Date, budget.Incs[index].Bin); 
+            if(budget.transactions[index].Value > 0m)
+            {
+               budget.DeleteIncome(budget.transactions[index].Value, budget.transactions[index].Description,
+               budget.transactions[index].Date, budget.transactions[index].Bin);
+            } else
+            {
+                budget.DeleteExpense(budget.transactions[index].Value, budget.transactions[index].Description,
+               budget.transactions[index].Date, budget.transactions[index].Bin);
+            }
+           
             
         }
 
@@ -208,8 +216,16 @@ namespace BudggyUWP
 
             }
             int index = ExpLB.SelectedIndex;
-            budget.DeleteExpense(budget.Exps[index].Value, budget.Exps[index].Description,
-                budget.Exps[index].Date, budget.Exps[index].Bin);
+            if (budget.transactions[index].Value > 0m)
+            {
+                budget.DeleteIncome(budget.transactions[index].Value, budget.transactions[index].Description,
+                budget.transactions[index].Date, budget.transactions[index].Bin);
+            }
+            else
+            {
+                budget.DeleteExpense(budget.transactions[index].Value, budget.transactions[index].Description,
+               budget.transactions[index].Date, budget.transactions[index].Bin);
+            }
         }
 
         private void BinsCB_SelectionChanged(object sender, SelectionChangedEventArgs e)

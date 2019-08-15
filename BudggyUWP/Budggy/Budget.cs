@@ -34,13 +34,15 @@ public class Budget : INotifyPropertyChanged
     }
 
     public ObservableCollection<Bin> Bins = new ObservableCollection<Bin>()  {
-         /*  new Bin("Savings", "", .3m),
+           new Bin("Savings", "", .3m),
             new Bin("Entertainment", "Going out money and gaming money, and whatever else I need to make this description longer", .5m),
             new Bin("Gas", "", .1m),
             new Bin("Food", "", .05m),
-            new Bin("Presents", "Money for Presents lol", .05m), */
+            new Bin("Presents", "Money for Presents lol", .05m), 
     };
-        public ObservableCollection<Income> Incs = new ObservableCollection<Income>() {
+    public ObservableCollection<Transaction> transactions = new ObservableCollection<Transaction>();
+
+        //public ObservableCollection<Income> Incs = new ObservableCollection<Income>() {
         /*    new Income(2500.00m, "Money.. I wonder what happens if this description... isn't actually short and takes up A TON of space. You know what I mean?", "Savings", DateTime.Now),
             new Income(143.72m, "Money", "Savings", DateTime.Now),
             new Income(28.00m, "Money", "Savings", DateTime.Now),
@@ -52,8 +54,8 @@ public class Budget : INotifyPropertyChanged
             new Income(10.10m, "Money", "Savings", DateTime.Now),
             new Income(172.46m, "Money", "Savings", DateTime.Now),
             new Income(60.18m, "Money", "Savings", DateTime.Now),  */
-        };
-        public ObservableCollection<Expense> Exps = new ObservableCollection<Expense>()  {
+       // };
+       // public ObservableCollection<Expense> Exps = new ObservableCollection<Expense>()  {
         /*  new Expense(3m, "Money", "Entertainment", DateTime.Now),
             new Expense(14.18m, "Money", "Entertainment", DateTime.Now),
             new Expense(29.37m, "Money", "Gas", DateTime.Now),
@@ -65,12 +67,12 @@ public class Budget : INotifyPropertyChanged
             new Expense(28.40m, "Money", "Gas", DateTime.Now),
             new Expense(13.99m, "Amazon", "Entertainment", DateTime.Now),
             new Expense(49.43m, "Amazon", "Presents", DateTime.Now), */
-        };
+       // };
 
-        public ObservableCollection<RepeatTransaction> repeatedTrans = new ObservableCollection<RepeatTransaction>()
-        {
+    public ObservableCollection<RepeatTransaction> repeatedTrans = new ObservableCollection<RepeatTransaction>()
+    {
 
-        };
+    };
 
         /*list of repeated transactions with another list that contains their frequency in days. Check on startup and when a refresh button is pressed (just put it into 
          * a method). if the current date is greater than the repeated transaction date + its frequency, add a copy to either Incs or Exps based on what it is lol. Also 
@@ -110,8 +112,9 @@ public class Budget : INotifyPropertyChanged
             
         }
         // Adds a bin to the Bins collection.  
-        public int AddBin(string name, string description, decimal percentage, decimal goalBalance = 2500, decimal minimumBalance = 0, decimal multiplier = 1)
+        public int AddBin(string name, string description, decimal percentage)
         {
+            int iD = 0;
             decimal currentSplit = 0;
             decimal diff;
 
@@ -126,6 +129,7 @@ public class Budget : INotifyPropertyChanged
                 currentSplit += bin.Percentage;
             }
 
+            iD = IDGenerator.RandIDGen(10000, GetSortedBinIDs());
             percentage = (percentage < 1) ? percentage * 100 : percentage;
 
             //correcting percentage if the new bin's percentage increases the split to above 100%
@@ -147,10 +151,31 @@ public class Budget : INotifyPropertyChanged
                     }
                 }
             }
-
-            Bins.Add(new Bin(name, description, percentage, minimumBalance, goalBalance, multiplier));
+            
+            Bins.Add(new Bin(name, description, percentage, iD));
             return 1;
         }     
+
+        private int[] GetSortedBinIDs()
+        {
+            SortedSet<int> binIds = new SortedSet<int>();            
+            int[] binIDarr = new int[Bins.Count];
+            
+            for(int i = 0; i < Bins.Count; ++i)
+            {
+                binIds.Add(Bins[i].ID);
+            }
+
+            SortedSet<int>.Enumerator enumerator = binIds.GetEnumerator();
+
+            for(int i = 0; i < Bins.Count; ++i)
+            {
+                binIDarr[i] = enumerator.Current;
+                enumerator.MoveNext();
+            }
+
+            return binIDarr;
+        }
 
         //Sets all Bins' balances to zero.
      /*   internal void BinBalanceToZero()
@@ -187,16 +212,11 @@ public class Budget : INotifyPropertyChanged
         {
             decimal balance = 0;
 
-            foreach(Income inc in Incs)
+            foreach(Transaction transaction in transactions)
             {
-                balance += inc.Value;
+                balance += transaction.Value;
             }
 
-            foreach (Expense exp in Exps)
-            {
-                balance -= exp.Value;
-            }
-            Balance = balance;
             return Balance;
         }
        
@@ -210,18 +230,17 @@ public class Budget : INotifyPropertyChanged
             decimal balance = Bins[index].GetBalance();
 
             //Changes the bin property of each income and expense associated with the bin to Savings
-            foreach(Income inc in Incs) 
+            foreach(Transaction transaction in transactions) 
             {
-                if (string.Compare(inc.Bin, bin) == 0)
-                    inc.Bin = Bins[0].Name;
+                if (string.Compare(transaction.Bin, bin) == 0)
+                    transaction.Bin = Bins[0].Name;
+                else if (transaction.IncomeSplit)
+                {
+                    if(transaction.IncomeString.Contains(Bins[index].ID.ToString() + "-"))
+                    transaction.RemoveBin(Bins[0].ID, Bins[index].ID);
+                }
+                transaction.DrawerGoal = null;
             }
-
-            foreach (Expense exp in Exps)
-            {
-                if (string.Compare(exp.Bin, bin) == 0)
-                    exp.Bin = Bins[0].Name;
-            }
-
             //transfers all funds or debts from the deleted bin to savings and deletes from the budget's list
             TransferFunds(Bins[0].Name, Bins[index].Name, balance, DateTime.Today);
             Bins.RemoveAt(index);
@@ -239,8 +258,8 @@ public class Budget : INotifyPropertyChanged
                 return 0;
 
             //creates the transfer.
-            Incs.Add(new Income(amount, "[Transfer from] " + Bins[index2].Name, Bins[index1].Name, date));
-            Exps.Add(new Expense(amount, "[Transfer to] " + Bins[index1].Name, Bins[index2].Name, date));
+            transactions.Add(new Transaction(amount, "[Transfer from] " + Bins[index2].Name, Bins[index1].Name, date));
+            transactions.Add(new Transaction(-amount, "[Transfer to] " + Bins[index1].Name, Bins[index2].Name, date));
 
           //  CalcBinBalance();
             return 1;
@@ -248,26 +267,27 @@ public class Budget : INotifyPropertyChanged
         }
 
         //Adds an income to the incs list either splitting it into the bins or into one list.
-        public int AddIncome(decimal value, string destr, DateTime date, string mode)
+        public int AddIncome(decimal value, string destr, DateTime date, string mode, bool split)
         {
             int index = 1;       
-            Income newInc = new Income(value, destr, mode, date);
+            Transaction newInc = new Transaction(value, destr, mode, date);
             string location = mode;
             Balance += value;
 
-            if (mode == "Split")
+            if (split)
             {
+                newInc.IncomeSplit = true;
                 int binIndex = 0;
-                decimal splitVal = 0; 
-                decimal[] incValArr = new decimal[Bins.Count];
+                //decimal splitVal = 0; 
+                //decimal[] incValArr = new decimal[Bins.Count];
                 //checks the percentage. if it is greater than 100 then it returns.
                 decimal percentage = 0;
                 foreach (Bin bin in Bins)
                 {
                     percentage += bin.Percentage;
                     //also determine the amount that goes into each bin
-                    incValArr[binIndex] = Math.Round((value * bin.Percentage / 100), 2);
-                    splitVal += incValArr[binIndex++];
+                  //  incValArr[binIndex] = Math.Round((value * bin.Percentage / 100), 2);
+                   // splitVal += incValArr[binIndex++];
                 }
                 
 
@@ -278,19 +298,20 @@ public class Budget : INotifyPropertyChanged
                 else
                 {
                     binIndex = 0;
-                    if(splitVal != value)
-                    {
-                        incValArr[0] += (value - splitVal);
-                    }
+                   // if(splitVal != value)
+                    //{
+                      //  incValArr[0] += (value - splitVal);
+                    //}
                     //splits the income across the bins based on their percentage.
                     foreach (Bin bin in Bins)
-                    {                      
-                        bin.AddIncome(new Income(incValArr[binIndex++], destr, bin.Name, date));    
+                    {
+                        newInc.IncomeString += bin.AddTransaction(newInc);
+                        //bin.AddIncome(new Income(incValArr[binIndex++], destr, bin.Name, date));    
                     }
  
                           
                 }
-                Incs.Add(newInc);                
+                transactions.Add(newInc);                
                 AddMonthBudgetInc(newInc);
                 OrganizeIncomesByDate();
                 return 1;
@@ -301,8 +322,8 @@ public class Budget : INotifyPropertyChanged
                 index = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, mode) == 0).FirstOrDefault());               
                 if (index != -1)
                 {
-                    Bins[index].AddIncome(newInc);
-                    Incs.Add(newInc);
+                    Bins[index].AddTransaction(newInc);
+                    transactions.Add(newInc);
                     AddMonthBudgetInc(newInc);
                     OrganizeIncomesByDate();
                 }              
@@ -311,41 +332,51 @@ public class Budget : INotifyPropertyChanged
         }
         
         //Deletes an income from incs list.
-        public void DeleteIncome(decimal value, string destr, myDateTime date, string bin)
+        public void DeleteIncome(decimal value, string destr, DateTime date, string bin)
         {
             //finds the income object that needs to be deleted.
-            int index = Incs.IndexOf(Incs.Where(x => string.Compare(x.Description, destr) == 0 && value == x.Value
-            && myDateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0).FirstOrDefault());
+            int index = transactions.IndexOf(transactions.Where(x => string.Compare(x.Description, destr) == 0 && value == x.Value
+            && DateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0).FirstOrDefault());
 
             int binIndex;
 
-            if(bin == "Split")
+            if(transactions[index].IncomeSplit)
             {
-                //remove the income from each bin
-                int incIndex;
-                foreach  (Bin BIN in Bins)
+                string[] binStr = transactions[index].IncomeString.Split('_');
+                int temp = int.MaxValue;
+                foreach (string str in binStr)
                 {
-                    incIndex = BIN.Incomes.IndexOf(BIN.Incomes.Where(x => string.Compare(x.Description, destr) == 0 && (Math.Abs(value - x.Value / x.Percentage) < .5m)
-                     && myDateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, BIN.Name) == 0).FirstOrDefault());
-
-                    if(incIndex != -1)
-                    {
-                        BIN.RemoveIncome(incIndex);
-
-                    }
+                    temp = Convert.ToInt32(str.Split('-')[0]);
+                    binIndex = Bins.IndexOf(Bins.Where(x => x.ID == temp).FirstOrDefault());
+                    Bins[binIndex].RemoveTransaction(transactions[index], str);
                 }
+                ////remove the income from each bin
+                //int incIndex;
+                //foreach  (Bin BIN in Bins)
+                //{
+                //    incIndex = BIN.Incomes.IndexOf(BIN.Incomes.Where(x => string.Compare(x.Description, destr) == 0 && (Math.Abs(value - x.Value / x.Percentage) < .5m)
+                //     && DateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, BIN.Name) == 0).FirstOrDefault());
+
+                //    if(incIndex != -1)
+                //    {
+                //        BIN.RemoveIncome(incIndex);
+
+                //    }
+                //}
 
             } else
             {
                 //find and remove the income from the bin
-                binIndex = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, bin) == 0).FirstOrDefault());
-                int incIndex = Bins[binIndex].Incomes.IndexOf(Bins[binIndex].Incomes.Where(x => string.Compare(x.Description, destr) == 0 && value == x.Value
-            && myDateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0).FirstOrDefault());
+                binIndex = Bins.IndexOf(Bins.Where(x => x.ID == Convert.ToInt32(transactions[index].IncomeString.Split('-')[0].Remove(0,1))).FirstOrDefault());
+                //int incIndex = Bins[binIndex].Incomes.IndexOf(Bins[binIndex].Incomes.Where(x => string.Compare(x.Description, destr) == 0 && value == x.Value
+                //&& DateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0).FirstOrDefault());
 
-                if (incIndex != -1)
-                {                    
-                    Bins[binIndex].RemoveIncome(incIndex);
-                }
+                Bins[binIndex].RemoveTransaction(transactions[index], transactions[index].IncomeString);
+
+              //  if (incIndex != -1)
+              //  {                    
+              //      Bins[binIndex].RemoveIncome(incIndex);
+             //   }
             }
 
             //finds the MonthBudget that is associated with the income object and removes it from its list.
@@ -357,9 +388,9 @@ public class Budget : INotifyPropertyChanged
                     break;
                 }
             } */
-            DeleteMonthBudgetInc(Incs[index]);
-            Balance -= Incs[index].Value;
-            Incs.RemoveAt(index);
+            DeleteMonthBudgetInc(transactions[index]);
+            Balance -= transactions[index].Value;
+            transactions.RemoveAt(index);
             OrganizeIncomesByDate();
        //     CalcBinBalance();     
         }
@@ -367,39 +398,40 @@ public class Budget : INotifyPropertyChanged
 
         public void AddExpense(decimal value, string destr, DateTime date, string bin, bool drawerOrGoal, string drawer = null)
         {
-            Expense exp; 
+            Transaction exp; 
             int index = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, bin) == 0).FirstOrDefault());
             if (index != -1)
             {
-                exp = new Expense(value, destr, Bins[index].Name, date);
+                exp = new Transaction(value, destr, Bins[index].Name, date);
             }
             else
                 return;
                 //exp = new Expense(value, destr, null, date);
 
-            exp.Drawer = drawer;
+            exp.DrawerGoal = drawer;
             exp.DrawerExp = drawerOrGoal;
-            Exps.Add(exp);
+            
             Balance -= exp.Value;
-            if (drawerOrGoal)
-            {
-                Bins[index].AddDrawerExpense(exp);
-            } else
-            {
-                Bins[index].AddGoalExpense(exp);
-            }
+           // if (drawerOrGoal)
+           // {
+                Bins[index].AddTransaction(exp);
+                //Bins[index].AddDrawerTransaction(exp);
+            //} else
+          //  {
+           //     Bins[index].AddGoalExpense(exp);
+          //  }
             
             AddMonthBudgetExp(exp);
-
-         //   CalcBinBalance(); 
+            transactions.Add(exp);
+            //   CalcBinBalance(); 
             OrganizeExpensesByDate();
         }
 
-        public void DeleteExpense(decimal value, string destr, myDateTime date, string bin)
+        public void DeleteExpense(decimal value, string destr, DateTime date, string bin)
         {
-            int index = Exps.IndexOf(Exps.Where(x => string.Compare(x.Description, destr) == 0 && value == x.Value
-            && myDateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0).FirstOrDefault());
-            int Binindex = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, bin) == 0).FirstOrDefault());
+            int index = transactions.IndexOf(transactions.Where(x => string.Compare(x.Description, destr) == 0 && value == x.Value
+            && DateTime.Compare(x.Date, date) == 0 && string.Compare(x.Bin, bin) == 0).FirstOrDefault());
+            int BinIndex = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, bin) == 0).FirstOrDefault());
             /*  foreach (MonthBudget bud in MonthlyBudgets)
               {
                   if (Exps[index].Date.Month == bud.Date.Month && Exps[index].Date.Year == bud.Date.Year)
@@ -408,17 +440,19 @@ public class Budget : INotifyPropertyChanged
                       break;
                   }
               } */
-            if (Exps[index].DrawerExp)
-            {
-                Bins[Binindex].RemoveDrawerExpense(Exps[index]);
-            } else
-            {
-                Bins[Binindex].RemoveGoalExpense(Exps[index]);
-            }
+
+            Bins[BinIndex].RemoveTransaction(transactions[index], transactions[index].IncomeString);
+            //if (Exps[index].DrawerExp)
+            //{
+            //    Bins[Binindex].RemoveDrawerExpense(Exps[index]);
+            //} else
+            //{
+            //    Bins[Binindex].RemoveGoalExpense(Exps[index]);
+            //}
             
-            DeleteMonthBudgetExp(Exps[index]);
-            Balance += Exps[index].Value;
-            Exps.RemoveAt(index);
+            DeleteMonthBudgetExp(transactions[index]);
+            Balance -= transactions[index].Value;
+            transactions.RemoveAt(index);
 
             OrganizeExpensesByDate();
        //     CalcBinBalance();       
@@ -427,34 +461,34 @@ public class Budget : INotifyPropertyChanged
         //Sorting Methods date and value
         public void OrganizeIncomesByDate()
         {
-            IEnumerable<Income> incomes = Incs.OrderByDescending(x => x.Date);
-            int count = Incs.Count;
+            IEnumerable<Transaction> incomes = transactions.OrderByDescending(x => x.Date);
+            int count = transactions.Count;
 
-            foreach (Income inc in incomes)
+            foreach (Transaction transaction in transactions)
             {
-                Incs.Add(inc);
+                transactions.Add(transaction);
             }
 
             for (int i = 0; i < count; i++)
             {
-                Incs.RemoveAt(0);
+                transactions.RemoveAt(0);
             }
             // Incs.Sort((x, y) => DateTime.Compare(x.Date, y.Date)); FIX IT***
         }
 
         public void OrganizeIncomesByValue()
         {
-            IEnumerable<Income> incomes = Incs.OrderBy(x => x.Value);
-            int count = Incs.Count;
+            IEnumerable<Transaction> incomes = transactions.OrderBy(x => x.Value);
+            int count = transactions.Count;
 
-            foreach (Income inc in incomes)
+            foreach (Transaction transaction in transactions)
             {
-                Incs.Add(inc);
+                transactions.Add(transaction);
             }
 
             for (int i = 0; i < count; i++)
             {
-                Incs.RemoveAt(0);
+                transactions.RemoveAt(0);
             }
             //  Incs.Sort((x, y) => DCompare(x.Value, y.Value)); FIX IT***
         }
@@ -462,35 +496,35 @@ public class Budget : INotifyPropertyChanged
         public void OrganizeExpensesByDate()
         {
             
-            IEnumerable<Expense> expenses = Exps.OrderByDescending(x => x.Date);
+            IEnumerable<Transaction> expenses = transactions.OrderByDescending(x => x.Date);
             
-            int count = Exps.Count;
+            int count = transactions.Count;
 
-            foreach (Expense exp in expenses)
+            foreach (Transaction transaction in transactions)
             {
-                Exps.Add(exp);
+                transactions.Add(transaction);
             }
 
             for (int i = 0; i < count; i++)
             {
-                Exps.RemoveAt(0);
+                transactions.RemoveAt(0);
             }
             // Exps.Sort((x, y) => DateTime.Compare(x.Date, y.Date)); FIX IT***
         }
 
         public void OrganizeExpensesByValue()
         {
-            IEnumerable<Expense> expenses = Exps.OrderBy(x => x.Value);
-            int count = Exps.Count;
+            IEnumerable<Transaction> expenses = transactions.OrderBy(x => x.Value);
+            int count = transactions.Count;
 
-            foreach (Expense exp in expenses)
+            foreach (Transaction transaction in transactions)
             {
-                Exps.Add(exp);
+                transactions.Add(transaction);
             }
 
             for (int i = 0; i < count; i++)
             {
-                Exps.RemoveAt(0);
+                transactions.RemoveAt(0);
             }
 
             //  Exps.Sort((x, y) => DCompare(x.Value, y.Value)); FIX IT***
@@ -563,7 +597,8 @@ public class Budget : INotifyPropertyChanged
             {
                 foreach(Drawer drawer in bin.Drawers)
                 {
-                    newDefault += drawer.Maximum;
+                  if(drawer.Month == DateTime.Now.Month && drawer.Year == DateTime.Now.Year)
+                    newDefault += drawer.AvailAmount;
                 }
             }
 
@@ -580,7 +615,7 @@ public class Budget : INotifyPropertyChanged
             DefaultMonthlyBudget = newDefault;
         }
 
-        public void AddMonthBudgetExp(Expense exp)
+        public void AddMonthBudgetExp(Transaction exp)
         {
             //find the associated month budget and subtract it from its budget
             foreach (MonthBudget bud in MonthlyBudgets)
@@ -589,7 +624,7 @@ public class Budget : INotifyPropertyChanged
                 {
                     if(!(exp.Description.Contains("[Transfer to]")))
                     {
-                        bud.SubtractExpense(exp);
+                        bud.AddTransaction(exp);
                         return;
                     }
                 }
@@ -599,7 +634,7 @@ public class Budget : INotifyPropertyChanged
             AddMonthBudgetExp(exp);
         }
 
-        public void DeleteMonthBudgetExp(Expense exp)
+        public void DeleteMonthBudgetExp(Transaction exp)
         {
             //find the associated month budget and remove it from its budget
             foreach (MonthBudget bud in MonthlyBudgets)
@@ -608,14 +643,14 @@ public class Budget : INotifyPropertyChanged
                 {
                     if (!(exp.Description.Contains("[Transfer to]")))
                     {
-                        bud.RemoveExpense(exp);
+                        bud.RemoveTransaction(exp);
                         return;
                     }
                 }
             }
         }
 
-        public void AddMonthBudgetInc(Income inc)
+        public void AddMonthBudgetInc(Transaction inc)
         {
             //find the associated month budget and add it to its budget
             foreach (MonthBudget bud in MonthlyBudgets)
@@ -624,7 +659,7 @@ public class Budget : INotifyPropertyChanged
                 {
                     if (!(inc.Description.Contains("[Transfer from]")))
                     {
-                        bud.AddIncome(inc);
+                        bud.AddTransaction(inc);
                         return;
                     }
                 }
@@ -634,7 +669,7 @@ public class Budget : INotifyPropertyChanged
             AddMonthBudgetInc(inc);
         }
 
-        public void DeleteMonthBudgetInc(Income inc)
+        public void DeleteMonthBudgetInc(Transaction inc)
         {
             //find the associated month budget and remove it from its budget
             foreach (MonthBudget bud in MonthlyBudgets)
@@ -643,7 +678,7 @@ public class Budget : INotifyPropertyChanged
                 {
                     if (!(inc.Description.Contains("[Transfer from]")))
                     {
-                        bud.RemoveIncome(inc);
+                        bud.RemoveTransaction(inc);
                         return;
                     }
                 }
@@ -689,7 +724,7 @@ public class Budget : INotifyPropertyChanged
              int index = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, bin) == 0).FirstOrDefault());
             if (index != -1)
             {
-                Bins[index].RemoveDrawer(name);
+                Bins[index].RemoveDrawer(name, DateTime.Now.Year, DateTime.Now.Month);
             }
 
             //recalculate the current MonthBudget.. budget
@@ -728,24 +763,24 @@ public class Budget : INotifyPropertyChanged
           
             if(DateTime.Compare(DateTime.Today, transactionDate) > -1)
             {
-                if (repeatedTrans[index].Transaction.IsIncome())
+                if (repeatedTrans[index].Transaction.Value > 0m)
                 {
-                    AddIncome(trans.Transaction.Value, trans.Transaction.Description, transactionDate, trans.Transaction.Bin);
-                    repeatedTrans[index].Transaction = new Income(trans.Transaction.Value, trans.Transaction.Description, trans.Transaction.Bin,
-                        transactionDate);
+                    AddIncome(trans.Transaction.Value, trans.Transaction.Description, transactionDate, trans.Transaction.Bin, trans.Transaction.IncomeSplit);
+                    repeatedTrans[index].Transaction.Date = transactionDate;
+                       // = new Income(trans.Transaction.Value, trans.Transaction.Description, trans.Transaction.Bin, transactionDate);
                 } else
                 {
                     Transaction exp = trans.Transaction;
                     AddExpense(exp.Value, exp.Description, transactionDate, exp.Bin, exp.GetDrawerExp(), exp.GetDrawer());
-                    repeatedTrans[index].Transaction = new Expense
-                    {
-                        Value = exp.Value,
-                        Description = exp.Description,
-                        Date = new myDateTime(transactionDate),
-                        Bin = exp.Bin,
-                        DrawerExp = exp.GetDrawerExp(),
-                        Drawer = exp.GetDrawer(),
-                    };
+                    repeatedTrans[index].Transaction.Date = transactionDate; //new Expense
+                    //{
+                    //    Value = exp.Value,
+                    //    Description = exp.Description,
+                    //    Date = transactionDate,//new myDateTime(transactionDate),
+                    //    Bin = exp.Bin,
+                    //    DrawerExp = exp.GetDrawerExp(),
+                    //    Drawer = exp.GetDrawer(),
+                    //};
                 }
                 
                 //repeatedTrans[index].Transaction.Date = new myDateTime(transactionDate);

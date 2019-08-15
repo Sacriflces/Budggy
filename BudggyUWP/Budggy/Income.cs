@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Budggy
 {
-     public class Income : Transaction
+ /*    public class Income : Transaction
     {
         private decimal _percentage;
         public decimal Percentage
@@ -43,5 +43,5 @@ namespace Budggy
         {
             return true;
         }
-    }
+    } */
 }

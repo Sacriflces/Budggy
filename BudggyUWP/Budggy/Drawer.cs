@@ -22,19 +22,28 @@ namespace Budggy
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private decimal _maximum;
-        public decimal Maximum
+        private decimal _availAmount;
+        public decimal AvailAmount
         {
-            get { return _maximum; }
+            get { return _availAmount; }
             set
             {
-                _maximum = value;
-                OnPropertyChange("Maximum");
+                _availAmount = value;
+                OnPropertyChange("AvailAmount");
             }
         }
 
-        private decimal Max;
+        private decimal _monthlyAmount;
 
+        public decimal MonthlyAmount
+        {
+            get { return _monthlyAmount; }
+            set
+            {
+                _monthlyAmount = value;
+                OnPropertyChange("MonthlyAmount");
+            }
+        }
         private decimal _currentSpent;
         public decimal CurrentSpent
         {
@@ -81,55 +90,67 @@ namespace Budggy
             }
         }
 
-        decimal[] prevSpent = new decimal[12]; //might change this to a list tbh...
-        private int index;
         public bool rollOver;
+        public int ID;
 
         public Drawer()
         {
 
         }
 
-        public Drawer(string name, decimal maximum, DateTime date, string binName = null)
+        public Drawer(string name, decimal monthAmount, DateTime date, string binName = null)
         {
             //Need to create strings to bind too... eventually
             BinName = binName;
             Name = name;
-            Maximum = maximum;
-            Max = maximum; //remove this later
+            AvailAmount = monthAmount;
+            MonthlyAmount = monthAmount; //remove this later
             CurrentSpent = 0;
             Month = date.Month;
             Year = date.Year;
             rollOver = false;
-            index = 0;
         }
 
-        public void Refresh()
+        private Drawer(Drawer prev)
+        {
+            BinName = prev.BinName;
+            Name = prev.Name;            
+            MonthlyAmount = prev.MonthlyAmount;
+            CurrentSpent = 0;
+            Month = DateTime.Now.Month;
+            Year = DateTime.Now.Year;
+            rollOver = prev.rollOver;
+            if (rollOver)
+            {
+                AvailAmount = MonthlyAmount + (prev.AvailAmount - prev.CurrentSpent);
+            }
+            else AvailAmount = MonthlyAmount;
+
+        }
+
+        public Drawer Refresh()
         { //make it so that the index maps based on the month 0 - January of that year, etc.
-            if (Month != DateTime.Now.Month && Year != DateTime.Now.Year) {
-                if (rollOver)
-                {
-                    Maximum = Maximum + (Maximum - CurrentSpent);
-                }
-                else
-                    Maximum = Maximum;
-
-                prevSpent[index++] = CurrentSpent;
-                index %= prevSpent.Length;
-                Month = DateTime.Now.Month;
-                Year = DateTime.Now.Year;
-                CurrentSpent = 0;
-            }            
+            //decimal AvailableAmount;
+            //if (rollOver)
+            //{
+            //    AvailableAmount = MonthlyAmount + (AvailAmount - CurrentSpent);
+            //}
+            //else
+            //    AvailableAmount = MonthlyAmount;           
+            return new Drawer(this); 
+                //Month = DateTime.Now.Month;
+                //Year = DateTime.Now.Year;
+                //CurrentSpent = 0;                   
         }
 
-        public void AddExpense(Expense exp)
+        public void AddExpense(Transaction transaction)
         {
-            CurrentSpent += exp.Value;
+            CurrentSpent -= transaction.Value;
         }
 
-        public void RemoveExpense(Expense exp)
+        public void RemoveExpense(Transaction transaction)
         {
-            CurrentSpent -= exp.Value;
+            CurrentSpent += transaction.Value;
         }
 
     }

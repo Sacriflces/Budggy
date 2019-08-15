@@ -112,6 +112,7 @@
     <Compile Include="Drawer.cs" />
     <Compile Include="Expense.cs" />
     <Compile Include="Goal.cs" />
+    <Compile Include="IDGenerator.cs" />
     <Compile Include="Income.cs" />
     <Compile Include="MonthBudget.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

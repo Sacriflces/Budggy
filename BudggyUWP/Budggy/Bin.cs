@@ -24,9 +24,17 @@ namespace Budggy
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        public ObservableCollection<Drawer> Drawers = new ObservableCollection<Drawer>();
-        public ObservableCollection<Income> Incomes = new ObservableCollection<Income>();
+        //have a huge list of drawers... and just return a list with drawers from a specific date to the UI
+        public List<Drawer> allDrawers = new List<Drawer>();
+        public ObservableCollection<Drawer> Drawers  = new ObservableCollection<Drawer>();     
+        //{
+        //    get
+        //    {
+        //        List<Drawer> temp = allDrawers.Where(x => x.Month == DateTime.Now.Month && x.Year == DateTime.Now.Year).ToList();
+        //        return new ObservableCollection<Drawer>(temp.AsEnumerable());
+        //    }
+        //}   
+      //  public ObservableCollection<Income> Incomes = new ObservableCollection<Income>();
         public ObservableCollection<Goal> Goals = new ObservableCollection<Goal>();
 
 
@@ -98,36 +106,22 @@ namespace Budggy
         }
 
 
-        public decimal MinimumBalance { get; set; }
 
-        private decimal _goalBalance;
-        public decimal GoalBalance {
-            get
-            {
-                return _goalBalance;
-            }
-            set
-            {
-                _goalBalance = value;
-                OnPropertyChange("GoalBlanace");
-            }
-        }
+        
 
-        internal decimal Multiplier { get; set; }
+        internal int ID { get; set; }
 
         public Bin()
         {
 
         }
 
-        public Bin(string name, string description, decimal percentage, decimal minimumBalance, decimal goalBalance, decimal multiplier)
+        public Bin(string name, string description, decimal percentage, int id)
         {
             Name = name;
             Description = description;
             Percentage = percentage;
-            MinimumBalance = minimumBalance;
-            GoalBalance = goalBalance;
-            Multiplier = multiplier;
+            ID = id;
             Balance = 0;
         }
 
@@ -154,16 +148,45 @@ namespace Budggy
 
         public void CreateDrawer(string name = null, decimal maximum = 100m)
         {
-            if(Drawers.IndexOf(Drawers.Where(x => string.Compare(x.Name, name) == 0).FirstOrDefault()) != -1)
+            if(Drawers.IndexOf(Drawers.Where(x => string.Compare(x.Name, name) == 0 && x.Month == DateTime.Now.Month
+            && x.Year == DateTime.Now.Year).FirstOrDefault()) != -1)
                 return;
 
-            Drawer item = new Drawer(name, maximum, DateTime.Now, Name);
+            Drawer item = new Drawer(name, maximum, DateTime.Now, Name)
+            {
+                ID = IDGenerator.RandIDGen(10000, GetSortedDrawerIDs())
+            };
+
             Drawers.Add(item);
         }
 
-        public void RemoveDrawer(string name)
+        private int[] GetSortedDrawerIDs()
         {
-            int index = Drawers.IndexOf(Drawers.Where(x => string.Compare(x.Name, name) == 0).FirstOrDefault());
+            SortedSet<int> drawerIds = new SortedSet<int>();
+            List<Drawer> currentDrawers = Drawers.ToList().Where(x=> x.Month == DateTime.Now.Month && x.Year == DateTime.Now.Year).ToList();
+            
+            int[] drawerIDarr = new int[currentDrawers.Count];
+
+            for (int i = 0; i < currentDrawers.Count; ++i)
+            {
+                drawerIds.Add(currentDrawers[i].ID);
+            }
+
+            SortedSet<int>.Enumerator enumerator = drawerIds.GetEnumerator();
+
+            for (int i = 0; i < currentDrawers.Count; ++i)
+            {
+                drawerIDarr[i] = enumerator.Current;
+                enumerator.MoveNext();
+            }
+
+            return drawerIDarr;
+        }
+
+        public void RemoveDrawer(string name, int year, int month)
+        {
+            int index = Drawers.IndexOf(Drawers.Where(x => string.Compare(x.Name, name) == 0
+            && x.Year == year && x.Month == month).FirstOrDefault());
             if(index != -1)
             {
                 Drawers.RemoveAt(index);
@@ -172,17 +195,40 @@ namespace Budggy
 
         public void CreateGoal(string name = null, decimal goalVal = 100m)
         {
+            int iD;
             if (Goals.IndexOf(Goals.Where(x => string.Compare(x.Name, name) == 0).FirstOrDefault()) != -1)
                 return;
-
+            iD = IDGenerator.RandIDGen(10000, GetSortedGoalIDs());
             Goal item = new Goal()
             {
                 Name = name,
                 GoalVal = goalVal,
                 Priority = Goals.Count,
+                ID = iD
             };
             
             Goals.Add(item);
+        }
+
+        public int[] GetSortedGoalIDs()
+        {
+            SortedSet<int> goalIds = new SortedSet<int>();
+            int[] goalIDarr = new int[Goals.Count];
+
+            for (int i = 0; i < Goals.Count; ++i)
+            {
+                goalIds.Add(Goals[i].ID);
+            }
+
+            SortedSet<int>.Enumerator enumerator = goalIds.GetEnumerator();
+
+            for (int i = 0; i < Goals.Count; ++i)
+            {
+                goalIDarr[i] = enumerator.Current;
+                enumerator.MoveNext();
+            }
+
+            return goalIDarr;
         }
 
         public void RemoveGoal(string name)
@@ -195,65 +241,169 @@ namespace Budggy
             }
         }
 
-        public void AddDrawerExpense(Expense exp)
-        {
-            Balance -= exp.Value;
-            int index = Drawers.IndexOf(Drawers.Where(x => string.Compare(x.Name, exp.Drawer) == 0).FirstOrDefault());
-            if (index != -1)
-            {
-                Drawers[index].AddExpense(exp);
-            }
-            if(Balance < 0)
-            {
-                PullfromGoals();
-            }
-        }
-
-        public void AddGoalExpense(Expense exp)
-        {
-            int index = Goals.IndexOf(Goals.Where(x => string.Compare(x.Name, exp.Drawer) == 0).FirstOrDefault());
-            if (index != -1)
-            {
-                Goals[index].AddExpense(exp);
-            } else
+        /*    public void AddDrawerExpense(Expense exp)
             {
                 Balance -= exp.Value;
+                int index = Drawers.IndexOf(Drawers.Where(x => string.Compare(x.Name, exp.Drawer) == 0).FirstOrDefault());
+                if (index != -1)
+                {
+                    Drawers[index].AddExpense(exp);
+                }
+                if(Balance < 0)
+                {
+                    PullfromGoals();
+                }
             }
-        }
 
-        public void RemoveDrawerExpense(Expense exp)
-        {
-            Balance += exp.Value;
-            int index = Drawers.IndexOf(Drawers.Where(x => string.Compare(x.Name, exp.Drawer) == 0).FirstOrDefault());
-            if (index != -1)
+            public void AddGoalExpense(Expense exp)
             {
-                Drawers[index].RemoveExpense(exp);
+                int index = Goals.IndexOf(Goals.Where(x => string.Compare(x.Name, exp.Drawer) == 0).FirstOrDefault());
+                if (index != -1)
+                {
+                    Goals[index].AddExpense(exp);
+                } else
+                {
+                    Balance -= exp.Value;
+                }
             }
-        }
 
-        public void RemoveGoalExpense(Expense exp)
-        {
-            
-            int index = Goals.IndexOf(Goals.Where(x => string.Compare(x.Name, exp.Drawer) == 0).FirstOrDefault());
-            if (index != -1)
-            {
-               Goals[index].RemoveExpense(exp);
-            } else
+            public void RemoveDrawerExpense(Expense exp)
             {
                 Balance += exp.Value;
+                int index = Drawers.IndexOf(Drawers.Where(x => string.Compare(x.Name, exp.Drawer) == 0).FirstOrDefault());
+                if (index != -1)
+                {
+                    Drawers[index].RemoveExpense(exp);
+                }
+            }
+
+            public void RemoveGoalExpense(Expense exp)
+            {
+
+                int index = Goals.IndexOf(Goals.Where(x => string.Compare(x.Name, exp.Drawer) == 0).FirstOrDefault());
+                if (index != -1)
+                {
+                   Goals[index].RemoveExpense(exp);
+                } else
+                {
+                    Balance += exp.Value;
+                }
+            } */
+
+        public string AddTransaction(Transaction transaction)
+        {
+            decimal value = Math.Round(transaction.Value * Percentage, 2);   
+            if (value > 0m)
+            {              
+                decimal totalAmount = 0;
+                StringBuilder str = new StringBuilder();
+                Tuple<int[], decimal[], decimal[]> goalAndPerc = AddToGoals(value);
+                str.Append("_" + ID + "-" + Percentage + "(");
+
+                for (int i = 0; i < Goals.Count; ++i)
+                {
+                    if (goalAndPerc.Item2[i] != 0)
+                    {
+                        str.Append("|" + goalAndPerc.Item1[i] + "-" + goalAndPerc.Item2[i]);                        
+                        totalAmount += goalAndPerc.Item3[i];
+                    }
+                }
+                str.Append(")");
+                Balance += value - totalAmount;
+                return str.ToString();
+            } else
+            {
+                if (transaction.DrawerExp) {
+                    Balance -= transaction.Value;
+                    int index = Drawers.IndexOf(Drawers.Where(x => String.Compare(x.Name, transaction.DrawerGoal) == 0
+                                && x.Month == transaction.Date.Month && x.Year == transaction.Date.Year).FirstOrDefault());
+                    if (index != -1)
+                    {
+                        Drawers[index].AddExpense(transaction);
+                        transaction.DrawerGoalID = Drawers[index].ID;
+                    }                  
+                } else {
+                    int index = Goals.IndexOf(Goals.Where(x => String.Compare(x.Name, transaction.DrawerGoal) == 0).FirstOrDefault());
+                    if (index != -1)
+                    {
+                        Goals[index].AddExpense(transaction);
+                        transaction.DrawerGoalID = Goals[index].ID;
+                    }
+                    else
+                    {
+                        Balance -= transaction.Value;
+                    }
+                }
+
+            }
+
+            return "_" + ID + "-" + Percentage + "()";       
+        }
+
+        public void RemoveTransaction(Transaction transaction, string splitString)
+        {
+            if (transaction.Value > 0m)
+            {
+                char[] separators = { '(', ')' };
+                string[] binGoalStrs = splitString.Split(separators);
+                string[] temp = binGoalStrs[0].Split('-');
+                decimal value = Math.Round(transaction.Value * Convert.ToDecimal(temp[1]));
+                decimal BinAmount = value;
+                int goalID;
+                decimal goalPerc;
+                int index;
+
+                string[] goalStrs = binGoalStrs[1].Split('|');
+                for (int i = 0; i < goalStrs.Count(); ++i)
+                {
+                    temp = goalStrs[i].Split('-');
+                    goalID = Convert.ToInt32(temp[0]);
+                    goalPerc = Convert.ToDecimal(temp[1]);
+                    index = Goals.IndexOf(Goals.Where(x => x.ID == goalID).FirstOrDefault());
+                    Goals[index].Value -= value * goalPerc;
+                    BinAmount -= value * goalPerc;
+                }
+                Balance -= BinAmount;
+
+
+            }
+            else
+            {
+                if (transaction.DrawerExp)
+                {
+                    Balance -= transaction.Value;
+                    int index = Drawers.IndexOf(Drawers.Where(x => x.ID == transaction.DrawerGoalID
+                                && x.Month == transaction.Date.Month && x.Year == transaction.Date.Year).FirstOrDefault());
+                    if (index != -1)
+                    {
+                        Drawers[index].RemoveExpense(transaction);
+                    }
+                }
+                else
+                {
+                    int index = Goals.IndexOf(Goals.Where(x => x.ID == transaction.DrawerGoalID).FirstOrDefault());
+                    if(index != -1)
+                    {
+                        Goals[index].RemoveExpense(transaction);
+                    } else
+                    {
+                        Balance -= transaction.Value;
+                    }
+                }
             }
         }
 
-        public void AddIncome(Income inc)
-        {
-            decimal adjustedValue = AddtoGoals(inc.Value);
-            Balance += adjustedValue;
-            inc.Percentage = Percentage;
-            Incomes.Add(inc);
-            
-        }
+            /*  public void AddIncome(Income inc)
+              {
 
-        public void RemoveIncome(int index)
+                  decimal adjustedValue = AddtoGoals(inc.Value);
+                  Balance += adjustedValue;
+                  //inc.Percentage = Percentage;
+                  //Incomes.Add(inc);
+
+              } */
+
+     /*       public void RemoveIncome(int index)
         {
             Balance -= Incomes[index].Value;
             Incomes.RemoveAt(index);
@@ -262,7 +412,7 @@ namespace Budggy
             {
                 PullfromGoals();
             }
-        }
+        } */
 
         //going to need to test all goal stuff when I begin implementing the ui
         private void PullfromGoals()
@@ -295,8 +445,60 @@ namespace Budggy
             RecurPull(++index);
             
         }
+        private Tuple<int[], decimal[], decimal[]> AddToGoals(decimal val)
+        {
+            Tuple<int[], decimal[], decimal[]> goalAndPerc = Tuple.Create(new int[Goals.Count], new decimal[Goals.Count], new decimal[Goals.Count]);
+            decimal percentage = 0;            
+            decimal splitAmount = 0;
+            int goalIndex = 0;
 
-        private decimal AddtoGoals(decimal val)
+            //1. check if the percentages add up to less than or equal to 100%
+            foreach (Goal goal in Goals)
+            {
+                percentage += goal.Percentage;
+                goalAndPerc.Item1[goalIndex] = goal.ID;
+                goalAndPerc.Item2[goalIndex] = goal.Percentage;
+                goalAndPerc.Item3[goalIndex] = Math.Round(val * goal.Percentage, 2);
+                splitAmount += goalAndPerc.Item3[goalIndex++];
+                ++goalIndex;
+            }
+
+            if (percentage > 1)
+            {
+                for (int i = 0; i < Goals.Count; ++i) {
+                    goalAndPerc.Item2[i] = 0;
+                }
+                return goalAndPerc;
+            }
+            
+            goalIndex = 0;
+            //2. then remove part of the adjVal and insert into the goals
+            //need to test this to see if adjVal -= splitAmount works outside of the if and else.
+            if (splitAmount != val * percentage)
+            {
+                goalAndPerc.Item3[goalIndex] += ((val * percentage) - splitAmount);
+            }
+
+            foreach (Goal goal in Goals)
+            {
+
+                if (goal.Value + goalAndPerc.Item3[goalIndex] >= goal.GoalVal)
+                {
+                    goalAndPerc.Item3[goalIndex] = (goal.GoalVal - goal.Value);
+                    
+                    goalAndPerc.Item2[goalIndex] = goalAndPerc.Item3[goalIndex] / val;
+                    goal.Value = goal.GoalVal;
+                }
+                else
+                {
+                    goal.Value += goalAndPerc.Item3[goalIndex];
+                }                
+            }
+
+            return goalAndPerc;
+        }
+
+     /*   private decimal AddtoGoals(decimal val)
         {
             decimal adjVal = val;
             decimal percentage = 0;
@@ -335,7 +537,7 @@ namespace Budggy
             }
 
             return adjVal;
-        }
+        } */
 
         private void AddGoal()
         {
@@ -374,7 +576,11 @@ namespace Budggy
         {
             foreach (Drawer drawer in Drawers)
             {
-                drawer.Refresh();
+                if (drawer.Month != DateTime.Now.Month && drawer.Year != DateTime.Now.Year)
+                {
+                    Drawers.Add(drawer.Refresh());
+                }
+                
             }
         }
         
@@ -382,3 +588,4 @@ namespace Budggy
     }
 
 }
+

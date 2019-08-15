@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Budggy
 {
-    public class Expense : Transaction
+   /* public class Expense : Transaction
     {
         public string Drawer;
         public bool DrawerExp;
@@ -34,5 +34,5 @@ namespace Budggy
         {
             return DrawerExp;
         }
-    }
+    } */
 }
