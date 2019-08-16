@@ -33,12 +33,12 @@ public class Budget : INotifyPropertyChanged
             PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public ObservableCollection<Bin> Bins = new ObservableCollection<Bin>()  {
+        public ObservableCollection<Bin> Bins = new ObservableCollection<Bin>()  {
            new Bin("Savings", "", .3m),
-            new Bin("Entertainment", "Going out money and gaming money, and whatever else I need to make this description longer", .5m),
-            new Bin("Gas", "", .1m),
-            new Bin("Food", "", .05m),
-            new Bin("Presents", "Money for Presents lol", .05m), 
+           new Bin("Entertainment", "Going out money and gaming money, and whatever else I need to make this description longer", .5m) { ID = 1 },
+           new Bin("Gas", "", .1m){ ID = 2 },
+           new Bin("Food", "", .05m){ ID = 3 },
+           new Bin("Presents", "Money for Presents lol", .05m){ ID = 4 }, 
     };
     public ObservableCollection<Transaction> transactions = new ObservableCollection<Transaction>();
 
@@ -308,8 +308,9 @@ public class Budget : INotifyPropertyChanged
                         newInc.IncomeString += bin.AddTransaction(newInc);
                         //bin.AddIncome(new Income(incValArr[binIndex++], destr, bin.Name, date));    
                     }
- 
-                          
+
+                    //remove the first '_'
+                    newInc.IncomeString = newInc.IncomeString.Remove(0, 1); 
                 }
                 transactions.Add(newInc);                
                 AddMonthBudgetInc(newInc);
@@ -398,6 +399,7 @@ public class Budget : INotifyPropertyChanged
 
         public void AddExpense(decimal value, string destr, DateTime date, string bin, bool drawerOrGoal, string drawer = null)
         {
+            if (value > 0m) value *= -1;
             Transaction exp; 
             int index = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, bin) == 0).FirstOrDefault());
             if (index != -1)
@@ -464,7 +466,7 @@ public class Budget : INotifyPropertyChanged
             IEnumerable<Transaction> incomes = transactions.OrderByDescending(x => x.Date);
             int count = transactions.Count;
 
-            foreach (Transaction transaction in transactions)
+            foreach (Transaction transaction in incomes)
             {
                 transactions.Add(transaction);
             }
@@ -481,7 +483,7 @@ public class Budget : INotifyPropertyChanged
             IEnumerable<Transaction> incomes = transactions.OrderBy(x => x.Value);
             int count = transactions.Count;
 
-            foreach (Transaction transaction in transactions)
+            foreach (Transaction transaction in incomes)
             {
                 transactions.Add(transaction);
             }
@@ -500,7 +502,7 @@ public class Budget : INotifyPropertyChanged
             
             int count = transactions.Count;
 
-            foreach (Transaction transaction in transactions)
+            foreach (Transaction transaction in expenses)
             {
                 transactions.Add(transaction);
             }
@@ -517,7 +519,7 @@ public class Budget : INotifyPropertyChanged
             IEnumerable<Transaction> expenses = transactions.OrderBy(x => x.Value);
             int count = transactions.Count;
 
-            foreach (Transaction transaction in transactions)
+            foreach (Transaction transaction in expenses)
             {
                 transactions.Add(transaction);
             }
@@ -771,7 +773,7 @@ public class Budget : INotifyPropertyChanged
                 } else
                 {
                     Transaction exp = trans.Transaction;
-                    AddExpense(exp.Value, exp.Description, transactionDate, exp.Bin, exp.GetDrawerExp(), exp.GetDrawer());
+                    AddExpense(exp.Value, exp.Description, transactionDate, exp.Bin, exp.DrawerExp, exp.DrawerGoal);
                     repeatedTrans[index].Transaction.Date = transactionDate; //new Expense
                     //{
                     //    Value = exp.Value,

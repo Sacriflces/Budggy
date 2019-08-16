@@ -43,8 +43,8 @@ namespace Budggy
             }
         }
 
-        public string DrawerGoal;
-        public bool DrawerExp;
+        public string DrawerGoal = string.Empty;
+        public bool DrawerExp = true;
         public bool IncomeSplit = false;
         public string IncomeString;
         public int DrawerGoalID;
@@ -60,8 +60,7 @@ namespace Budggy
             Description = destr;
             Bin = bin;
             Date = date; //new myDateTime(date);
-            DateStr = date.ToString("d");
-            DrawerGoal = null;
+            DateStr = date.ToString("d");           
             DrawerExp = true;
         }
 

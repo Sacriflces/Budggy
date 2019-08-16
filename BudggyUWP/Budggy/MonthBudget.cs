@@ -199,10 +199,10 @@ namespace Budggy
             {
                 IncAmount += transaction.Value;
             } else
-            {
-                Value += transaction.Value;
+            {                
                 ExpAmount += transaction.Value;
             }
+            Value += transaction.Value;
         }
 
         internal void RemoveTransaction(Transaction transaction)

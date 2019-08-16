@@ -26,7 +26,8 @@ namespace Budggy
         }
         //have a huge list of drawers... and just return a list with drawers from a specific date to the UI
         public List<Drawer> allDrawers = new List<Drawer>();
-        public ObservableCollection<Drawer> Drawers  = new ObservableCollection<Drawer>();     
+        public ObservableCollection<Drawer> Drawers  = new ObservableCollection<Drawer>();     //could set this up how I did the four orientation images lol 
+        //LIST OF OBSERVABLECOLLECTION DRAWERS just add the drawers to this list based on their month / year and create a new one if it is different 
         //{
         //    get
         //    {
@@ -292,13 +293,16 @@ namespace Budggy
 
         public string AddTransaction(Transaction transaction)
         {
-            decimal value = Math.Round(transaction.Value * Percentage, 2);   
+            decimal value = 0;
+            if (transaction.IncomeSplit) value = Math.Round(transaction.Value * _percentage, 2);
+            else value = transaction.Value;
+            
             if (value > 0m)
             {              
                 decimal totalAmount = 0;
                 StringBuilder str = new StringBuilder();
                 Tuple<int[], decimal[], decimal[]> goalAndPerc = AddToGoals(value);
-                str.Append("_" + ID + "-" + Percentage + "(");
+                str.Append("_" + ID + "-" + _percentage + "(");
 
                 for (int i = 0; i < Goals.Count; ++i)
                 {
@@ -314,7 +318,7 @@ namespace Budggy
             } else
             {
                 if (transaction.DrawerExp) {
-                    Balance -= transaction.Value;
+                    Balance += transaction.Value;
                     int index = Drawers.IndexOf(Drawers.Where(x => String.Compare(x.Name, transaction.DrawerGoal) == 0
                                 && x.Month == transaction.Date.Month && x.Year == transaction.Date.Year).FirstOrDefault());
                     if (index != -1)
@@ -331,7 +335,7 @@ namespace Budggy
                     }
                     else
                     {
-                        Balance -= transaction.Value;
+                        Balance += transaction.Value;
                     }
                 }
 
@@ -345,6 +349,7 @@ namespace Budggy
             if (transaction.Value > 0m)
             {
                 char[] separators = { '(', ')' };
+                splitString = splitString.Replace(")", "");
                 string[] binGoalStrs = splitString.Split(separators);
                 string[] temp = binGoalStrs[0].Split('-');
                 decimal value = Math.Round(transaction.Value * Convert.ToDecimal(temp[1]));
@@ -352,20 +357,24 @@ namespace Budggy
                 int goalID;
                 decimal goalPerc;
                 int index;
+                decimal valTemp;
 
-                string[] goalStrs = binGoalStrs[1].Split('|');
-                for (int i = 0; i < goalStrs.Count(); ++i)
+                if(String.Compare("", binGoalStrs[1]) != 0)
                 {
-                    temp = goalStrs[i].Split('-');
-                    goalID = Convert.ToInt32(temp[0]);
-                    goalPerc = Convert.ToDecimal(temp[1]);
-                    index = Goals.IndexOf(Goals.Where(x => x.ID == goalID).FirstOrDefault());
-                    Goals[index].Value -= value * goalPerc;
-                    BinAmount -= value * goalPerc;
-                }
+                    binGoalStrs[1] = binGoalStrs[1].Remove(0, 1);
+                    string[] goalStrs = binGoalStrs[1].Split('|');
+                    for (int i = 0; i < goalStrs.Count(); ++i)
+                    {
+                        temp = goalStrs[i].Split('-');
+                        goalID = Convert.ToInt32(temp[0]);
+                        goalPerc = Convert.ToDecimal(temp[1]);
+                        valTemp = Math.Round(value * goalPerc, 2);
+                        index = Goals.IndexOf(Goals.Where(x => x.ID == goalID).FirstOrDefault());
+                        Goals[index].Value -= valTemp;
+                        BinAmount -= valTemp;
+                    }
+                }                
                 Balance -= BinAmount;
-
-
             }
             else
             {
@@ -459,8 +468,7 @@ namespace Budggy
                 goalAndPerc.Item1[goalIndex] = goal.ID;
                 goalAndPerc.Item2[goalIndex] = goal.Percentage;
                 goalAndPerc.Item3[goalIndex] = Math.Round(val * goal.Percentage, 2);
-                splitAmount += goalAndPerc.Item3[goalIndex++];
-                ++goalIndex;
+                splitAmount += goalAndPerc.Item3[goalIndex++];                
             }
 
             if (percentage > 1)
@@ -474,10 +482,10 @@ namespace Budggy
             goalIndex = 0;
             //2. then remove part of the adjVal and insert into the goals
             //need to test this to see if adjVal -= splitAmount works outside of the if and else.
-            if (splitAmount != val * percentage)
-            {
-                goalAndPerc.Item3[goalIndex] += ((val * percentage) - splitAmount);
-            }
+            //if (splitAmount != val * percentage)
+            //{
+            //    goalAndPerc.Item3[goalIndex] += ((val * percentage) - splitAmount);
+            //}
 
             foreach (Goal goal in Goals)
             {
@@ -492,7 +500,8 @@ namespace Budggy
                 else
                 {
                     goal.Value += goalAndPerc.Item3[goalIndex];
-                }                
+                }
+                ++goalIndex;
             }
 
             return goalAndPerc;
