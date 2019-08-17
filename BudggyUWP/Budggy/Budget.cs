@@ -597,7 +597,7 @@ public class Budget : INotifyPropertyChanged
 
             foreach (Bin bin in Bins)
             {
-                foreach(Drawer drawer in bin.Drawers)
+                foreach(Drawer drawer in bin.CurrDrawers)
                 {
                   if(drawer.Month == DateTime.Now.Month && drawer.Year == DateTime.Now.Year)
                     newDefault += drawer.AvailAmount;

@@ -17,7 +17,7 @@ namespace Budggy
 
         #endregion
 
-       
+       //add Year / Month fields, so that I can switch which list CurrDrawers return when it is called. I think i can also remove drawers from CurrDrawers as well. we'll see 
 
         void OnPropertyChange(string propertyName)
         {
@@ -25,13 +25,20 @@ namespace Budggy
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
         //have a huge list of drawers... and just return a list with drawers from a specific date to the UI
-        public List<Drawer> allDrawers = new List<Drawer>();
-        public ObservableCollection<Drawer> Drawers  = new ObservableCollection<Drawer>();     //could set this up how I did the four orientation images lol 
+        public List<DrawerContainer> AllDrawers = new List<DrawerContainer>();
+        public ObservableCollection<Drawer> CurrDrawers {
+            get
+            {
+                if (AllDrawers.Count == 0) AllDrawers.Add(new DrawerContainer(DateTime.Now.Year, DateTime.Now.Month));
+                return AllDrawers[AllDrawers.Count - 1].Drawers;
+            }
+
+        }     //could set this up how I did the four orientation images lol 
         //LIST OF OBSERVABLECOLLECTION DRAWERS just add the drawers to this list based on their month / year and create a new one if it is different 
         //{
         //    get
         //    {
-        //        List<Drawer> temp = allDrawers.Where(x => x.Month == DateTime.Now.Month && x.Year == DateTime.Now.Year).ToList();
+        //        List<Drawer> temp = AllDrawers.Where(x => x.Month == DateTime.Now.Month && x.Year == DateTime.Now.Year).ToList();
         //        return new ObservableCollection<Drawer>(temp.AsEnumerable());
         //    }
         //}   
@@ -149,22 +156,32 @@ namespace Budggy
 
         public void CreateDrawer(string name = null, decimal maximum = 100m)
         {
-            if(Drawers.IndexOf(Drawers.Where(x => string.Compare(x.Name, name) == 0 && x.Month == DateTime.Now.Month
-            && x.Year == DateTime.Now.Year).FirstOrDefault()) != -1)
-                return;
-
-            Drawer item = new Drawer(name, maximum, DateTime.Now, Name)
+            int index;
+            index = AllDrawers.IndexOf(AllDrawers.Where(x => x.Year == DateTime.Now.Year && x.Month == DateTime.Now.Month).FirstOrDefault());
+            if(index == -1)
             {
-                ID = IDGenerator.RandIDGen(10000, GetSortedDrawerIDs())
-            };
+                AllDrawers.Add(new DrawerContainer(DateTime.Now.Year, DateTime.Now.Month));
+                index = AllDrawers.Count - 1;
+            }
 
-            Drawers.Add(item);
+            AllDrawers[index].CreateDrawer(Name, name, maximum);
+            //if(Drawers.IndexOf(Drawers.Where(x => string.Compare(x.Name, name) == 0 && x.Month == DateTime.Now.Month
+            //&& x.Year == DateTime.Now.Year).FirstOrDefault()) != -1)
+             //   return;
+             
+
+           // Drawer item = new Drawer(name, maximum, DateTime.Now, Name)
+           // {
+            //    ID = IDGenerator.RandIDGen(10000, GetSortedDrawerIDs())
+            //};
+
+           // Drawers.Add(item);
         }
 
         private int[] GetSortedDrawerIDs()
         {
             SortedSet<int> drawerIds = new SortedSet<int>();
-            List<Drawer> currentDrawers = Drawers.ToList().Where(x=> x.Month == DateTime.Now.Month && x.Year == DateTime.Now.Year).ToList();
+            List<Drawer> currentDrawers = CurrDrawers.ToList().Where(x=> x.Month == DateTime.Now.Month && x.Year == DateTime.Now.Year).ToList();
             
             int[] drawerIDarr = new int[currentDrawers.Count];
 
@@ -183,14 +200,14 @@ namespace Budggy
 
             return drawerIDarr;
         }
-
+        //Fix for Drawer Change
         public void RemoveDrawer(string name, int year, int month)
         {
-            int index = Drawers.IndexOf(Drawers.Where(x => string.Compare(x.Name, name) == 0
+            int index = CurrDrawers.IndexOf(CurrDrawers.Where(x => string.Compare(x.Name, name) == 0
             && x.Year == year && x.Month == month).FirstOrDefault());
             if(index != -1)
             {
-                Drawers.RemoveAt(index);
+                CurrDrawers.RemoveAt(index);
             }
         }
 
@@ -290,7 +307,7 @@ namespace Budggy
                     Balance += exp.Value;
                 }
             } */
-
+        //Fix for Drawer Change
         public string AddTransaction(Transaction transaction)
         {
             decimal value = 0;
@@ -319,12 +336,12 @@ namespace Budggy
             {
                 if (transaction.DrawerExp) {
                     Balance += transaction.Value;
-                    int index = Drawers.IndexOf(Drawers.Where(x => String.Compare(x.Name, transaction.DrawerGoal) == 0
+                    int index = CurrDrawers.IndexOf(CurrDrawers.Where(x => String.Compare(x.Name, transaction.DrawerGoal) == 0
                                 && x.Month == transaction.Date.Month && x.Year == transaction.Date.Year).FirstOrDefault());
                     if (index != -1)
                     {
-                        Drawers[index].AddExpense(transaction);
-                        transaction.DrawerGoalID = Drawers[index].ID;
+                        CurrDrawers[index].AddExpense(transaction);
+                        transaction.DrawerGoalID = CurrDrawers[index].ID;
                     }                  
                 } else {
                     int index = Goals.IndexOf(Goals.Where(x => String.Compare(x.Name, transaction.DrawerGoal) == 0).FirstOrDefault());
@@ -343,7 +360,7 @@ namespace Budggy
 
             return "_" + ID + "-" + Percentage + "()";       
         }
-
+        //Fix for Drawer Change
         public void RemoveTransaction(Transaction transaction, string splitString)
         {
             if (transaction.Value > 0m)
@@ -381,11 +398,11 @@ namespace Budggy
                 if (transaction.DrawerExp)
                 {
                     Balance -= transaction.Value;
-                    int index = Drawers.IndexOf(Drawers.Where(x => x.ID == transaction.DrawerGoalID
+                    int index = CurrDrawers.IndexOf(CurrDrawers.Where(x => x.ID == transaction.DrawerGoalID
                                 && x.Month == transaction.Date.Month && x.Year == transaction.Date.Year).FirstOrDefault());
                     if (index != -1)
                     {
-                        Drawers[index].RemoveExpense(transaction);
+                        CurrDrawers[index].RemoveExpense(transaction);
                     }
                 }
                 else
@@ -583,18 +600,97 @@ namespace Budggy
 
         public void RefreshDrawers()
         {
-            foreach (Drawer drawer in Drawers)
+            foreach (Drawer drawer in AllDrawers[AllDrawers.Count -1].Drawers)
             {
                 if (drawer.Month != DateTime.Now.Month && drawer.Year != DateTime.Now.Year)
                 {
-                    Drawers.Add(drawer.Refresh());
-                }
-                
+                   CreateDrawer(drawer.Refresh());
+                }                
             }
         }
-        
+
+        public void CreateDrawer(Drawer drawer)
+        {
+            int index;
+            index = AllDrawers.IndexOf(AllDrawers.Where(x => x.Year == DateTime.Now.Year && x.Month == DateTime.Now.Month).FirstOrDefault());
+            if (index == -1)
+            {
+                AllDrawers.Add(new DrawerContainer(DateTime.Now.Year, DateTime.Now.Month));
+                index = AllDrawers.Count - 1;
+            }
+
+            AllDrawers[index].AddDrawer(drawer);
+            //if(Drawers.IndexOf(Drawers.Where(x => string.Compare(x.Name, name) == 0 && x.Month == DateTime.Now.Month
+            //&& x.Year == DateTime.Now.Year).FirstOrDefault()) != -1)
+            //   return;
+
+
+            // Drawer item = new Drawer(name, maximum, DateTime.Now, Name)
+            // {
+            //    ID = IDGenerator.RandIDGen(10000, GetSortedDrawerIDs())
+            //};
+
+            // Drawers.Add(item);
+        }
+
         //need a function to change the priority of goals correctly
     }
+
+    public class DrawerContainer
+    {
+        public int Year;
+        public int Month;
+        public ObservableCollection<Drawer> Drawers = new ObservableCollection<Drawer>();
+
+        public DrawerContainer(int year, int month)
+        {
+            Year = year;
+            Month = month;
+        }
+
+        public void CreateDrawer(string binName, string name = null, decimal maximum = 100m)
+        {
+            if (Drawers.IndexOf(Drawers.Where(x => string.Compare(x.Name, name) == 0).FirstOrDefault()) != -1)
+                return;
+
+            Drawer item = new Drawer(name, maximum, new DateTime(Year, Month, 1), binName)
+            {
+                ID = IDGenerator.RandIDGen(10000, GetSortedDrawerIDs())
+            };
+
+            Drawers.Add(item);
+        }
+
+        public void AddDrawer(Drawer drawer)
+        {
+            if (drawer.Year != Year || drawer.Month != Month) return;
+            Drawers.Add(drawer);
+        }
+
+        private int[] GetSortedDrawerIDs()
+        {
+            SortedSet<int> drawerIds = new SortedSet<int>();
+            List<Drawer> currentDrawers = Drawers.ToList();
+
+            int[] drawerIDarr = new int[currentDrawers.Count];
+
+            for (int i = 0; i < currentDrawers.Count; ++i)
+            {
+                drawerIds.Add(currentDrawers[i].ID);
+            }
+
+            SortedSet<int>.Enumerator enumerator = drawerIds.GetEnumerator();
+
+            for (int i = 0; i < currentDrawers.Count; ++i)
+            {
+                drawerIDarr[i] = enumerator.Current;
+                enumerator.MoveNext();
+            }
+
+            return drawerIDarr;
+        }
+    }
+
 
 }
 
