@@ -232,7 +232,7 @@ namespace BudggyUWP
         {
             if (DrawGoalTSW.IsOn)
             {
-                DrawersCB.ItemsSource = budget.Bins[BinsCB.SelectedIndex].Drawers;
+                DrawersCB.ItemsSource = budget.Bins[BinsCB.SelectedIndex].CurrDrawers;
             } else
             {
                 DrawersCB.ItemsSource = budget.Bins[BinsCB.SelectedIndex].Goals;
@@ -300,7 +300,7 @@ namespace BudggyUWP
             {           
                 if (DrawGoalTSW.IsOn)
                  {
-                DrawersCB.ItemsSource = budget.Bins[BinsCB.SelectedIndex].Drawers;
+                DrawersCB.ItemsSource = budget.Bins[BinsCB.SelectedIndex].CurrDrawers;
                  }
                 else
                 {

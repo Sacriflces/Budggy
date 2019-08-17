@@ -29,8 +29,15 @@ namespace Budggy
         public ObservableCollection<Drawer> CurrDrawers {
             get
             {
-                if (AllDrawers.Count == 0) AllDrawers.Add(new DrawerContainer(DateTime.Now.Year, DateTime.Now.Month));
-                return AllDrawers[AllDrawers.Count - 1].Drawers;
+                int index = AllDrawers.IndexOf(AllDrawers.Where(x => x.Month == Month && x.Year == Year).FirstOrDefault());
+
+                if (index == -1)
+                {
+                    if (AllDrawers.Count > 0) RefreshDrawers();
+                    AllDrawers.Add(new DrawerContainer(Year, Month));
+                    index = AllDrawers.Count - 1;
+                } 
+                return AllDrawers[index].Drawers;
             }
 
         }     //could set this up how I did the four orientation images lol 
@@ -118,7 +125,8 @@ namespace Budggy
         
 
         internal int ID { get; set; }
-
+        public int Month = DateTime.Now.Month;
+        public int Year = DateTime.Now.Year;
         public Bin()
         {
 
@@ -157,10 +165,12 @@ namespace Budggy
         public void CreateDrawer(string name = null, decimal maximum = 100m)
         {
             int index;
+            DrawerContainer.DCCompare dC = new DrawerContainer.DCCompare();
             index = AllDrawers.IndexOf(AllDrawers.Where(x => x.Year == DateTime.Now.Year && x.Month == DateTime.Now.Month).FirstOrDefault());
             if(index == -1)
-            {
+            { //Organize by Date, latest date at the bottom
                 AllDrawers.Add(new DrawerContainer(DateTime.Now.Year, DateTime.Now.Month));
+                AllDrawers.Sort(dC);
                 index = AllDrawers.Count - 1;
             }
 
@@ -602,7 +612,7 @@ namespace Budggy
         {
             foreach (Drawer drawer in AllDrawers[AllDrawers.Count -1].Drawers)
             {
-                if (drawer.Month != DateTime.Now.Month && drawer.Year != DateTime.Now.Year)
+                if (drawer.Month != DateTime.Now.Month || drawer.Year != DateTime.Now.Year)
                 {
                    CreateDrawer(drawer.Refresh());
                 }                
@@ -612,10 +622,13 @@ namespace Budggy
         public void CreateDrawer(Drawer drawer)
         {
             int index;
+            DrawerContainer.DCCompare dC = new DrawerContainer.DCCompare();
             index = AllDrawers.IndexOf(AllDrawers.Where(x => x.Year == DateTime.Now.Year && x.Month == DateTime.Now.Month).FirstOrDefault());
             if (index == -1)
             {
+                //Organize by Date, latest date at the bottom
                 AllDrawers.Add(new DrawerContainer(DateTime.Now.Year, DateTime.Now.Month));
+                AllDrawers.Sort(dC);
                 index = AllDrawers.Count - 1;
             }
 
@@ -688,6 +701,26 @@ namespace Budggy
             }
 
             return drawerIDarr;
+        }
+
+        public class DCCompare : IComparer<DrawerContainer>
+        {
+            public int Compare(DrawerContainer x, DrawerContainer y)
+            {
+                if (x.Year > y.Year)
+                    return 1;
+                else if (x.Year < y.Year)
+                    return -1;
+                else
+                {
+                    if (x.Month > y.Month)
+                        return 1;
+                    else if (x.Month < y.Month)
+                        return -1;
+                    else
+                        return 0;
+                }
+            }
         }
     }
 

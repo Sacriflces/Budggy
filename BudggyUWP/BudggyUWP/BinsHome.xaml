@@ -208,14 +208,19 @@
                                                      Margin="0,0,10,0"/>
                                 <TextBlock Text="{Binding CurrentSpent, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                        Margin="0,0,10,0"/>
-                                <TextBox Text="{Binding Maximum, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                <TextBox Text="{Binding AvailAmount, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                      Margin="0,0,10,0"
                                          KeyDown="TextBox_KeyDown_2"/>
                                 <Button Name="DrawerDelBT" FontFamily="Segoe MDL2 Assets"
                                                     Content="&#xE738;"
                                                     Click="DrawerDelBT_Click"
                                                      />
-                            </StackPanel>
+                                <TextBox Text="{Binding MonthlyAmount, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                    Margin="0,0,10,0"
+                                         KeyDown="TextBox_KeyDown_3"/>
+                                    <ToggleButton Content="RollOver" 
+                                                  Margin="0,0,10,0" Click="ToggleButton_Click"/>
+                                </StackPanel>
 
                         </DataTemplate>
                     </ListView.ItemTemplate>
@@ -449,7 +454,7 @@
                                 Click="DrawerCreBT_Click"
                                />
 
-                            <ListView Name ="DrawerLV" ItemsSource="{x:Bind Drawers}"  >
+                            <ListView Name ="DrawerLV" ItemsSource="{x:Bind CurrDrawers}"  >
                                 <ListView.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel
@@ -464,7 +469,7 @@
                                                      Margin="0,0,10,0"/>
                                             <TextBlock Text="{Binding CurrentSpent, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                        Margin="0,0,10,0"/>
-                                            <TextBox Text="{Binding Maximum, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                            <TextBox Text="{Binding AvailAmount, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                      Margin="0,0,10,0"/>
                                             <Button Name="DrawerDelBT" FontFamily="Segoe MDL2 Assets"
                                                     Content="&#xE738;"

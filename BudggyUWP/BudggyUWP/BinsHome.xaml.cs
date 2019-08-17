@@ -46,7 +46,7 @@ namespace BudggyUWP
                 BinsLV.ItemsSource = budget.Bins;
                 BinsEditLV.ItemsSource = budget.Bins;
 
-                DrawerLVNV.ItemsSource = budget.Bins[index].Drawers;
+                DrawerLVNV.ItemsSource = budget.Bins[index].CurrDrawers;
                 GoalLVNV.ItemsSource = budget.Bins[index].Goals;
             }
            
@@ -269,7 +269,7 @@ namespace BudggyUWP
         {
             BinBackBTB.Visibility = Visibility.Visible;
             DataContext = budget.Bins[++index];
-            DrawerLVNV.ItemsSource = budget.Bins[index].Drawers;
+            DrawerLVNV.ItemsSource = budget.Bins[index].CurrDrawers;
             GoalLVNV.ItemsSource = budget.Bins[index].Goals;
             if (index == budget.Bins.Count - 1) {
                 BinNextBTB.Visibility = Visibility.Collapsed;
@@ -281,7 +281,7 @@ namespace BudggyUWP
         {
             BinNextBTB.Visibility = Visibility.Visible;
             DataContext = budget.Bins[--index];
-            DrawerLVNV.ItemsSource = budget.Bins[index].Drawers;
+            DrawerLVNV.ItemsSource = budget.Bins[index].CurrDrawers;
             GoalLVNV.ItemsSource = budget.Bins[index].Goals;
             if (index == 0)
             {
@@ -295,7 +295,7 @@ namespace BudggyUWP
             budget.AddBin("New Bin", "Description", 0);
             index = budget.Bins.Count - 1;
             DataContext = budget.Bins[index];
-            DrawerLVNV.ItemsSource = budget.Bins[index].Drawers;
+            DrawerLVNV.ItemsSource = budget.Bins[index].CurrDrawers;
             GoalLVNV.ItemsSource = budget.Bins[index].Goals;
             BinNextBTB.Visibility = Visibility.Collapsed;
 
@@ -357,6 +357,24 @@ namespace BudggyUWP
         public static string GetPageStr()
         {
             return "BinsSTR!!";
+        }
+
+        private void TextBox_KeyDown_3(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                TextBox ele = sender as TextBox;
+                Drawer drawer = ele.DataContext as Drawer;
+                drawer.MonthlyAmount = Convert.ToDecimal(ele.Text);
+                //goal percentage
+            }
+        }
+
+        private void ToggleButton_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleButton ele = sender as ToggleButton;
+            Drawer drawer = ele.DataContext as Drawer;
+            drawer.rollOver = (bool)ele.IsChecked;           
         }
     }
 }
