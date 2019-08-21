@@ -258,8 +258,8 @@ public class Budget : INotifyPropertyChanged
                 return 0;
 
             //creates the transfer.
-            transactions.Add(new Transaction(amount, "[Transfer from] " + Bins[index2].Name, Bins[index1].Name, date));
-            transactions.Add(new Transaction(-amount, "[Transfer to] " + Bins[index1].Name, Bins[index2].Name, date));
+            transactions.Add(new Transaction(amount, "[Transfer from] " + Bins[index2].Name, Bins[index1].Name, Bins[index1].ID, date));
+            transactions.Add(new Transaction(-amount, "[Transfer to] " + Bins[index1].Name, Bins[index2].Name, Bins[index2].ID, date));
 
           //  CalcBinBalance();
             return 1;
@@ -270,7 +270,7 @@ public class Budget : INotifyPropertyChanged
         public int AddIncome(decimal value, string destr, DateTime date, string mode, bool split)
         {
             int index = 1;       
-            Transaction newInc = new Transaction(value, destr, mode, date);
+            Transaction newInc = new Transaction(value, destr, mode, -1, date);
             string location = mode;
             Balance += value;
 
@@ -323,6 +323,7 @@ public class Budget : INotifyPropertyChanged
                 index = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, mode) == 0).FirstOrDefault());               
                 if (index != -1)
                 {
+                    newInc.BinID = Bins[index].ID;
                     Bins[index].AddTransaction(newInc);
                     transactions.Add(newInc);
                     AddMonthBudgetInc(newInc);
@@ -404,7 +405,7 @@ public class Budget : INotifyPropertyChanged
             int index = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, bin) == 0).FirstOrDefault());
             if (index != -1)
             {
-                exp = new Transaction(value, destr, Bins[index].Name, date);
+                exp = new Transaction(value, destr, Bins[index].Name, Bins[index].ID, date);
             }
             else
                 return;
@@ -752,7 +753,7 @@ public class Budget : INotifyPropertyChanged
         //need to test this 
         public void CheckRepeatTransac(RepeatTransaction trans, int index)
         {
-            DateTime transactionDate = new DateTime(trans.Transaction.Date.Year, trans.Transaction.Date.Month, trans.Transaction.Date.Day);            
+            DateTime transactionDate = new DateTime(trans.Date.Year, trans.Date.Month, trans.Date.Day);            
             if (trans.Monthly)
             {
                 transactionDate = transactionDate.AddMonths(trans.Frequency);
@@ -765,16 +766,15 @@ public class Budget : INotifyPropertyChanged
           
             if(DateTime.Compare(DateTime.Today, transactionDate) > -1)
             {
-                if (repeatedTrans[index].Transaction.Value > 0m)
+                if (repeatedTrans[index].Value > 0m)
                 {
-                    AddIncome(trans.Transaction.Value, trans.Transaction.Description, transactionDate, trans.Transaction.Bin, trans.Transaction.IncomeSplit);
-                    repeatedTrans[index].Transaction.Date = transactionDate;
+                    AddIncome(trans.Value, trans.Description, transactionDate, trans.Bin, trans.IncomeSplit);
+                    repeatedTrans[index].Date = transactionDate;
                        // = new Income(trans.Transaction.Value, trans.Transaction.Description, trans.Transaction.Bin, transactionDate);
                 } else
                 {
-                    Transaction exp = trans.Transaction;
-                    AddExpense(exp.Value, exp.Description, transactionDate, exp.Bin, exp.DrawerExp, exp.DrawerGoal);
-                    repeatedTrans[index].Transaction.Date = transactionDate; //new Expense
+                    AddExpense(trans.Value, trans.Description, transactionDate, trans.Bin, trans.DrawerExp, trans.DrawerGoal);
+                    repeatedTrans[index].Date = transactionDate; //new Expense
                     //{
                     //    Value = exp.Value,
                     //    Description = exp.Description,
@@ -792,22 +792,13 @@ public class Budget : INotifyPropertyChanged
 
         public void AddRepeatTransaction(Transaction trans, int frequency = 1, bool monthly = true)
         {
-            int index = repeatedTrans.IndexOf(repeatedTrans.Where(x => (string.Compare(x.Transaction.Bin, trans.Bin) == 0) 
-            && (string.Compare(x.Transaction.Description, trans.Description) == 0) && 
-            (x.Transaction.Value == trans.Value)).FirstOrDefault());
+            int index = repeatedTrans.IndexOf(repeatedTrans.Where(x => (string.Compare(x.Bin, trans.Bin) == 0) 
+            && (string.Compare(x.Description, trans.Description) == 0) && 
+            (x.Value == trans.Value)).FirstOrDefault());
 
             if(index == -1)
             {
-                RepeatTransaction repeat = new RepeatTransaction
-                {
-                    Transaction = trans,
-                    Frequency = frequency,
-                    Monthly = monthly,
-                    ValueStr = trans.ValueStr,
-                    Bin = trans.Bin,
-                    Description = trans.Description,
-                };
-
+                RepeatTransaction repeat = new RepeatTransaction(trans, frequency, monthly);       
                 repeatedTrans.Add(repeat);
             }
         }
@@ -817,7 +808,8 @@ public class Budget : INotifyPropertyChanged
             int index = repeatedTrans.IndexOf(repeatedTrans.Where(x => string.Compare(x.Bin, repeatTrans.Bin) == 0 &&
             string.Compare(x.Description, repeatTrans.Description) == 0 &&
             x.Frequency == repeatTrans.Frequency &&
-            x.Monthly == repeatTrans.Monthly).FirstOrDefault());
+            x.Monthly == repeatTrans.Monthly &&
+            x.Value == repeatTrans.Value).FirstOrDefault());
             if(index != -1)
             {
                 repeatedTrans.RemoveAt(index);

@@ -7,7 +7,7 @@ using System.ComponentModel;
 
 namespace Budggy
 {
-    public class RepeatTransaction : INotifyPropertyChanged
+    public class RepeatTransaction :  Transaction, INotifyPropertyChanged
     {
         #region INotifyPropertyChanged Members
 
@@ -21,40 +21,40 @@ namespace Budggy
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public Transaction Transaction;
+       // public Transaction Transaction;
 
-        private string _valueStr;
-        public string ValueStr
-        {
-            get { return _valueStr; }
-            set
-            {
-                _valueStr = value;
-                OnPropertyChange("ValueStr");
-            }
-        }
+        //private string _valueStr;
+        //public string ValueStr
+        //{
+        //    get { return _valueStr; }
+        //    set
+        //    {
+        //        _valueStr = value;
+        //        OnPropertyChange("ValueStr");
+        //    }
+        //}
 
-        private string _description;
-        public string Description
-        {
-            get { return _description; }
-            set
-            {
-                _description = value;
-                OnPropertyChange("Description");
-            }
-        }
+        //private string _description;
+        //public string Description
+        //{
+        //    get { return _description; }
+        //    set
+        //    {
+        //        _description = value;
+        //        OnPropertyChange("Description");
+        //    }
+        //}
 
-        private string _bin;
-        public string Bin
-        {
-            get { return _bin; }
-            set
-            {
-                _bin = value;
-                OnPropertyChange("ValueStr");
-            }
-        }
+        //private string _bin;
+        //public string Bin
+        //{
+        //    get { return _bin; }
+        //    set
+        //    {
+        //        _bin = value;
+        //        OnPropertyChange("ValueStr");
+        //    }
+        //}
 
         private int _freq;
         public int Frequency
@@ -80,6 +80,20 @@ namespace Budggy
         public RepeatTransaction()
         {
 
+        }
+
+        public RepeatTransaction(Transaction transaction, int freq = 1, bool monthly = true)
+        {
+            Monthly = monthly;
+            Frequency = freq;
+            Value = transaction.Value;
+            Description = transaction.Description;
+            Bin = transaction.Bin;
+            Date = transaction.Date;
+            DrawerGoal = transaction.DrawerGoal;
+            DrawerExp = transaction.DrawerExp;
+            IncomeSplit = transaction.IncomeSplit;
+            DrawerGoalID = transaction.DrawerGoalID;            
         }
     }
 }

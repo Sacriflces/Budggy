@@ -94,7 +94,8 @@ namespace Budggy
         }
 
         internal int ID { get; set; }
-
+        internal int BinID { get; set; }
+        public bool ReduceAfterExp = false;
         public Goal()
         {
             Value = 0;
@@ -105,11 +106,13 @@ namespace Budggy
 
         public void AddExpense(Transaction transaction)
         {
+            if (ReduceAfterExp) GoalVal += transaction.Value;
             Value += transaction.Value;
         }
 
         public void RemoveExpense(Transaction transaction)
         {
+            if (ReduceAfterExp) GoalVal -= transaction.Value;
             Value -= transaction.Value;
         }
         

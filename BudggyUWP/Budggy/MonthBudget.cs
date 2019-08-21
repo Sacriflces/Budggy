@@ -96,7 +96,7 @@ namespace Budggy
         public decimal BudgetVal { get; set; }
 
         private decimal val;
-        public decimal Value { get { return val; }
+        public decimal Value { get { return val; } //remaining budget amount
             set {
                 val = Math.Round(value, 2, MidpointRounding.AwayFromZero);
                 OnPropertyChanged("Value");

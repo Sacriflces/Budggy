@@ -67,7 +67,7 @@ namespace Budggy
         }
 
         public string BinName;
-
+        internal int BinID { get; set; }
         private int _month;
         public int Month
         {
@@ -114,6 +114,7 @@ namespace Budggy
         private Drawer(Drawer prev)
         {
             BinName = prev.BinName;
+            BinID = prev.BinID;
             Name = prev.Name;            
             MonthlyAmount = prev.MonthlyAmount;
             CurrentSpent = 0;

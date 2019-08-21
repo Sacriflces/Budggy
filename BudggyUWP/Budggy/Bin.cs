@@ -174,7 +174,7 @@ namespace Budggy
                 index = AllDrawers.Count - 1;
             }
 
-            AllDrawers[index].CreateDrawer(Name, name, maximum);
+            AllDrawers[index].CreateDrawer(Name, ID, name, maximum);
             //if(Drawers.IndexOf(Drawers.Where(x => string.Compare(x.Name, name) == 0 && x.Month == DateTime.Now.Month
             //&& x.Year == DateTime.Now.Year).FirstOrDefault()) != -1)
              //   return;
@@ -232,7 +232,8 @@ namespace Budggy
                 Name = name,
                 GoalVal = goalVal,
                 Priority = Goals.Count,
-                ID = iD
+                ID = iD,
+                BinID = ID
             };
             
             Goals.Add(item);
@@ -661,14 +662,15 @@ namespace Budggy
             Month = month;
         }
 
-        public void CreateDrawer(string binName, string name = null, decimal maximum = 100m)
+        public void CreateDrawer(string binName, int binID, string name = null, decimal maximum = 100m)
         {
             if (Drawers.IndexOf(Drawers.Where(x => string.Compare(x.Name, name) == 0).FirstOrDefault()) != -1)
                 return;
 
             Drawer item = new Drawer(name, maximum, new DateTime(Year, Month, 1), binName)
             {
-                ID = IDGenerator.RandIDGen(10000, GetSortedDrawerIDs())
+                ID = IDGenerator.RandIDGen(10000, GetSortedDrawerIDs()),
+                BinID = binID
             };
 
             Drawers.Add(item);
