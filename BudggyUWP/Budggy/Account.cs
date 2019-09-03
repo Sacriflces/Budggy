@@ -13,14 +13,14 @@ namespace Budggy
         static public string Username = "Jmarcus2004";
         static public string Password = "";
         static public string Email = "";
-        static private string ConnectionStr = "Data Source=75.182.88.195, 1434; Initial Catalog=Budggy; User ID=sa; Password=Stormer1;"; // Connect " +
+        static private string ConnectionStr = @"Data Source=75.182.88.195, 1434; Initial Catalog=Budggy; User ID=sa; Password=Stormer1;"; // Connect " +
         //"Timeout=30; Encrypt=False; TrustServerCertificate=False; ApplicationIntent=ReadWrite; MultiSubnetFailover=False";
 
         //"Server=75.182.88.195, 1434;Database=Budggy;User Id=sa; Password=Stormer1;"; 
 
         static public ObservableCollection<Bin> SelectBins()
         {
-            string getBinsQuery = "SELECT * FROM [Bins] WHERE User =" + "'" + Username + "'";
+            string getBinsQuery = "SELECT * FROM [Bins] WHERE [User] =" + "'" + Username + "'";
             var Bins = new ObservableCollection<Bin>();
 
             try
@@ -37,7 +37,15 @@ namespace Budggy
                             {
                                 while (reader.Read())
                                 {
-
+                                    Bin Bin = new Bin()
+                                    {
+                                        ID = reader.GetInt32(0),
+                                        Name = reader.GetString(1),
+                                        Description = reader.GetString(2),
+                                        Balance = reader.GetDecimal(3),
+                                        Percentage = reader.GetDecimal(4),
+                                    };
+                                    Bins.Add(Bin);
                                 }
                             }
                         }
@@ -48,7 +56,7 @@ namespace Budggy
             {
                
             }
-
+            
             return Bins;
         }
 /*

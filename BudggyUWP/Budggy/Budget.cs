@@ -34,11 +34,11 @@ public class Budget : INotifyPropertyChanged
     }
 
         public ObservableCollection<Bin> Bins = new ObservableCollection<Bin>()  {
-           new Bin("Savings", "", .3m),
+          /* new Bin("Savings", "", .3m),
            new Bin("Entertainment", "Going out money and gaming money, and whatever else I need to make this description longer", .5m) { ID = 1 },
            new Bin("Gas", "", .1m){ ID = 2 },
            new Bin("Food", "", .05m){ ID = 3 },
-           new Bin("Presents", "Money for Presents lol", .05m){ ID = 4 }, 
+           new Bin("Presents", "Money for Presents lol", .05m){ ID = 4 }, */
     };
     public ObservableCollection<Transaction> transactions = new ObservableCollection<Transaction>();
 
@@ -85,7 +85,9 @@ public class Budget : INotifyPropertyChanged
              also need to add goals to the bin where a certain % of the money entering a bin will put allocated to it. It'll also STOP receiving part of the income when its full.
              The goals will also have priorities associated with them, so the amount stored will be used up if the bin amount goes to 0.
              -Need to figure out how to use the money in the goals... for example I wanted x amount saved for presents. I use some, and then it begins to fill up again since it is not maxed
-             - add a function to add an expense to the goal? (add the goal to the description)*/
+             - add a function to add an expense to the goal? (add the goal to the description)
+             You know I could actually at a boolean that let me know when something has been edited, so I can add the changes to the database*/
+             
         public ObservableCollection<MonthBudget> MonthlyBudgets = new ObservableCollection<MonthBudget>() {
             
         };      
@@ -101,7 +103,7 @@ public class Budget : INotifyPropertyChanged
 
         public Budget()
         {
-            Account.SelectBins();
+            Bins = Account.SelectBins();
             DefaultMonthlyBudget = 0;
             Balance = 0;
          /*   if(MonthlyBudgets.Count == 0)
