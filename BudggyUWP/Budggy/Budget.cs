@@ -101,6 +101,7 @@ public class Budget : INotifyPropertyChanged
 
         public Budget()
         {
+            Account.SelectBins();
             DefaultMonthlyBudget = 0;
             Balance = 0;
          /*   if(MonthlyBudgets.Count == 0)
