@@ -59,7 +59,102 @@ namespace Budggy
             
             return Bins;
         }
-/*
+
+        static public void UpdateBin(Bin bin)
+        {
+            try
+            {
+                using(SqlConnection conn = new SqlConnection(ConnectionStr))
+                {
+                    conn.Open();
+                    if (conn.State == System.Data.ConnectionState.Open)
+                    {
+                        using (SqlCommand command = conn.CreateCommand())
+                        {
+                            command.CommandType = System.Data.CommandType.StoredProcedure;
+                            command.CommandText = "stpUpdateBin";
+
+                            //add parameters
+                            command.Parameters.Add(new SqlParameter("ID", bin.ID));
+                            command.Parameters.Add(new SqlParameter("Name", bin.Name));
+                            command.Parameters.Add(new SqlParameter("Description", bin.Description));
+                            command.Parameters.Add(new SqlParameter("Balance", bin.Balance));
+                            command.Parameters.Add(new SqlParameter("Percentage", bin.Percentage));
+                            command.Parameters.Add(new SqlParameter("User", Username));
+
+                            command.ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+        }
+
+        static public void DeleteBin(Bin bin)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(ConnectionStr))
+                {
+                    conn.Open();
+                    if (conn.State == System.Data.ConnectionState.Open)
+                    {
+                        using (SqlCommand command = conn.CreateCommand())
+                        {
+                            command.CommandType = System.Data.CommandType.StoredProcedure;
+                            command.CommandText = "stpDeleteBin";
+
+                            //add parameters
+                            command.Parameters.Add(new SqlParameter("ID", bin.ID));                            
+                            command.Parameters.Add(new SqlParameter("User", Username));
+
+                            command.ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+        }
+
+        static public void InsertBin(Bin bin)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(ConnectionStr))
+                {
+                    conn.Open();
+                    if (conn.State == System.Data.ConnectionState.Open)
+                    {
+                        using (SqlCommand command = conn.CreateCommand())
+                        {
+                            command.CommandType = System.Data.CommandType.StoredProcedure;
+                            command.CommandText = "stpInsertBin";
+
+                            //add parameters
+                            command.Parameters.Add(new SqlParameter("ID", bin.ID));
+                            command.Parameters.Add(new SqlParameter("Name", bin.Name));
+                            command.Parameters.Add(new SqlParameter("Description", bin.Description));
+                            command.Parameters.Add(new SqlParameter("Balance", bin.Balance));
+                            command.Parameters.Add(new SqlParameter("Percentage", bin.Percentage));
+                            command.Parameters.Add(new SqlParameter("User", Username));
+
+                            command.ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+        }
+/*  Need Select, Update, and Delete functions 
         static public List<Transaction> SelectTransactions()
         {
 

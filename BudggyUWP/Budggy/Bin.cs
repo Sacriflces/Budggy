@@ -22,7 +22,7 @@ namespace Budggy
         void OnPropertyChange(string propertyName)
         {
             if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));            
         }
         //have a huge list of drawers... and just return a list with drawers from a specific date to the UI
         public List<DrawerContainer> AllDrawers = new List<DrawerContainer>();
