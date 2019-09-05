@@ -17,6 +17,8 @@ namespace Budggy
  * 
  * Need to change the implementations of the delete functions. I can pass the object instead of its description only for incomes though. I don't want to be able
  * to delete the savings bin
+ * Later on, when we add a transaction or bin, or w/e while there is no internet connection. Set the Id to -1 if it cannot access the database and add it to a update list
+ * that will be saved locally. It will insert into the database once the internet connection is restored.
  */
 public class Budget : INotifyPropertyChanged
     {
@@ -272,10 +274,16 @@ public class Budget : INotifyPropertyChanged
         //Adds an income to the incs list either splitting it into the bins or into one list.
         public int AddIncome(decimal value, string destr, DateTime date, string mode, bool split)
         {
-            int index = 1;       
-            Transaction newInc = new Transaction(value, destr, mode, -1, date);
+            int index = 1;
+            Transaction newInc = new Transaction(value, destr, mode, -1, date)
+            {
+                BinID = -1,
+                TransactionID = Account.GenerateTransactionID(date)
+            };           
+            
             string location = mode;
             Balance += value;
+            
 
             if (split)
             {
@@ -408,7 +416,10 @@ public class Budget : INotifyPropertyChanged
             int index = Bins.IndexOf(Bins.Where(x => string.Compare(x.Name, bin) == 0).FirstOrDefault());
             if (index != -1)
             {
-                exp = new Transaction(value, destr, Bins[index].Name, Bins[index].ID, date);
+                exp = new Transaction(value, destr, Bins[index].Name, Bins[index].ID, date)
+                {
+                    TransactionID = Account.GenerateTransactionID(date)
+                };
             }
             else
                 return;

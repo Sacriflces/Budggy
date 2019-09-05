@@ -22,6 +22,7 @@ namespace Budggy
         internal int BinID { get; set; }
         // add BinID and set it to -1 if the income is split. and change Split to Split Among Bins 
         // Possibly add TransactionID that'll goes by the date
+        internal int TransactionID { get; set; }
         private DateTime _date;
         public DateTime Date { get { return _date; }
             set {

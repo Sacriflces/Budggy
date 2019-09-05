@@ -94,7 +94,7 @@ namespace Budggy
         }
 
         static public void DeleteBin(Bin bin)
-        {
+        {           
             try
             {
                 using (SqlConnection conn = new SqlConnection(ConnectionStr))
@@ -154,30 +154,230 @@ namespace Budggy
 
             }
         }
-/*  Need Select, Update, and Delete functions 
-        static public List<Transaction> SelectTransactions()
-        {
 
+        static public List<Transaction> SelectTransactions(DateTime date)
+        {
+            var transactions = new List<Transaction>();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(ConnectionStr))
+                {
+                    conn.Open();
+                    if (conn.State == System.Data.ConnectionState.Open)
+                    {
+                        using (SqlCommand command = conn.CreateCommand())
+                        {
+                            command.CommandType = System.Data.CommandType.StoredProcedure;
+                            command.CommandText = "stpSelect100TransactionsFromDate";
+
+                            //add parameters
+                            command.Parameters.Add(new SqlParameter("Date", date));                            
+                            command.Parameters.Add(new SqlParameter("User", Username));
+
+                            using (SqlDataReader reader = command.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    Transaction transaction = new Transaction()
+                                    {
+                                        Value = reader.GetDecimal(0),
+                                        Description = reader.GetString(1),
+                                        Date = reader.GetDateTime(2),
+                                        IncomeString = reader.GetString(3),
+                                        DrawerGoal = reader.GetString(4),
+                                        DrawerGoalID = reader.GetInt32(5),
+                                        IncomeSplit = reader.GetBoolean(6),
+                                        DrawerExp = reader.GetBoolean(7),
+                                        Bin = reader.GetString(8),
+                                        BinID = reader.GetInt32(9),
+                                        TransactionID = reader.GetInt32(10)
+                                    };
+                                    
+                                    transactions.Add(transaction);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+            return transactions;
         }
 
-        static public List<RepeatTransaction> SelectRepeatTransactions()
+        static public int GenerateTransactionID(DateTime date)
         {
+            SortedSet<int> transIDs = new SortedSet<int>();
+            string getTransactionQuery = "Select [ID] FROM [Transactions] WHERE YEAR([Date]) = " + date.Year
+                + " AND MONTH([Date]) = " + date.Month + " AND DAY([Date]) = " + date.Day;
+            try
+            {
+                using(SqlConnection conn = new SqlConnection(ConnectionStr))
+                {
+                    conn.Open();
+                    if(conn.State == System.Data.ConnectionState.Open)
+                    {
+                        using(SqlCommand command = conn.CreateCommand())
+                        {
+                            command.CommandText = getTransactionQuery;
 
+                            using(SqlDataReader reader = command.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    transIDs.Add(reader.GetInt32(0));
+                                }
+                            }
+                        }
+                    }
+                }
+                int[] transIDArr = new int[transIDs.Count];
+                SortedSet<int>.Enumerator enumerator = transIDs.GetEnumerator();
+
+                for(int i = 0; i < transIDs.Count; ++i)
+                {
+                    transIDArr[i] = enumerator.Current;
+                    enumerator.MoveNext();
+                }
+
+                return IDGenerator.RandIDGen(10000, transIDArr);
+            }
+            catch
+            {
+                return -1;
+            }
+        }
+        static public void InsertTransaction(Transaction trans)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(ConnectionStr))
+                {
+                    conn.Open();
+                    if (conn.State == System.Data.ConnectionState.Open)
+                    {
+                        using (SqlCommand command = conn.CreateCommand())
+                        {
+                            command.CommandType = System.Data.CommandType.StoredProcedure;
+                            command.CommandText = "stpInsertTransaction";
+
+                            //add parameters
+                            command.Parameters.Add(new SqlParameter("Value", trans.Value));
+                            command.Parameters.Add(new SqlParameter("Description", trans.Description));
+                            command.Parameters.Add(new SqlParameter("Date", trans.Date));
+                            command.Parameters.Add(new SqlParameter("BinSplitString", trans.IncomeString));
+                            command.Parameters.Add(new SqlParameter("DrawerGoal", trans.DrawerGoal));
+                            command.Parameters.Add(new SqlParameter("DrawerGoalID", trans.DrawerGoalID));
+                            command.Parameters.Add(new SqlParameter("IncomeSplit", trans.IncomeSplit));
+                            command.Parameters.Add(new SqlParameter("DrawerExpense", trans.DrawerExp));
+                            command.Parameters.Add(new SqlParameter("Bin", trans.Bin));
+                            command.Parameters.Add(new SqlParameter("@User", Username));
+                            command.Parameters.Add(new SqlParameter("@BinID", trans.BinID));
+                            command.Parameters.Add(new SqlParameter("TransactionID", trans.TransactionID));
+
+                            command.ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
+            catch
+            {
+
+            }
         }
 
-        static public MonthBudget SelectMonthBudget(DateTime date)
+        static public void UpdateTransaction(Transaction trans)
         {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(ConnectionStr))
+                {
+                    conn.Open();
+                    if (conn.State == System.Data.ConnectionState.Open)
+                    {
+                        using (SqlCommand command = conn.CreateCommand())
+                        {
+                            command.CommandType = System.Data.CommandType.StoredProcedure;
+                            command.CommandText = "stpUpdateTransaction";
 
+                            //add parameters
+                            command.Parameters.Add(new SqlParameter("Value", trans.Value));
+                            command.Parameters.Add(new SqlParameter("Description", trans.Description));
+                            command.Parameters.Add(new SqlParameter("Date", trans.Date));
+                            command.Parameters.Add(new SqlParameter("BinSplitString", trans.IncomeString));
+                            command.Parameters.Add(new SqlParameter("DrawerGoal", trans.DrawerGoal));
+                            command.Parameters.Add(new SqlParameter("DrawerGoalID", trans.DrawerGoalID));
+                            command.Parameters.Add(new SqlParameter("IncomeSplit", trans.IncomeSplit));
+                            command.Parameters.Add(new SqlParameter("DrawerExpense", trans.DrawerExp));
+                            command.Parameters.Add(new SqlParameter("Bin", trans.Bin));
+                            command.Parameters.Add(new SqlParameter("@User", Username));
+                            command.Parameters.Add(new SqlParameter("@BinID", trans.BinID));
+                            command.Parameters.Add(new SqlParameter("TransactionID", trans.TransactionID));
+
+                            command.ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
+            catch
+            {
+
+            }
         }
 
-        static public List<Drawer> SelectDrawersByMonth(int month)
+        static public void DeleteTransaction(Transaction trans)
         {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(ConnectionStr))
+                {
+                    conn.Open();
+                    if (conn.State == System.Data.ConnectionState.Open)
+                    {
+                        using (SqlCommand command = conn.CreateCommand())
+                        {
+                            command.CommandType = System.Data.CommandType.StoredProcedure;
+                            command.CommandText = "stpDeleteTransaction";
 
+                            //add parameters
+                            command.Parameters.Add(new SqlParameter("Date", trans.Date));
+                            command.Parameters.Add(new SqlParameter("@User", Username));
+                            command.Parameters.Add(new SqlParameter("@BinID", trans.BinID));
+                            command.Parameters.Add(new SqlParameter("TransactionID", trans.TransactionID));
+
+                            command.ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
+            catch
+            {
+
+            }
         }
+        /*  Need Select, Update, and Delete functions 
 
-        static public List<Goal> SelectGoals()
-        {
 
-        } */
+                static public List<RepeatTransaction> SelectRepeatTransactions()
+                {
+
+                }
+
+                static public MonthBudget SelectMonthBudget(DateTime date)
+                {
+
+                }
+
+                static public List<Drawer> SelectDrawersByMonth(int month)
+                {
+
+                }
+
+                static public List<Goal> SelectGoals()
+                {
+
+                } */
     }
 }
