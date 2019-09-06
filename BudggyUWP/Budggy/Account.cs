@@ -189,8 +189,8 @@ namespace Budggy
                                         IncomeSplit = reader.GetBoolean(6),
                                         DrawerExp = reader.GetBoolean(7),
                                         Bin = reader.GetString(8),
-                                        BinID = reader.GetInt32(9),
-                                        TransactionID = reader.GetInt32(10)
+                                        BinID = reader.GetInt32(10),
+                                        TransactionID = reader.GetInt32(11)
                                     };
                                     
                                     transactions.Add(transaction);
@@ -357,13 +357,172 @@ namespace Budggy
 
             }
         }
+
+        static public List<RepeatTransaction> SelectRepeatTransactions()
+        {
+            var repeatTransList = new List<RepeatTransaction>();
+            string commandStr = "SELECT * FROM [RepeatedTransactions] WHERE User = '" + Username + "'";
+
+            try
+            {
+                using(SqlConnection conn = new SqlConnection(ConnectionStr))
+                {
+                    conn.Open();
+                    if(conn.State == System.Data.ConnectionState.Open)
+                    {
+                        using(SqlCommand command = conn.CreateCommand())
+                        {
+                            command.CommandText = commandStr;
+                            
+                            using(SqlDataReader reader = command.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    RepeatTransaction temp = new RepeatTransaction()
+                                    {
+                                        Value = reader.GetDecimal(0),
+                                        Description = reader.GetString(1),
+                                        Date = reader.GetDateTime(2),
+                                        IncomeString = reader.GetString(3),
+                                        DrawerGoal = reader.GetString(4),
+                                        DrawerGoalID = reader.GetInt32(5),
+                                        IncomeSplit = reader.GetBoolean(6),
+                                        DrawerExp = reader.GetBoolean(7),
+                                        Bin = reader.GetString(8),
+                                        Frequency = reader.GetInt32(10),
+                                        Monthly = reader.GetBoolean(11),
+                                        BinID = reader.GetInt32(12),
+                                        TransactionID = reader.GetInt32(13)
+                                    };
+                                    repeatTransList.Add(temp);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+
+            return repeatTransList;
+        }
+
+        static public void InsertRepeatTransaction(RepeatTransaction trans)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(ConnectionStr))
+                {
+                    conn.Open();
+                    if (conn.State == System.Data.ConnectionState.Open)
+                    {
+                        using (SqlCommand command = conn.CreateCommand())
+                        {
+                            command.CommandType = System.Data.CommandType.StoredProcedure;
+                            command.CommandText = "stpInsertRepeatedTransaction";
+
+                            //add parameters
+                            command.Parameters.Add(new SqlParameter("Value", trans.Value));
+                            command.Parameters.Add(new SqlParameter("Description", trans.Description));
+                            command.Parameters.Add(new SqlParameter("Date", trans.Date));
+                            command.Parameters.Add(new SqlParameter("BinSplitString", trans.IncomeString));
+                            command.Parameters.Add(new SqlParameter("DrawerGoal", trans.DrawerGoal));
+                            command.Parameters.Add(new SqlParameter("DrawerGoalID", trans.DrawerGoalID));
+                            command.Parameters.Add(new SqlParameter("IncomeSplit", trans.IncomeSplit));
+                            command.Parameters.Add(new SqlParameter("DrawerExpense", trans.DrawerExp));
+                            command.Parameters.Add(new SqlParameter("Bin", trans.Bin));
+                            command.Parameters.Add(new SqlParameter("@User", Username));
+                            command.Parameters.Add(new SqlParameter("@Frequency", trans.Frequency));
+                            command.Parameters.Add(new SqlParameter("@Monthly", trans.Monthly));
+                            command.Parameters.Add(new SqlParameter("@BinID", trans.BinID));
+                            command.Parameters.Add(new SqlParameter("TransactionID", trans.TransactionID));
+
+                            command.ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+        }
+
+        static public void UpdateRepeatTransaction(RepeatTransaction trans)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(ConnectionStr))
+                {
+                    conn.Open();
+                    if (conn.State == System.Data.ConnectionState.Open)
+                    {
+                        using (SqlCommand command = conn.CreateCommand())
+                        {
+                            command.CommandType = System.Data.CommandType.StoredProcedure;
+                            command.CommandText = "stpUpdateRepeatedTransaction";
+
+                            //add parameters
+                            command.Parameters.Add(new SqlParameter("Value", trans.Value));
+                            command.Parameters.Add(new SqlParameter("Description", trans.Description));
+                            command.Parameters.Add(new SqlParameter("Date", trans.Date));
+                            command.Parameters.Add(new SqlParameter("BinSplitString", trans.IncomeString));
+                            command.Parameters.Add(new SqlParameter("DrawerGoal", trans.DrawerGoal));
+                            command.Parameters.Add(new SqlParameter("DrawerGoalID", trans.DrawerGoalID));
+                            command.Parameters.Add(new SqlParameter("IncomeSplit", trans.IncomeSplit));
+                            command.Parameters.Add(new SqlParameter("DrawerExpense", trans.DrawerExp));
+                            command.Parameters.Add(new SqlParameter("Bin", trans.Bin));
+                            command.Parameters.Add(new SqlParameter("@User", Username));
+                            command.Parameters.Add(new SqlParameter("@Frequency", trans.Frequency));
+                            command.Parameters.Add(new SqlParameter("@Monthly", trans.Monthly));
+                            command.Parameters.Add(new SqlParameter("@BinID", trans.BinID));
+                            command.Parameters.Add(new SqlParameter("TransactionID", trans.TransactionID));
+
+                            command.ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+        }
+
+        static public void DeleteRepeatedTransaction(RepeatTransaction trans)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(ConnectionStr))
+                {
+                    conn.Open();
+                    if (conn.State == System.Data.ConnectionState.Open)
+                    {
+                        using (SqlCommand command = conn.CreateCommand())
+                        {
+                            command.CommandType = System.Data.CommandType.StoredProcedure;
+                            command.CommandText = "stpDeleteRepeatedTransaction";
+
+                            //add parameters
+                            command.Parameters.Add(new SqlParameter("@User", Username));
+                            command.Parameters.Add(new SqlParameter("TransactionID", trans.TransactionID));
+
+                            command.ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+        }
         /*  Need Select, Update, and Delete functions 
 
 
-                static public List<RepeatTransaction> SelectRepeatTransactions()
-                {
-
-                }
+                
 
                 static public MonthBudget SelectMonthBudget(DateTime date)
                 {

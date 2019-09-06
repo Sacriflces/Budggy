@@ -810,21 +810,34 @@ public class Budget : INotifyPropertyChanged
             && (string.Compare(x.Description, trans.Description) == 0) && 
             (x.Value == trans.Value)).FirstOrDefault());
 
-            if(index == -1)
+            RepeatTransaction[] rTransArr = repeatedTrans.OrderBy(x => x.TransactionID).ToArray();
+            int[] sortedIDArr = new int[rTransArr.Length];
+            
+            for(int i = 0; i < rTransArr.Length; ++i)
             {
-                RepeatTransaction repeat = new RepeatTransaction(trans, frequency, monthly);       
+                sortedIDArr[i] = rTransArr[i].TransactionID;
+            }
+
+            if (index == -1)
+            {
+                RepeatTransaction repeat = new RepeatTransaction(trans, frequency, monthly)
+                {
+                    TransactionID = IDGenerator.RandIDGen(10000, sortedIDArr)
+                };       
                 repeatedTrans.Add(repeat);
             }
         }
 
         public void RemoveRepeatTransaction(RepeatTransaction repeatTrans)
         {
-            int index = repeatedTrans.IndexOf(repeatedTrans.Where(x => string.Compare(x.Bin, repeatTrans.Bin) == 0 &&
-            string.Compare(x.Description, repeatTrans.Description) == 0 &&
-            x.Frequency == repeatTrans.Frequency &&
-            x.Monthly == repeatTrans.Monthly &&
-            x.Value == repeatTrans.Value).FirstOrDefault());
-            if(index != -1)
+            int index = repeatedTrans.IndexOf(repeatedTrans.Where(x => x.TransactionID == repeatTrans.TransactionID).FirstOrDefault());
+
+            //string.Compare(x.Bin, repeatTrans.Bin) == 0 &&
+            //string.Compare(x.Description, repeatTrans.Description) == 0 &&
+            //x.Frequency == repeatTrans.Frequency &&
+            //x.Monthly == repeatTrans.Monthly &&
+            //x.Value == repeatTrans.Value
+            if (index != -1)
             {
                 repeatedTrans.RemoveAt(index);
             }
