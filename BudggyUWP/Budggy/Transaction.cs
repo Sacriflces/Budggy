@@ -3,11 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace Budggy
 {
-    public class Transaction 
+    public class Transaction : INotifyPropertyChanged
     {
+        #region INotifyPropertyChanged Members
+
+        public virtual event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion
+
+        protected virtual void OnPropertyChange(string propertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+
+            if (!Setup) Account.UpdateTransaction(this);
+        }
         public string ValueStr { get; set; }
         private decimal _value;
         public decimal Value { get { return _value; }
@@ -15,11 +29,34 @@ namespace Budggy
             {
                 _value = value;
                 ValueStr = String.Format("{0:C}", value);
+                OnPropertyChange("Value");
             } }
 
-        public string Description { get; set; }
-        public string Bin { get; set; }
-        internal int BinID { get; set; }
+        private string _description;
+        public string Description { get { return _description; }
+            set
+            {
+                _description = value;
+                OnPropertyChange("Description");
+            } }
+
+        private string _bin;
+        public string Bin { get { return _bin; }
+            set
+            {
+                _bin = value;
+                OnPropertyChange("Bin");
+            }
+        }
+
+        private int _binID;
+        internal int BinID { get { return _binID; }
+            set
+            {
+                _binID = value;
+                OnPropertyChange("BinID");
+            }
+        }
         // add BinID and set it to -1 if the income is split. and change Split to Split Among Bins 
         // Possibly add TransactionID that'll goes by the date
         internal int TransactionID { get; set; }
@@ -28,6 +65,7 @@ namespace Budggy
             set {
                 _date = value;
                 DateStr = _date.ToString("d");
+                OnPropertyChange("Date");
             }
         }
         public string DateStr { get; set; }
@@ -47,12 +85,35 @@ namespace Budggy
         //    }
         //}
 
-        public string DrawerGoal = string.Empty;
+        private string _drawerGoal = string.Empty;
+        public string DrawerGoal { get { return _drawerGoal; }
+            set
+            {
+                _drawerGoal = value;
+                OnPropertyChange("DrawerGoal");
+            }
+        }
         public bool DrawerExp = true;
         public bool IncomeSplit = false;
-        public string IncomeString;
-        public int DrawerGoalID;
 
+        private string _incomeString;
+        public string IncomeString { get { return _incomeString; }
+            set
+            {
+                _incomeString = value;
+                OnPropertyChange("IncomeString");
+            }
+        }
+
+        private int _drawerGoalID;
+        public int DrawerGoalID { get { return _drawerGoalID; }
+            set
+            {
+                _drawerGoalID = value;
+                OnPropertyChange("DrawerGoalID");
+            }
+        }
+        internal bool Setup = true;
         public Transaction()
         {
             Value = 0;

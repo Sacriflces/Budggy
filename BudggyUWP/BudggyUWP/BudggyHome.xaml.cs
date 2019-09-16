@@ -345,7 +345,15 @@ namespace BudggyUWP
 
         private void BinRemoveBT_Click(object sender, RoutedEventArgs e)
         {
+            int index;
+            FrameworkElement ele = sender as FrameworkElement;
+            if (ele != null)
+            {
+                BinLB.SelectedItem = ele.DataContext;
+                index = BinLB.SelectedIndex;
 
+                budget.DeleteBin(budget.Bins[index].Name);
+            }
         }
     }
 

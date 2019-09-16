@@ -20,7 +20,8 @@ namespace Budggy
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
+            if (!Setup) Account.UpdateDrawer(this);
+    }
 
         private decimal _availAmount;
         public decimal AvailAmount
@@ -90,8 +91,16 @@ namespace Budggy
             }
         }
 
-        public bool rollOver;
+        private bool _rollOver;
+        public bool rollOver { get { return _rollOver; }
+        set
+            {
+                _rollOver = value;
+                OnPropertyChange("rollOver");
+            }
+        }
         public int ID;
+        internal bool Setup = true;
 
         public Drawer()
         {

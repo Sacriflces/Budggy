@@ -7,18 +7,19 @@ using System.ComponentModel;
 
 namespace Budggy
 {
-    public class RepeatTransaction :  Transaction, INotifyPropertyChanged
+    public class RepeatTransaction :  Transaction//, INotifyPropertyChanged
     {
         #region INotifyPropertyChanged Members
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        override public event PropertyChangedEventHandler PropertyChanged;
 
         #endregion
 
-        void OnPropertyChange(string propertyName)
+        override protected void OnPropertyChange(string propertyName)
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            if (!Setup) Account.UpdateRepeatTransaction(this);
         }
 
        // public Transaction Transaction;

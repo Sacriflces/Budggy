@@ -105,9 +105,27 @@ public class Budget : INotifyPropertyChanged
 
         public Budget()
         {
-            Bins = Account.SelectBins();
+            try
+            {
+                Bins = Account.SelectBins();
+                AddGoalsToBins();
+                AddDrawersToBins();
+                MonthlyBudgets.Add(Account.SelectMonthBudget(DateTime.Now));
+                if(MonthlyBudgets[MonthlyBudgets.Count - 1].Setup == true)
+                {
+                    MonthlyBudgets.RemoveAt(MonthlyBudgets.Count - 1);
+                    CreateMonthlyBudget();
+                }
+                repeatedTrans = Account.SelectRepeatTransactions();
+                transactions = Account.SelectTransactions(DateTime.Now);
+            }
+            catch
+            {
+
+            }
+            
             DefaultMonthlyBudget = 0;
-            Balance = 0;
+            Balance = TotalBalance();
          /*   if(MonthlyBudgets.Count == 0)
             {
                 CreateMonthlyBudget();
@@ -116,6 +134,34 @@ public class Budget : INotifyPropertyChanged
           //  CalcBinBalance();
             
         }
+        //Add Goals to Bins
+
+        public void AddGoalsToBins()
+        {
+            var allGoals = Account.SelectGoals();
+            foreach(Goal goal in allGoals)
+            {
+                Bins.First(x => x.ID == goal.BinID).Goals.Add(goal);
+            }
+        }
+
+        //Add Drawers to Bins
+        public void AddDrawersToBins()
+        {
+            var allDrawers = Account.SelectDrawersByMonth(DateTime.Now);
+            if (allDrawers.Count == 0)
+            {
+                int Month = (DateTime.Now.Month == 1) ? 12 : DateTime.Now.Month - 1;
+                int Year = (Month == 12) ? DateTime.Now.Year - 1 : DateTime.Now.Year;
+                DateTime dateTime = new DateTime(Year, Month, 1);
+                allDrawers = Account.SelectDrawersByMonth(dateTime);
+            } 
+            foreach (Drawer drawer in allDrawers)
+            {
+                Bins.First(x => x.ID == drawer.BinID).CreateDrawer(drawer);
+            }
+        }
+
         // Adds a bin to the Bins collection.  
         public int AddBin(string name, string description, decimal percentage)
         {
@@ -158,6 +204,8 @@ public class Budget : INotifyPropertyChanged
             }
             
             Bins.Add(new Bin(name, description, percentage, iD));
+            Bins[Bins.Count - 1].Setup = false;
+            Account.InsertBin(Bins[Bins.Count - 1]);
             return 1;
         }     
 
@@ -217,12 +265,16 @@ public class Budget : INotifyPropertyChanged
         {
             decimal balance = 0;
 
-            foreach(Transaction transaction in transactions)
+            foreach(Bin bin in Bins)
             {
-                balance += transaction.Value;
+                balance += bin.Balance;
+                foreach (Goal goal in bin.Goals)
+                {
+                    balance += goal.Value;
+                }
             }
 
-            return Balance;
+            return balance;
         }
        
         // Delete a specific bin and transfer its balance to the Savings Bin
@@ -248,6 +300,7 @@ public class Budget : INotifyPropertyChanged
             }
             //transfers all funds or debts from the deleted bin to savings and deletes from the budget's list
             TransferFunds(Bins[0].Name, Bins[index].Name, balance, DateTime.Today);
+            Account.DeleteBin(Bins[index]);
             Bins.RemoveAt(index);
         }
 
@@ -325,6 +378,8 @@ public class Budget : INotifyPropertyChanged
                 }
                 transactions.Add(newInc);                
                 AddMonthBudgetInc(newInc);
+                Account.InsertTransaction(newInc);
+                newInc.Setup = false;
                 OrganizeIncomesByDate();
                 return 1;
 
@@ -338,6 +393,8 @@ public class Budget : INotifyPropertyChanged
                     Bins[index].AddTransaction(newInc);
                     transactions.Add(newInc);
                     AddMonthBudgetInc(newInc);
+                    Account.InsertTransaction(newInc);
+                    newInc.Setup = false;
                     OrganizeIncomesByDate();
                 }              
                 return index;
@@ -403,6 +460,7 @@ public class Budget : INotifyPropertyChanged
             } */
             DeleteMonthBudgetInc(transactions[index]);
             Balance -= transactions[index].Value;
+            Account.DeleteTransaction(transactions[index]);
             transactions.RemoveAt(index);
             OrganizeIncomesByDate();
        //     CalcBinBalance();     
@@ -428,7 +486,7 @@ public class Budget : INotifyPropertyChanged
             exp.DrawerGoal = drawer;
             exp.DrawerExp = drawerOrGoal;
             
-            Balance -= exp.Value;
+            Balance += exp.Value;
            // if (drawerOrGoal)
            // {
                 Bins[index].AddTransaction(exp);
@@ -440,6 +498,8 @@ public class Budget : INotifyPropertyChanged
             
             AddMonthBudgetExp(exp);
             transactions.Add(exp);
+            Account.InsertTransaction(exp);
+            exp.Setup = false;
             //   CalcBinBalance(); 
             OrganizeExpensesByDate();
         }
@@ -469,6 +529,7 @@ public class Budget : INotifyPropertyChanged
             
             DeleteMonthBudgetExp(transactions[index]);
             Balance -= transactions[index].Value;
+            Account.DeleteTransaction(transactions[index]);
             transactions.RemoveAt(index);
 
             OrganizeExpensesByDate();
@@ -590,6 +651,7 @@ public class Budget : INotifyPropertyChanged
             if(found == 0)
             {
                 CreateMonthlyBudget(DateTime.Now.Month, DateTime.Now.Year);                
+
                 foreach (Bin bin in Bins)
                 {
                     bin.RefreshDrawers();
@@ -598,8 +660,11 @@ public class Budget : INotifyPropertyChanged
         }
 
         public void CreateMonthlyBudget(int month, int year)
-        {          
-            MonthlyBudgets.Add(new MonthBudget(DefaultMonthlyBudget, month, year));
+        {
+            MonthBudget monthBudget = new MonthBudget(DefaultMonthlyBudget, month, year);
+            MonthlyBudgets.Add(monthBudget);
+            Account.InsertMonthlyBudget(monthBudget);
+            monthBudget.Setup = false;
             CalcMonthBudget();
             OrganizeMonthBudgetsByDate();
             return;
@@ -825,6 +890,8 @@ public class Budget : INotifyPropertyChanged
                     TransactionID = IDGenerator.RandIDGen(10000, sortedIDArr)
                 };       
                 repeatedTrans.Add(repeat);
+                Account.InsertRepeatTransaction(repeat);
+                repeat.Setup = false;
             }
         }
 
@@ -839,7 +906,9 @@ public class Budget : INotifyPropertyChanged
             //x.Value == repeatTrans.Value
             if (index != -1)
             {
+                Account.DeleteRepeatedTransaction(repeatedTrans[index]);
                 repeatedTrans.RemoveAt(index);
+                
             }
             
         }

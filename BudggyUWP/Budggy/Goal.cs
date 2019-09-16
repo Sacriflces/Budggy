@@ -19,6 +19,7 @@ namespace Budggy
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            if (!Setup) Account.UpdateGoal(this);
         }
 
         private string _name;
@@ -94,10 +95,12 @@ namespace Budggy
         }
 
         internal int ID { get; set; }
+        internal string BinName { get; set; }
         internal int BinID { get; set; }
+        internal bool Setup = true;
         public bool ReduceAfterExp = false;
         public Goal()
-        {
+        {            
             Value = 0;
             Percentage = 0;
             GoalVal = 0;

@@ -22,7 +22,8 @@ namespace Budggy
         void OnPropertyChange(string propertyName)
         {
             if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));            
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            if (!Setup) Account.UpdateBin(this);
         }
         //have a huge list of drawers... and just return a list with drawers from a specific date to the UI
         public List<DrawerContainer> AllDrawers = new List<DrawerContainer>();
@@ -73,6 +74,10 @@ namespace Budggy
             set
             {
                 _name = value;
+                foreach (Goal goal in Goals)
+                {
+                    goal.BinName = Name;
+                }
                 OnPropertyChange("Name");
             }
         }
@@ -127,6 +132,7 @@ namespace Budggy
         internal int ID { get; set; }
         public int Month = DateTime.Now.Month;
         public int Year = DateTime.Now.Year;
+        internal bool Setup = true;
         public Bin()
         {
 
@@ -217,11 +223,12 @@ namespace Budggy
             && x.Year == year && x.Month == month).FirstOrDefault());
             if(index != -1)
             {
+                Account.DeleteDrawer(CurrDrawers[index]);
                 CurrDrawers.RemoveAt(index);
             }
         }
 
-        public void CreateGoal(string name = null, decimal goalVal = 100m)
+        public void CreateGoal(string name = "New Goal!", decimal goalVal = 100m)
         {
             int iD;
             if (Goals.IndexOf(Goals.Where(x => string.Compare(x.Name, name) == 0).FirstOrDefault()) != -1)
@@ -233,10 +240,12 @@ namespace Budggy
                 GoalVal = goalVal,
                 Priority = Goals.Count,
                 ID = iD,
-                BinID = ID
+                BinID = ID,
+                BinName = Name
             };
-            
+            item.Setup = false;
             Goals.Add(item);
+            Account.InsertGoal(item);
         }
 
         public int[] GetSortedGoalIDs()
@@ -266,6 +275,7 @@ namespace Budggy
             if (index != -1)
             {
                 Balance += Goals[index].Value;
+                Account.DeleteGoal(Goals[index]);
                 Goals.RemoveAt(index);
             }
         }
@@ -582,7 +592,7 @@ namespace Budggy
             {
                 Priority = Goals.Count,
             };
-
+            
             Goals.Add(goal);
             GoalsByPriority();
             //organize based on priority
@@ -633,7 +643,7 @@ namespace Budggy
                 index = AllDrawers.Count - 1;
             }
 
-            AllDrawers[index].AddDrawer(drawer);
+            AllDrawers[index].AddDrawer(drawer, Setup);
             //if(Drawers.IndexOf(Drawers.Where(x => string.Compare(x.Name, name) == 0 && x.Month == DateTime.Now.Month
             //&& x.Year == DateTime.Now.Year).FirstOrDefault()) != -1)
             //   return;
@@ -672,14 +682,17 @@ namespace Budggy
                 ID = IDGenerator.RandIDGen(10000, GetSortedDrawerIDs()),
                 BinID = binID
             };
-
+            item.Setup = false;
             Drawers.Add(item);
+            Account.InsertDrawer(item);
         }
 
-        public void AddDrawer(Drawer drawer)
+        public void AddDrawer(Drawer drawer, bool setup)
         {
             if (drawer.Year != Year || drawer.Month != Month) return;
             Drawers.Add(drawer);
+            drawer.Setup = false;
+            if (!setup) Account.InsertDrawer(drawer);
         }
 
         private int[] GetSortedDrawerIDs()

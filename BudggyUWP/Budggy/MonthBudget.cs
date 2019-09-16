@@ -91,6 +91,7 @@ namespace Budggy
         {
            if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            if (!Setup) Account.UpdateMonthBudget(this);
         }
 
         public decimal BudgetVal { get; set; }
@@ -173,6 +174,8 @@ namespace Budggy
         public string MonthStr { get; set; }
         public int YearInt { get; set; }
 
+        internal bool Setup = true;
+
         public MonthBudget()
         {
             Value = 0;
@@ -201,8 +204,9 @@ namespace Budggy
             } else
             {                
                 ExpAmount += transaction.Value;
+                Value += transaction.Value;
             }
-            Value += transaction.Value;
+            
         }
 
         internal void RemoveTransaction(Transaction transaction)
