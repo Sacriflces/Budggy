@@ -156,9 +156,13 @@ public class Budget : INotifyPropertyChanged
                 DateTime dateTime = new DateTime(Year, Month, 1);
                 allDrawers = Account.SelectDrawersByMonth(dateTime);
             } 
-            foreach (Drawer drawer in allDrawers)
+            foreach (Drawer drawer in allDrawers) //Might add in a while loop for if the user hasn't used this for a few months lol.
+                //The while loop would keep refreshing until it go to the current Month/Year combination
             {
-                Bins.First(x => x.ID == drawer.BinID).CreateDrawer(drawer);
+                if(drawer.Month != DateTime.Now.Month || drawer.Year != DateTime.Now.Year)
+                    Bins.First(x => x.ID == drawer.BinID).CreateDrawer(drawer.Refresh());
+                else
+                    Bins.First(x => x.ID == drawer.BinID).CreateDrawer(drawer);
             }
         }
 
